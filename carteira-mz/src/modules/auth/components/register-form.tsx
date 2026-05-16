@@ -160,6 +160,18 @@ export function RegisterForm() {
               Entrar
             </Link>
           </div>
+
+          <p className="text-center text-xs text-slate-400 mt-6">
+            © 2026 Carteira MZ. Desenvolvido por{" "}
+            <a
+              href="https://lourencomonjane.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+            >
+              Lourenço Monjane
+            </a>
+          </p>
         </motion.div>
       </div>
     </div>
