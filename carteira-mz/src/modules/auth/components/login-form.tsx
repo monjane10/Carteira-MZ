@@ -123,12 +123,6 @@ export function LoginForm() {
             </Link>
           </div>
 
-          <div className="text-center mt-4">
-            <Link href="/admin/login" className="text-xs text-slate-300 hover:text-slate-500 transition-colors">
-              Acesso Administrativo
-            </Link>
-          </div>
-
           <p className="text-center text-xs text-slate-400 mt-4">
             © 2026 Carteira MZ. Desenvolvido por{" "}
             <a

@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Mail, Lock, ArrowRight, Shield } from "lucide-react"
+import Image from "next/image"
+import { Mail, Lock, ArrowRight } from "lucide-react"
 import { ADMIN_CREDENTIALS } from "@/services/mock/admin"
 
 export default function AdminLoginPage() {
@@ -35,8 +36,8 @@ export default function AdminLoginPage() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="flex flex-col items-center"
         >
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0F172A] mb-6">
-            <Shield className="h-8 w-8 text-white" />
+          <div className="relative w-64 h-16 mb-6">
+            <Image src="/logo.png" alt="Carteira MZ" fill className="object-contain" priority />
           </div>
 
           <div className="text-center mb-8">

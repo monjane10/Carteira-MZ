@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { LayoutDashboard, Users, Building2, LogOut, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
@@ -17,10 +18,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   const isLoginPage = pathname === "/admin/login"
 
   const handleLogout = () => {
+    setShowLogoutConfirm(false)
     router.push("/admin/login")
   }
 
@@ -74,10 +77,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
         <div className="px-4 py-4 border-t border-white/15">
-          <Link href="/login" className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors w-full"
+          >
             <LogOut className="h-4 w-4" />
             Sair do Admin
-          </Link>
+          </button>
         </div>
       </aside>
       <div className="flex-1 flex flex-col min-w-0">
@@ -87,7 +93,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button
                 type="button"
                 onClick={() => setSidebarOpen(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-gray-50 transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="3" y1="6" x2="21" y2="6" />
@@ -99,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="h-6 px-2.5 rounded-full bg-emerald-500 text-white text-[11px] font-semibold flex items-center">Admin</span>
             <span className="text-sm text-slate-400">Painel Administrativo</span>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-500 transition-colors">
+          <button onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-500 transition-colors">
             <LogOut className="h-4 w-4" />
             Sair
           </button>
@@ -108,6 +114,50 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {children}
         </main>
       </div>
+
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6"
+            onClick={() => setShowLogoutConfirm(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-lg font-bold text-[#0F172A] text-center">
+                Terminar sessão
+              </h3>
+              <p className="text-sm text-slate-500 text-center mt-1">
+                Tem a certeza que deseja sair do painel administrativo?
+              </p>
+              <div className="mt-5 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="flex-1 h-11 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 transition-colors hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex-1 h-11 rounded-xl bg-red-500 text-sm font-semibold text-white transition-colors hover:bg-red-600"
+                >
+                  Terminar Sessão
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

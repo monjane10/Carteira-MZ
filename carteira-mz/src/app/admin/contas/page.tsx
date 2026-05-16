@@ -72,13 +72,13 @@ export default function AdminContasPage() {
             placeholder="Pesquisar por nome da conta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-10 rounded-xl border border-slate-200 pl-9 pr-4 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            className="h-10 rounded-xl border border-slate-200 pl-9 pr-4 text-sm w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
           />
         </div>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="h-10 rounded-xl border border-slate-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+          className="h-10 rounded-xl border border-slate-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
         >
           {ACCOUNT_TYPE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -126,7 +126,7 @@ export default function AdminContasPage() {
                     </div>
                   </td>
                   <td className="px-5 py-3.5 text-slate-600">{ACCOUNT_TYPE_LABELS[account.type]}</td>
-                  <td className="px-5 py-3.5 text-right font-medium text-slate-900">{formatCurrency(account.balance, account.currency)}</td>
+                  <td className="px-5 py-3.5 text-right font-medium text-slate-900">{account.balance.toLocaleString("pt-MZ")}</td>
                   <td className="px-5 py-3.5 text-slate-500">{account.currency}</td>
                   <td className="px-5 py-3.5 text-center">
                     <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${

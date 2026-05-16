@@ -5,10 +5,10 @@ import { Users, Building2, ArrowUpDown, Banknote } from "lucide-react"
 import { getAdminStats, getAdminUsers, type AdminStats, type AdminUser } from "@/services/mock/admin"
 import { formatCurrency } from "@/lib/utils"
 
-function StatCard({ title, value, icon: Icon, subtitle }: { title: string; value: string; icon: React.ElementType; subtitle?: string }) {
+function StatCard({ title, value, icon: Icon, subtitle, color }: { title: string; value: string; icon: React.ElementType; subtitle?: string; color: string }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-5 flex items-start gap-4">
-      <div className="h-10 w-10 rounded-lg bg-[#0F172A] flex items-center justify-center shrink-0">
+      <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
         <Icon className="h-5 w-5 text-white" />
       </div>
       <div className="min-w-0">
@@ -53,22 +53,26 @@ export default function AdminDashboardPage() {
           value={String(stats?.total_users ?? 0)}
           icon={Users}
           subtitle={`${stats?.active_users ?? 0} activos`}
+          color="bg-emerald-500"
         />
         <StatCard
           title="Total Contas"
           value={String(stats?.total_accounts ?? 0)}
           icon={Building2}
+          color="bg-emerald-400"
         />
         <StatCard
           title="Total Transacções"
           value={String(stats?.total_transactions ?? 0)}
           icon={ArrowUpDown}
+          color="bg-teal-500"
         />
         <StatCard
           title="Saldo Total"
           value={formatCurrency(stats?.total_balance ?? 0)}
           icon={Banknote}
           subtitle={`+${stats?.monthly_growth ?? 0}% este mês`}
+          color="bg-emerald-600"
         />
       </div>
 
