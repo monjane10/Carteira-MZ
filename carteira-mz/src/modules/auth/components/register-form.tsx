@@ -10,10 +10,6 @@ import Link from "next/link"
 import { registerSchema, type RegisterFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 export function RegisterForm() {
   const router = useRouter()
@@ -37,155 +33,135 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-sm"
-      >
-        <Card className="border-slate-200 shadow-lg">
-          <CardContent className="p-8">
-            <div className="flex justify-center mb-8">
-              <Logo />
+    <div className="min-h-dvh flex items-center justify-center bg-white px-6 py-8">
+      <div className="w-full max-w-[360px] mx-auto max-h-full overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <div className="flex flex-col items-center">
+            <Logo size="xl" />
+            <h1 className="font-bold text-center text-[#0F172A] mt-10 leading-tight" style={{ fontSize: 30 }}>
+              Criar conta
+            </h1>
+            <p className="text-center text-slate-500 mt-1.5" style={{ fontSize: 16 }}>
+              Comece a organizar as suas finanças
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 36 }}>
+            <div style={{ marginBottom: 18 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+                Nome Completo
+              </label>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <input
+                  type="text"
+                  placeholder="Seu nome"
+                  {...register("full_name")}
+                  className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 16px 0 46px" }}
+                />
+              </div>
+              {errors.full_name && <p className="text-xs text-red-500 mt-1">{errors.full_name.message}</p>}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="full_name" className="text-slate-700 text-sm font-medium">
-                  Nome Completo
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    id="full_name"
-                    type="text"
-                    placeholder="Seu nome"
-                    error={!!errors.full_name}
-                    className="pl-10"
-                    {...register("full_name")}
-                  />
-                </div>
-                {errors.full_name && (
-                  <p className="text-xs text-red-500 mt-1">{errors.full_name.message}</p>
-                )}
+            <div style={{ marginBottom: 18 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <input
+                  type="email"
+                  placeholder="seu@email.com"
+                  {...register("email")}
+                  className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 16px 0 46px" }}
+                />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-700 text-sm font-medium">
-                  Email
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    error={!!errors.email}
-                    className="pl-10"
-                    {...register("email")}
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-700 text-sm font-medium">
-                  Senha
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    error={!!errors.password}
-                    className="pl-10 pr-10"
-                    {...register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirm_password" className="text-slate-700 text-sm font-medium">
-                  Confirmar Senha
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    id="confirm_password"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    error={!!errors.confirm_password}
-                    className="pl-10 pr-10"
-                    {...register("confirm_password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                {errors.confirm_password && (
-                  <p className="text-xs text-red-500 mt-1">{errors.confirm_password.message}</p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    Criando...
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    Criar Conta
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                )}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center text-sm text-slate-400">
-              Já tem conta?{" "}
-              <Link
-                href="/login"
-                className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
-              >
-                Entrar
-              </Link>
+              {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+                Senha
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  {...register("password")}
+                  className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 44px 0 46px" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute text-slate-400 hover:text-slate-600 transition-colors"
+                  style={{ right: 16, top: "50%", transform: "translateY(-50%)" }}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff style={{ width: 20, height: 20 }} /> : <Eye style={{ width: 20, height: 20 }} />}
+                </button>
+              </div>
+              {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+                Confirmar Senha
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  {...register("confirm_password")}
+                  className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 44px 0 46px" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute text-slate-400 hover:text-slate-600 transition-colors"
+                  style={{ right: 16, top: "50%", transform: "translateY(-50%)" }}
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff style={{ width: 18, height: 18 }} /> : <Eye style={{ width: 18, height: 18 }} />}
+                </button>
+              </div>
+              {errors.confirm_password && <p className="text-xs text-red-500 mt-1">{errors.confirm_password.message}</p>}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center gap-2 bg-[#0F172A] text-white transition-all hover:bg-[#1E293B] disabled:opacity-60"
+              style={{ height: 56, fontSize: 17, fontWeight: 700, borderRadius: 12, marginTop: 4 }}
+            >
+              {isSubmitting ? (
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                <>
+                  Criar Conta
+                  <ArrowRight style={{ width: 20, height: 20 }} />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center text-slate-500 mt-6 pt-5" style={{ borderTop: "1px solid #F1F5F9", fontSize: 15 }}>
+            Já tem conta?{" "}
+            <Link href="/login" className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+              Entrar
+            </Link>
+          </div>
+        </motion.div>
+      </div>
     </div>
   )
 }
