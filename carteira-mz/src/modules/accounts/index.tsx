@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { LoadingState } from "@/components/shared/loading-state"
@@ -13,6 +13,7 @@ import { supabase } from "@/services/supabase/client"
 import type { Account } from "@/types"
 
 function AccountsPage() {
+  const router = useRouter()
   const { accounts, isLoading, error, fetchAccounts, addAccount, updateAccount, removeAccount } = useAccountStore()
   const [formOpen, setFormOpen] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
@@ -90,8 +91,7 @@ function AccountsPage() {
   }
 
   const handleOpenEdit = (account: Account) => {
-    setEditingAccount(account)
-    setFormOpen(true)
+    router.push(`/contas/${account.id}`)
   }
 
   const handleFormSubmit = async (data: {

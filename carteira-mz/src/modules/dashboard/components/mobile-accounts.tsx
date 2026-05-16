@@ -57,7 +57,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
             return (
               <Link
                 key={account.id}
-                href="/contas"
+                href={`/contas/${account.id}`}
                 className="w-[180px] shrink-0 rounded-2xl border border-slate-100 bg-white p-3 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800"
               >
                 <div className="flex items-center justify-between">

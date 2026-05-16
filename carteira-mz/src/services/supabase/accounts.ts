@@ -93,6 +93,14 @@ export async function updateAccount(
 
 export async function deleteAccount(id: string): Promise<void> {
   try {
+    await supabase.from("goal_contributions").delete().eq("account_id", id)
+    await supabase.from("loan_payments").delete().in("loan_id", (await supabase.from("loans").select("id").eq("account_id", id)).data?.map(l => l.id) ?? [])
+    await supabase.from("goals").delete().eq("account_id", id)
+    await supabase.from("loans").delete().eq("account_id", id)
+    await supabase.from("recurring_transactions").delete().eq("account_id", id)
+    await supabase.from("transfers").delete().eq("from_account_id", id)
+    await supabase.from("transfers").delete().eq("to_account_id", id)
+    await supabase.from("transactions").delete().eq("account_id", id)
     const { error } = await supabase.from("accounts").delete().eq("id", id)
     if (error) throw error
     logger.info("Deleted account", { id })

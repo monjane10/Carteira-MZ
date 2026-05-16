@@ -1,12 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { User, Mail, Globe, Edit3 } from "lucide-react"
+import { User, Mail, Globe, Edit3, Trash2 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { supabase } from "@/services"
 
 export default function SettingsPage() {
+  const router = useRouter()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [currency, setCurrency] = useState("MZN")
@@ -16,6 +19,8 @@ export default function SettingsPage() {
   const [editEmail, setEditEmail] = useState("")
   const [editPhone, setEditPhone] = useState("")
   const [editCurrency, setEditCurrency] = useState("MZN")
+  const [showDelete, setShowDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -67,6 +72,31 @@ export default function SettingsPage() {
     setEditPhone(phone)
     setEditCurrency(currency)
     setEditing(false)
+  }
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true)
+    try {
+      const { data: u } = await supabase.auth.getUser()
+      const userId = u.user?.id
+      if (!userId) return
+
+      await supabase.from("accounts").delete().eq("user_id", userId)
+      await supabase.from("transactions").delete().eq("user_id", userId)
+      await supabase.from("transfers").delete().eq("user_id", userId)
+      await supabase.from("loans").delete().eq("user_id", userId)
+      await supabase.from("goals").delete().eq("user_id", userId)
+      await supabase.from("budgets").delete().eq("user_id", userId)
+      await supabase.from("recurring_transactions").delete().eq("user_id", userId)
+      await supabase.from("notifications").delete().eq("user_id", userId)
+      await supabase.from("profiles").delete().eq("id", userId)
+
+      await supabase.auth.signOut()
+      router.push("/login")
+    } catch {
+      toast({ title: "Erro", description: "Não foi possível eliminar a conta.", variant: "error" })
+      setDeleting(false)
+    }
   }
 
   return (
@@ -140,8 +170,27 @@ export default function SettingsPage() {
             <Edit3 className="h-4 w-4" />
             Editar Perfil
           </button>
+
+          {/* Botão Excluir Conta */}
+          <button
+            type="button"
+            onClick={() => setShowDelete(true)}
+            className="w-full h-13 flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm font-bold transition-all hover:bg-red-100"
+          >
+            <Trash2 className="h-4 w-4" />
+            Excluir Conta
+          </button>
         </motion.div>
       </div>
+
+      <ConfirmDialog
+        open={showDelete}
+        onOpenChange={(open) => { if (!open) setShowDelete(false) }}
+        title="Excluir Conta"
+        description="Tem a certeza que deseja excluir a sua conta? Todos os seus dados serão removidos permanentemente. Esta acção não pode ser desfeita."
+        onConfirm={handleDeleteAccount}
+        isLoading={deleting}
+      />
 
       {/* Modal de Edição */}
       {editing && (
