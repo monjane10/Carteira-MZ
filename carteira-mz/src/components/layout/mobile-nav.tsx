@@ -13,7 +13,6 @@ import {
   ArrowLeftRight,
   HandCoins,
   PieChart,
-  Tags,
   BarChart3,
   Settings,
   X,
@@ -32,7 +31,6 @@ const moreItems = [
   { id: "transferencias", label: "Transferências", icon: ArrowLeftRight, href: "/transferencias" },
   { id: "emprestimos", label: "Empréstimos", icon: HandCoins, href: "/emprestimos" },
   { id: "orcamentos", label: "Orçamentos", icon: PieChart, href: "/orcamentos" },
-  { id: "categorias", label: "Categorias", icon: Tags, href: "/categorias" },
   { id: "relatorios", label: "Relatórios", icon: BarChart3, href: "/relatorios" },
   { id: "configuracoes", label: "Configurações", icon: Settings, href: "/configuracoes" },
 ]

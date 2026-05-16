@@ -104,7 +104,6 @@ export const NAV_ITEMS = [
   { label: "Contas", href: "/contas", icon: "Wallet" },
   { label: "Transacções", href: "/transacoes", icon: "ArrowUpDown" },
   { label: "Transferências", href: "/transferencias", icon: "ArrowLeftRight" },
-  { label: "Categorias", href: "/categorias", icon: "Tags" },
   { label: "Empréstimos", href: "/emprestimos", icon: "HandCoins" },
   { label: "Metas", href: "/metas", icon: "Target" },
   { label: "Orçamentos", href: "/orcamentos", icon: "PieChart" },
