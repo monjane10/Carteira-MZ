@@ -47,9 +47,8 @@ Portuguese (Mozambique) — `pt-MZ`, currency MZN. Labels in Portuguese (e.g. `A
 
 ## Auth
 
-- Cookie-based session guard: `carteira_session` = `"authenticated"`.
-- The file `src/proxy.ts` defines auth middleware logic and a `config.matcher` but is **not wired up** (no `middleware.ts` exists). If you add middleware, copy the matcher routes and cookie check from `proxy.ts`.
-- Auth is handled by Supabase Auth (`supabase.auth.signInWithPassword`, `supabase.auth.signUp`).
+- Auth is handled by Supabase Auth (`supabase.auth.signInWithPassword`, `supabase.auth.signUp`) — client-side only.
+- `src/proxy.ts` is a pass-through middleware (Next.js 16 auto-detects it). No server-side redirects to avoid Safari Service Worker issues.
 
 ## Supabase Schema
 
