@@ -9,6 +9,7 @@ import { toast } from "@/hooks/use-toast"
 import { AccountsList } from "./components/accounts-list"
 import { AccountForm } from "./components/account-form"
 import { useAccountStore } from "@/store"
+import { supabase } from "@/services/supabase/client"
 import type { Account } from "@/types"
 
 function AccountsPage() {
@@ -28,6 +29,11 @@ function AccountsPage() {
     initial_balance: number
   }) => {
     try {
+      const { data: inst } = await supabase
+        .from("financial_institutions")
+        .select("id")
+        .eq("name", data.name)
+        .maybeSingle()
       await addAccount({
         name: data.name,
         type: data.type,
@@ -36,7 +42,7 @@ function AccountsPage() {
         initial_balance: data.initial_balance,
         color: "#0F172A",
         icon: null,
-        institution_id: null,
+        institution_id: inst?.id ?? null,
         is_active: true,
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })

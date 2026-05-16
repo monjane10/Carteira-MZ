@@ -51,7 +51,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
       <div className="overflow-x-auto overflow-y-hidden pb-2 hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
         <div className="flex gap-3" style={{ width: "max-content", minWidth: "100%" }}>
           {active.map((account) => {
-            const logoPath = getAccountLogo(account.name)
+            const logoPath = getAccountLogo(account.institution?.name ?? account.name)
             const FallbackIcon = fallbackIcons[account.type] || Wallet
 
             return (

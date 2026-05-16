@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
@@ -14,6 +14,7 @@ import { ACCOUNT_TYPE_LABELS } from "@/constants"
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { accounts as accountService } from "@/services"
+import { supabase } from "@/services/supabase/client"
 
 const schema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
@@ -73,6 +74,11 @@ export function AccountCreateScreen() {
 
   async function onSubmit(data: FormData) {
     try {
+      const { data: insts } = await supabase
+        .from("financial_institutions")
+        .select("id")
+        .eq("name", data.institution)
+        .maybeSingle()
       await accountService.createAccount({
         name: data.name || data.institution,
         type: data.type,
@@ -81,7 +87,7 @@ export function AccountCreateScreen() {
         initial_balance: data.initial_balance,
         color: "#0F172A",
         icon: null,
-        institution_id: null,
+        institution_id: insts?.id ?? null,
         is_active: true,
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })

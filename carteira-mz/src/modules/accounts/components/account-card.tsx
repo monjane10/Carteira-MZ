@@ -25,7 +25,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 export function AccountCard({ account, onClick }: AccountCardProps) {
   const FallbackIcon = TYPE_ICONS[account.type] ?? HelpCircle
   const accentColor = account.color ?? ACCOUNT_TYPE_COLORS[account.type] ?? "#64748B"
-  const logoPath = getAccountLogo(account.name)
+  const logoPath = getAccountLogo(account.institution?.name ?? account.name)
 
   return (
     <button

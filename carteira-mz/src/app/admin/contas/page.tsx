@@ -108,7 +108,7 @@ export default function AdminContasPage() {
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg flex items-center justify-center overflow-hidden bg-slate-50">
                         {(() => {
-                          const logoPath = getAccountLogo(account.name)
+                          const logoPath = getAccountLogo(account.institution?.name ?? account.name)
                           if (logoPath) {
                             return <Image src={logoPath} alt={account.name} width={32} height={32} className="object-contain" />
                           }
