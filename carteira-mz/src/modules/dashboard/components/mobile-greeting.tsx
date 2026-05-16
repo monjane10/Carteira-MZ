@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { pt } from "date-fns/locale"
 import { LogOut } from "lucide-react"
@@ -18,6 +19,7 @@ function getGreeting(hour: number): string {
 }
 
 export function MobileGreeting() {
+  const router = useRouter()
   const [time, setTime] = useState(getMozambiqueTime())
 
   useEffect(() => {
@@ -51,8 +53,9 @@ export function MobileGreeting() {
         </div>
         <button
           type="button"
+          onClick={() => router.push("/login")}
           className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors hover:text-red-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:text-red-400 flex-shrink-0"
-          aria-label="Sair"
+          aria-label="Terminar sessão"
         >
           <LogOut className="h-4 w-4" />
         </button>

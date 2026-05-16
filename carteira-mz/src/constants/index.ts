@@ -34,7 +34,7 @@ export const COLORS = {
 
 export const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
   BANK: "Banco",
-  MOBILE_MONEY: "Mobile Money",
+  MOBILE_MONEY: "Carteira Móvel",
   CASH: "Dinheiro",
   SAVINGS: "Poupança",
   INVESTMENT: "Investimento",

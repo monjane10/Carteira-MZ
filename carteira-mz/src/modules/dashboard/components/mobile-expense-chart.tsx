@@ -8,7 +8,7 @@ interface MobileExpenseChartProps {
   data: CategorySpending[]
 }
 
-const COLORS = ["#0F172A", "#10B981", "#34D399", "#475569", "#94A3B8", "#64748B", "#059669", "#CBD5E1"]
+const COLORS = ["#0F172A", "#10B981", "#059669", "#0D9488", "#1E293B", "#334155", "#34D399", "#475569"]
 
 export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   if (data.length === 0) {
@@ -31,7 +31,7 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
       </h2>
 
       <div className="mt-4 flex items-center gap-4">
-        <div className="relative flex-shrink-0" style={{ width: 130, height: 130 }}>
+        <div className="relative flex-shrink-0" style={{ width: 160, height: 160 }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -40,8 +40,8 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 nameKey="category_name"
                 cx="50%"
                 cy="50%"
-                innerRadius={38}
-                outerRadius={60}
+                innerRadius={45}
+                outerRadius={75}
                 strokeWidth={0}
               >
                 {data.map((_, index) => (
@@ -51,26 +51,26 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <p className="text-[10px] font-medium text-slate-400">Total</p>
-            <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+            <p className="text-xs font-medium text-slate-400">Total</p>
+            <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
               {formatCurrency(total)}
             </p>
           </div>
         </div>
 
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-2.5">
           {data.slice(0, 5).map((item, index) => (
             <div key={item.category_id} className="flex items-center justify-between">
               <div className="flex items-center gap-2 min-w-0">
                 <div
-                  className="h-2.5 w-2.5 rounded-full flex-shrink-0"
+                  className="h-3 w-3 rounded-full flex-shrink-0"
                   style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 />
-                <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                <span className="text-sm text-slate-600 dark:text-slate-300 truncate font-medium">
                   {item.category_name}
                 </span>
               </div>
-              <span className="text-xs font-semibold text-slate-900 dark:text-white flex-shrink-0 ml-2">
+              <span className="text-sm font-bold text-slate-900 dark:text-white flex-shrink-0 ml-2">
                 {formatCurrency(item.total)}
               </span>
             </div>

@@ -5,6 +5,10 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "Carteira MZ - Gestão Financeira",
   description: "Aplicação moderna de gestão financeira pessoal",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({

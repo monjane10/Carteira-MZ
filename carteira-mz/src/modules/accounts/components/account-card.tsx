@@ -1,8 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import { Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { cn, formatCurrency } from "@/lib/utils"
+import { getAccountLogo } from "@/lib/account-logos"
 import { ACCOUNT_TYPE_LABELS, ACCOUNT_TYPE_COLORS } from "@/constants"
 import type { Account } from "@/types"
 
@@ -21,8 +23,9 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 }
 
 export function AccountCard({ account, onClick }: AccountCardProps) {
-  const Icon = TYPE_ICONS[account.type] ?? HelpCircle
+  const FallbackIcon = TYPE_ICONS[account.type] ?? HelpCircle
   const accentColor = account.color ?? ACCOUNT_TYPE_COLORS[account.type] ?? "#64748B"
+  const logoPath = getAccountLogo(account.name)
 
   return (
     <button
@@ -38,11 +41,18 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
         style={{ backgroundColor: accentColor }}
       />
       <div className="flex items-start justify-between">
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-lg"
-          style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
-        >
-          <Icon className="h-5 w-5" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
+          {logoPath ? (
+            <Image
+              src={logoPath}
+              alt={account.name}
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+          ) : (
+            <FallbackIcon className="h-5 w-5" style={{ color: accentColor }} />
+          )}
         </div>
       </div>
       <div className="mt-3">

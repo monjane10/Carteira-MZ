@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function LoginForm() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const {
     register,
@@ -31,6 +33,7 @@ export function LoginForm() {
       description: "Login simulado com sucesso",
       variant: "success",
     })
+    setTimeout(() => router.push("/dashboard"), 800)
   }
 
   return (

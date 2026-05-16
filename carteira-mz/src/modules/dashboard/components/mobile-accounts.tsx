@@ -1,7 +1,9 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { formatCurrency } from "@/lib/utils"
+import { getAccountLogo } from "@/lib/account-logos"
 import type { Account } from "@/types"
 import { Building2, Smartphone, Wallet, PiggyBank, ChevronRight } from "lucide-react"
 
@@ -9,7 +11,7 @@ interface MobileAccountsProps {
   accounts: Account[]
 }
 
-const accountIcons: Record<string, typeof Building2> = {
+const fallbackIcons: Record<string, typeof Building2> = {
   BANK: Building2,
   MOBILE_MONEY: Smartphone,
   CASH: Wallet,
@@ -48,7 +50,8 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
 
       <div className="mt-3 flex gap-3 overflow-x-auto pb-1 scrollbar-none">
         {active.map((account) => {
-          const Icon = accountIcons[account.type] || Wallet
+          const logoPath = getAccountLogo(account.name)
+          const FallbackIcon = fallbackIcons[account.type] || Wallet
 
           return (
             <Link
@@ -58,14 +61,21 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               style={{ width: "165px" }}
             >
               <div className="flex items-center justify-between">
-                <div
-                  className="flex h-9 w-9 items-center justify-center rounded-xl"
-                  style={{ backgroundColor: (account.color || "#0F172A") + "15" }}
-                >
-                  <Icon
-                    className="h-4.5 w-4.5"
-                    style={{ color: account.color || "#0F172A" }}
-                  />
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
+                  {logoPath ? (
+                    <Image
+                      src={logoPath}
+                      alt={account.name}
+                      width={36}
+                      height={36}
+                      className="object-contain"
+                    />
+                  ) : (
+                    <FallbackIcon
+                      className="h-4.5 w-4.5"
+                      style={{ color: account.color || "#0F172A" }}
+                    />
+                  )}
                 </div>
                 <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
               </div>

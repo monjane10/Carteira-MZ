@@ -1,17 +1,38 @@
 "use client"
 
 import type { ReactNode } from "react"
+import { usePathname } from "next/navigation"
 import { useUIStore } from "@/store"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sidebar } from "./sidebar"
 import { Header } from "./header"
 import { MobileNav } from "./mobile-nav"
+import { BackButton } from "@/components/shared/back-button"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
+const mainTabs = ["/dashboard", "/contas", "/transacoes", "/metas"]
+
 interface DashboardLayoutProps {
   children: ReactNode
+}
+
+function Back({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
+  const isMobile = useMediaQuery("(max-width: 1023px)")
+  const showBack = isMobile && !mainTabs.includes(pathname)
+
+  return (
+    <>
+      {showBack && (
+        <div className="mb-3">
+          <BackButton />
+        </div>
+      )}
+      {children}
+    </>
+  )
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -22,7 +43,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
       <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
         <ScrollArea className="flex-1">
-          <main className="px-4 pb-24">{children}</main>
+          <main className="px-4 pt-5 pb-24">{children}</main>
         </ScrollArea>
       </div>
     )
@@ -32,7 +53,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
       <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
         <ScrollArea className="flex-1">
-          <main className="px-4 pb-24">{children}</main>
+          <main className="px-4 pt-5 pb-24">
+            <Back>{children}</Back>
+          </main>
         </ScrollArea>
         <MobileNav />
       </div>
