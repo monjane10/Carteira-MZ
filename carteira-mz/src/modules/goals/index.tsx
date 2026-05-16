@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
@@ -135,10 +136,12 @@ function GoalsPage() {
   return (
     <div>
       <PageHeader title="Metas" description="Defina e acompanhe as suas metas financeiras">
-        <Button onClick={handleOpenCreate} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Nova Meta
-        </Button>
+        <Link href="/metas/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Meta
+          </Button>
+        </Link>
       </PageHeader>
 
       {loading ? (
@@ -148,13 +151,16 @@ function GoalsPage() {
           ))}
         </div>
       ) : goals.length === 0 ? (
-        <EmptyState
-          icon={Target}
-          title="Nenhuma meta"
-          description="Crie a sua primeira meta financeira para começar a poupar."
-          actionLabel="Criar Meta"
-          onAction={handleOpenCreate}
-        />
+        <div className="flex flex-col items-center py-16 text-center">
+          <Target className="h-12 w-12 text-slate-400 mb-4" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Crie a sua primeira meta financeira para começar a poupar.</p>
+          <Link href="/metas/nova">
+            <Button size="sm" className="mt-4">
+              Criar Meta
+            </Button>
+          </Link>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {goals.map((goal) => (

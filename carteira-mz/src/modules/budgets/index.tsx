@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
@@ -113,10 +114,12 @@ function BudgetsPage() {
   return (
     <div>
       <PageHeader title="Orçamentos" description="Controle os seus gastos por categoria">
-        <Button onClick={handleOpenCreate} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Novo Orçamento
-        </Button>
+        <Link href="/orcamentos/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Novo Orçamento
+          </Button>
+        </Link>
       </PageHeader>
 
       {loading ? (
@@ -126,13 +129,16 @@ function BudgetsPage() {
           ))}
         </div>
       ) : budgets.length === 0 ? (
-        <EmptyState
-          icon={Wallet}
-          title="Nenhum orçamento"
-          description="Crie o seu primeiro orçamento para controlar os gastos."
-          actionLabel="Criar Orçamento"
-          onAction={handleOpenCreate}
-        />
+        <div className="flex flex-col items-center py-16 text-center">
+          <Wallet className="h-12 w-12 text-slate-400 mb-4" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum orçamento</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Crie o seu primeiro orçamento para controlar os gastos.</p>
+          <Link href="/orcamentos/nova">
+            <Button size="sm" className="mt-4">
+              Criar Orçamento
+            </Button>
+          </Link>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {budgets.map((budget) => (

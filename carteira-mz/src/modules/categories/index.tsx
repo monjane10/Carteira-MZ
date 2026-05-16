@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
+import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
+import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { CategoryList } from "./components/category-list"
 import { CategoryForm } from "./components/category-form"
@@ -120,6 +123,12 @@ function CategoriesPage() {
   return (
     <div>
       <PageHeader title="Categorias" description="Gerencie as suas categorias de transacções">
+        <Link href="/categorias/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Categoria
+          </Button>
+        </Link>
       </PageHeader>
 
       <CategoryList

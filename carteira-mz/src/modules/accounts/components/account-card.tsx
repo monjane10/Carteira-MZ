@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle } from "lucide-react"
+import { Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle, ChevronRight } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { cn, formatCurrency } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
@@ -32,16 +32,16 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-5 text-left transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950",
+        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950",
         onClick && "cursor-pointer"
       )}
     >
       <div
-        className="absolute inset-x-0 top-0 h-1"
+        className="absolute left-0 top-0 bottom-0 w-1"
         style={{ backgroundColor: accentColor }}
       />
-      <div className="flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
+      <div className="flex items-center gap-3 pl-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800 flex-shrink-0">
           {logoPath ? (
             <Image
               src={logoPath}
@@ -54,18 +54,21 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
             <FallbackIcon className="h-5 w-5" style={{ color: accentColor }} />
           )}
         </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-[#0F172A] dark:text-white truncate">
+            {account.name}
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {ACCOUNT_TYPE_LABELS[account.type] ?? account.type}
+          </p>
+        </div>
+        <div className="text-right flex-shrink-0">
+          <p className="text-sm font-bold text-[#0F172A] dark:text-white">
+            {formatCurrency(account.balance)}
+          </p>
+        </div>
+        <ChevronRight className="h-4 w-4 text-slate-300 flex-shrink-0" />
       </div>
-      <div className="mt-3">
-        <p className="text-sm font-semibold text-slate-900 dark:text-white">
-          {account.name}
-        </p>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          {ACCOUNT_TYPE_LABELS[account.type] ?? account.type}
-        </p>
-      </div>
-      <p className="mt-2 text-lg font-bold text-slate-900 dark:text-white">
-        {formatCurrency(account.balance)}
-      </p>
     </button>
   )
 }

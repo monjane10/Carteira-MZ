@@ -111,12 +111,12 @@ export function AccountCreateScreen() {
 
   return (
     <div className="min-h-dvh bg-white flex flex-col">
-      <div className="px-5 pt-5 pb-3">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Nova Conta</h1>
+      <div className="px-4 pt-5 pb-3">
+        <h1 className="text-xl font-bold text-[#0F172A]">Nova Conta</h1>
         <p className="text-sm text-slate-500 mt-1">Adicione uma conta bancária ou carteira móvel</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-28">
+      <div className="flex-1 overflow-y-auto px-4 pb-28">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,9 +124,9 @@ export function AccountCreateScreen() {
 
         >
           {/* Tipo de Conta */}
-          <div className="mb-6">
+          <div className="mb-5">
             <p className="text-sm font-semibold text-[#0F172A] mb-3">Tipo de conta</p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => {
@@ -135,7 +135,7 @@ export function AccountCreateScreen() {
                   setValue("institution", "")
                 }}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-xl font-medium text-sm h-14 transition-all",
+                  "flex flex-1 items-center justify-center gap-2 rounded-xl font-medium text-sm h-12 transition-all",
                   accountType === "BANK"
                     ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700"
                     : "border border-slate-200 bg-white text-slate-600"
@@ -152,7 +152,7 @@ export function AccountCreateScreen() {
                   setValue("institution", "")
                 }}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-xl font-medium text-sm h-14 transition-all",
+                  "flex flex-1 items-center justify-center gap-2 rounded-xl font-medium text-sm h-12 transition-all",
                   accountType === "MOBILE_MONEY"
                     ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700"
                     : "border border-slate-200 bg-white text-slate-600"
@@ -165,9 +165,9 @@ export function AccountCreateScreen() {
           </div>
 
           {/* Instituição */}
-          <div className="mb-6">
+          <div className="mb-5">
             <p className="text-sm font-semibold text-[#0F172A] mb-3">Instituição</p>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               {institutions.map((inst) => {
                 const logo = getAccountLogo(inst.name)
                 const isSelected = selectedInstitution === inst.name
@@ -187,11 +187,11 @@ export function AccountCreateScreen() {
                     )}
                   >
                     {logo ? (
-                      <div className="h-8 w-8 relative">
+                      <div className="h-7 w-7 relative">
                         <Image src={logo} alt={inst.name} fill className="object-contain" />
                       </div>
                     ) : (
-                      <div className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: inst.color }}>
+                      <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: inst.color }}>
                         {inst.name[0]}
                       </div>
                     )}
@@ -217,7 +217,7 @@ export function AccountCreateScreen() {
               type="text"
               placeholder="Ex.: Conta Principal, Poupança, Salários"
               {...register("name")}
-              className="w-full h-14 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+              className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
             />
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
@@ -231,7 +231,7 @@ export function AccountCreateScreen() {
                 step="0.01"
                 placeholder="0,00"
                 {...register("initial_balance", { valueAsNumber: true })}
-                className="w-full h-14 rounded-xl border border-slate-200 bg-white px-4 pr-16 text-[15px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 pr-16 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">
                 {selectedCurrency === "MZN" ? "MTn" : "$"}
@@ -240,9 +240,9 @@ export function AccountCreateScreen() {
           </div>
 
           {/* Moeda */}
-          <div className="mb-6">
+          <div className="mb-5">
             <p className="text-sm font-semibold text-[#0F172A] block mb-1.5">Moeda</p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setValue("currency", "MZN")}
@@ -271,9 +271,9 @@ export function AccountCreateScreen() {
           </div>
 
           {/* Cor */}
-          <div className="mb-6">
+          <div className="mb-5">
             <p className="text-sm font-semibold text-[#0F172A] block mb-3">Cor (opcional)</p>
-            <div className="flex gap-3 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
               {colorOptions.map((c) => {
                 const isSelected = selectedColor === c.value
                 return (
@@ -282,7 +282,7 @@ export function AccountCreateScreen() {
                     type="button"
                     onClick={() => setValue("color", c.value)}
                     className={cn(
-                      "h-8 w-8 rounded-full transition-all",
+                      "h-7 w-7 rounded-full transition-all",
                       isSelected && "ring-2 ring-offset-2 ring-emerald-500"
                     )}
                     style={{ backgroundColor: c.value }}
@@ -305,7 +305,7 @@ export function AccountCreateScreen() {
               className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4"
             >
               <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: selectedInstColor }} />
-              <div className="flex items-center gap-3 pl-3">
+              <div className="flex items-center gap-2 pl-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden bg-slate-50">
                   {logoPath ? (
                     <Image src={logoPath} alt={previewName} width={40} height={40} className="object-contain" />
@@ -334,7 +334,7 @@ export function AccountCreateScreen() {
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={isSubmitting}
-            className="w-full h-[56px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[15px] shadow-sm transition-all hover:bg-[#1E293B] disabled:opacity-60"
+            className="w-full h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] shadow-sm transition-all hover:bg-[#1E293B] disabled:opacity-60"
           >
             <Save className="h-5 w-5" />
             {isSubmitting ? "A guardar..." : "Guardar Conta"}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
@@ -55,10 +56,12 @@ function TransfersPage() {
   return (
     <div>
       <PageHeader title="Transferências" description="Gerencie as transferências entre as suas contas">
-        <Button onClick={() => setFormOpen(true)} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Nova Transferência
-        </Button>
+        <Link href="/transferencias/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Transferência
+          </Button>
+        </Link>
       </PageHeader>
 
       <TransferList transfers={transfers} loading={loading} />

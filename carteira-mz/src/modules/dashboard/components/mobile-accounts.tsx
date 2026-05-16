@@ -48,7 +48,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
         </Link>
       </div>
 
-      <div className="mt-3 flex gap-3 overflow-x-auto pb-1 scrollbar-none">
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         {active.map((account) => {
           const logoPath = getAccountLogo(account.name)
           const FallbackIcon = fallbackIcons[account.type] || Wallet
@@ -61,7 +61,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               style={{ width: "165px" }}
             >
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
                   {logoPath ? (
                     <Image
                       src={logoPath}

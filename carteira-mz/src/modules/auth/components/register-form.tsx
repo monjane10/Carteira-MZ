@@ -42,17 +42,17 @@ export function RegisterForm() {
         >
           <div className="flex flex-col items-center">
             <Logo size="xl" />
-            <h1 className="font-bold text-center text-[#0F172A] mt-10 leading-tight" style={{ fontSize: 30 }}>
+            <h1 className="font-bold text-center text-[#0F172A] mt-8 leading-tight" style={{ fontSize: 30 }}>
               Criar conta
             </h1>
-            <p className="text-center text-slate-500 mt-1.5" style={{ fontSize: 16 }}>
+            <p className="text-center text-slate-500 mt-1.5" style={{ fontSize: 14 }}>
               Comece a organizar as suas finanças
             </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 36 }}>
             <div style={{ marginBottom: 18 }}>
-              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 14, marginBottom: 5 }}>
                 Nome Completo
               </label>
               <div className="relative">
@@ -62,14 +62,14 @@ export function RegisterForm() {
                   placeholder="Seu nome"
                   {...register("full_name")}
                   className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
-                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 16px 0 46px" }}
+                  style={{ height: 48, fontSize: 14, borderRadius: 12, padding: "0 16px 0 46px" }}
                 />
               </div>
               {errors.full_name && <p className="text-xs text-red-500 mt-1">{errors.full_name.message}</p>}
             </div>
 
             <div style={{ marginBottom: 18 }}>
-              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 14, marginBottom: 5 }}>
                 Email
               </label>
               <div className="relative">
@@ -79,14 +79,14 @@ export function RegisterForm() {
                   placeholder="seu@email.com"
                   {...register("email")}
                   className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
-                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 16px 0 46px" }}
+                  style={{ height: 48, fontSize: 14, borderRadius: 12, padding: "0 16px 0 46px" }}
                 />
               </div>
               {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
             </div>
 
             <div style={{ marginBottom: 18 }}>
-              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 14, marginBottom: 5 }}>
                 Senha
               </label>
               <div className="relative">
@@ -96,7 +96,7 @@ export function RegisterForm() {
                   placeholder="••••••••"
                   {...register("password")}
                   className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
-                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 44px 0 46px" }}
+                  style={{ height: 48, fontSize: 14, borderRadius: 12, padding: "0 44px 0 46px" }}
                 />
                 <button
                   type="button"
@@ -112,7 +112,7 @@ export function RegisterForm() {
             </div>
 
             <div style={{ marginBottom: 18 }}>
-              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 15, marginBottom: 6 }}>
+              <label className="text-[#0F172A] block font-semibold" style={{ fontSize: 14, marginBottom: 5 }}>
                 Confirmar Senha
               </label>
               <div className="relative">
@@ -122,7 +122,7 @@ export function RegisterForm() {
                   placeholder="••••••••"
                   {...register("confirm_password")}
                   className="w-full border border-slate-200 bg-white text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
-                  style={{ height: 54, fontSize: 15, borderRadius: 12, padding: "0 44px 0 46px" }}
+                  style={{ height: 48, fontSize: 14, borderRadius: 12, padding: "0 44px 0 46px" }}
                 />
                 <button
                   type="button"
@@ -141,7 +141,7 @@ export function RegisterForm() {
               type="submit"
               disabled={isSubmitting}
               className="w-full flex items-center justify-center gap-2 bg-[#0F172A] text-white transition-all hover:bg-[#1E293B] disabled:opacity-60"
-              style={{ height: 56, fontSize: 17, fontWeight: 700, borderRadius: 12, marginTop: 4 }}
+              style={{ height: 48, fontSize: 15, fontWeight: 700, borderRadius: 12, marginTop: 4 }}
             >
               {isSubmitting ? (
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -154,7 +154,7 @@ export function RegisterForm() {
             </button>
           </form>
 
-          <div className="text-center text-slate-500 mt-6 pt-5" style={{ borderTop: "1px solid #F1F5F9", fontSize: 15 }}>
+          <div className="text-center text-slate-500 mt-5 pt-4" style={{ borderTop: "1px solid #F1F5F9", fontSize: 14 }}>
             Já tem conta?{" "}
             <Link href="/login" className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
               Entrar

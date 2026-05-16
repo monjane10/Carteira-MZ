@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
@@ -135,10 +136,12 @@ function LoansPage() {
   return (
     <div>
       <PageHeader title="Empréstimos" description="Gerencie os empréstimos concedidos e obtidos">
-        <Button onClick={handleOpenCreate} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Novo Empréstimo
-        </Button>
+        <Link href="/emprestimos/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Novo Empréstimo
+          </Button>
+        </Link>
       </PageHeader>
 
       {loading ? (
@@ -150,9 +153,11 @@ function LoansPage() {
       ) : loans.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum empréstimo registado.</p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={handleOpenCreate}>
-            Registar primeiro empréstimo
-          </Button>
+          <Link href="/emprestimos/nova">
+            <Button variant="outline" size="sm" className="mt-4">
+              Registar primeiro empréstimo
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

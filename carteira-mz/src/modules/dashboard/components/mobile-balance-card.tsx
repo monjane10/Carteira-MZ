@@ -32,21 +32,21 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
           </button>
         </div>
 
-        <p className="mt-2 text-3xl font-bold tracking-tight">
+        <p className="mt-2 text-2xl font-bold tracking-tight">
           {showValues ? formatCurrency(summary.total_balance) : hidden}
         </p>
 
         <div className="mt-5 flex items-center">
           <div className="flex-1">
             <p className="text-xs font-medium text-emerald-400">Receitas</p>
-            <p className="mt-0.5 text-base font-bold">
+            <p className="mt-0.5 text-sm font-bold">
               {showValues ? formatCurrency(summary.monthly_income) : hidden}
             </p>
           </div>
           <div className="mx-3 h-10 w-px bg-slate-700" />
           <div className="flex-1">
             <p className="text-xs font-medium text-red-400">Despesas</p>
-            <p className="mt-0.5 text-base font-bold">
+            <p className="mt-0.5 text-sm font-bold">
               {showValues ? formatCurrency(summary.monthly_expenses) : hidden}
             </p>
           </div>

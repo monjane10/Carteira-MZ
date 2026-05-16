@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
@@ -116,10 +117,12 @@ function TransactionsPage() {
   return (
     <div>
       <PageHeader title="Transacções" description="Registe e consulte todas as suas transacções financeiras">
-        <Button onClick={handleOpenCreate} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Nova Transacção
-        </Button>
+        <Link href="/transacoes/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Transacção
+          </Button>
+        </Link>
       </PageHeader>
 
       <TransactionList
