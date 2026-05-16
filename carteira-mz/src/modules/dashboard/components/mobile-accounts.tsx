@@ -25,7 +25,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
 
   if (active.length === 0) {
     return (
-      <div>
+    <div className="max-w-full">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Minhas Contas
         </h2>
@@ -48,7 +48,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
         </Link>
       </div>
 
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 max-w-full">
         {active.map((account) => {
           const logoPath = getAccountLogo(account.name)
           const FallbackIcon = fallbackIcons[account.type] || Wallet
