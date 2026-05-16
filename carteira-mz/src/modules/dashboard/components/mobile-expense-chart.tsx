@@ -1,8 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
-import { formatCurrency } from "@/lib/utils"
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 import type { CategorySpending } from "@/types"
 
 interface MobileExpenseChartProps {
@@ -12,24 +10,12 @@ interface MobileExpenseChartProps {
 const COLORS = ["#0F172A", "#10B981", "#F59E0B", "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316", "#64748B"]
 
 function formatWhole(value: number): string {
-  return new Intl.NumberFormat("pt-MZ", { style: "currency", currency: "MZN", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value)
-}
-
-function CustomTooltip({ active, payload }: any) {
-  if (active && payload && payload.length) {
-    return (
-      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm text-xs">
-        <p className="font-semibold text-slate-900">{payload[0].name}</p>
-        <p className="text-emerald-600 font-bold">{formatWhole(payload[0].value)}</p>
-      </div>
-    )
-  }
-  return null
+  return new Intl.NumberFormat("pt-MZ", { style: "currency", currency: "MZN", minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    .format(value)
+    .replace("MTn", "Mzn")
 }
 
 export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
-
   if (data.length === 0) {
     return (
       <div className="w-full rounded-2xl border border-slate-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800">
@@ -62,14 +48,11 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 innerRadius={38}
                 outerRadius={60}
                 strokeWidth={0}
-                onMouseEnter={(_, index) => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(undefined)}
               >
                 {data.map((_, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
@@ -82,12 +65,7 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
 
         <div className="flex-1 space-y-2.5 min-w-0">
           {data.slice(0, 5).map((item, index) => (
-            <div
-              key={item.category_id}
-              className="flex items-center justify-between cursor-pointer transition-opacity hover:opacity-80"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(undefined)}
-            >
+            <div key={item.category_id} className="flex items-center justify-between">
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <div
                   className="h-2.5 w-2.5 rounded-full shrink-0"
