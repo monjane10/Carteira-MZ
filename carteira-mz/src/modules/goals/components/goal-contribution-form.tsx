@@ -90,14 +90,15 @@ export function GoalContributionForm({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label htmlFor="amount">Valor</Label>
+              <Label htmlFor="amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor</Label>
               <Input
                 id="amount"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.amount || exceedsRemaining}
                 {...register("amount", { valueAsNumber: true })}
               />
@@ -111,13 +112,12 @@ export function GoalContributionForm({
             </div>
 
             <div className="space-y-2">
-              <Label>Conta</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta</Label>
               <Select
                 value={watch("account_id") ?? ""}
                 onValueChange={(value) => setValue("account_id", value || null)}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione a conta (opcional)" />
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Nenhuma</SelectItem>
@@ -131,10 +131,11 @@ export function GoalContributionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contribution_date">Data</Label>
+              <Label htmlFor="contribution_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data</Label>
               <Input
                 id="contribution_date"
                 type="date"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.contribution_date}
                 {...register("contribution_date")}
               />
@@ -149,10 +150,11 @@ export function GoalContributionForm({
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || exceedsRemaining}>
+            <Button type="submit" disabled={isSubmitting || exceedsRemaining} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : "Registar Contribuição"}
             </Button>
           </DialogFooter>

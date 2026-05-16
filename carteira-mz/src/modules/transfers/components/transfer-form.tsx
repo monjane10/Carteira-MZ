@@ -85,15 +85,15 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
           <DialogDescription>Transfira valores entre as suas contas.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label>Conta de Origem</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta de Origem</Label>
               <Select
                 value={fromAccount}
                 onValueChange={(value) => setValue("from_account_id", value)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione a conta" />
                 </SelectTrigger>
                 <SelectContent>
@@ -110,13 +110,13 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
             </div>
 
             <div className="space-y-2">
-              <Label>Conta de Destino</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta de Destino</Label>
               <Select
                 value={toAccount}
                 onValueChange={(value) => setValue("to_account_id", value)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione a conta" />
                 </SelectTrigger>
                 <SelectContent>
@@ -139,12 +139,13 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="amount">Valor</Label>
+              <Label htmlFor="amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor</Label>
               <Input
                 id="amount"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.amount}
                 {...register("amount", { valueAsNumber: true })}
               />
@@ -152,27 +153,29 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="fee">Taxa</Label>
+              <Label htmlFor="fee" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Taxa</Label>
               <Input
                 id="fee"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 {...register("fee", { valueAsNumber: true })}
               />
               {errors.fee && <p className="text-xs text-red-500">{errors.fee.message}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
-              <Input id="description" placeholder="Descrição da transferência" {...register("description")} />
+              <Label htmlFor="description" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Descrição</Label>
+              <Input id="description" placeholder="Descrição da transferência" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("description")} />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="transfer_date">Data</Label>
+              <Label htmlFor="transfer_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data</Label>
               <Input
                 id="transfer_date"
                 type="date"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.transfer_date}
                 {...register("transfer_date")}
               />
@@ -187,10 +190,11 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || loadingData || sameAccount}>
+            <Button type="submit" disabled={isSubmitting || loadingData || sameAccount} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : "Criar Transferência"}
             </Button>
           </DialogFooter>

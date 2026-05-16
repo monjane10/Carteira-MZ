@@ -33,15 +33,13 @@ export function MobileGreeting() {
 
   return (
     <div className="flex items-start justify-between">
-      <div>
-        <div className="flex items-baseline gap-1.5">
+        <div>
           <p className="text-lg font-medium text-emerald-600 dark:text-emerald-400">
-            {greeting},
+            {greeting}
           </p>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
             Lourenço
           </h1>
-        </div>
         <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500 capitalize">
           {dateStr}
         </p>

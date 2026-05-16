@@ -109,12 +109,13 @@ export function CategoryForm({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome</Label>
+              <Label htmlFor="name" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Nome</Label>
               <Input
                 id="name"
                 placeholder="Nome da categoria"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.name}
                 {...register("name")}
               />
@@ -124,14 +125,14 @@ export function CategoryForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="type">Tipo</Label>
+              <Label htmlFor="type" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</Label>
               <Select
                 value={selectedType}
                 onValueChange={(value) =>
                   setValue("type", value as TransactionType)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +149,7 @@ export function CategoryForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="color">Cor</Label>
+              <Label htmlFor="color" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</Label>
               <div className="flex items-center gap-3">
                 <Input
                   id="color"
@@ -168,10 +169,11 @@ export function CategoryForm({
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting
                 ? "Aguarde..."
                 : editingCategory

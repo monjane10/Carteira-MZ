@@ -114,9 +114,9 @@ export function TransactionForm({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label>Tipo</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</Label>
               <Select
                 value={selectedType}
                 onValueChange={(value) => {
@@ -125,7 +125,7 @@ export function TransactionForm({
                 }}
                 disabled={loadingData}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -140,13 +140,13 @@ export function TransactionForm({
             </div>
 
             <div className="space-y-2">
-              <Label>Conta</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta</Label>
               <Select
                 value={watch("account_id")}
                 onValueChange={(value) => setValue("account_id", value)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione a conta" />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,13 +161,13 @@ export function TransactionForm({
             </div>
 
             <div className="space-y-2">
-              <Label>Categoria</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Categoria</Label>
               <Select
                 value={watch("category_id") ?? ""}
                 onValueChange={(value) => setValue("category_id", value || null)}
                 disabled={loadingData || filteredCategories.length === 0}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue
                     placeholder={filteredCategories.length === 0 ? "Sem categorias" : "Seleccione categoria"}
                   />
@@ -183,12 +183,13 @@ export function TransactionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="amount">Valor</Label>
+              <Label htmlFor="amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor</Label>
               <Input
                 id="amount"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.amount}
                 {...register("amount", { valueAsNumber: true })}
               />
@@ -196,19 +197,21 @@ export function TransactionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Descrição</Label>
               <Input
                 id="description"
                 placeholder="Descrição da transacção"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 {...register("description")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="transaction_date">Data</Label>
+              <Label htmlFor="transaction_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data</Label>
               <Input
                 id="transaction_date"
                 type="date"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.transaction_date}
                 {...register("transaction_date")}
               />
@@ -223,10 +226,11 @@ export function TransactionForm({
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || loadingData}>
+            <Button type="submit" disabled={isSubmitting || loadingData} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : editingTransaction ? "Salvar" : "Criar Transacção"}
             </Button>
           </DialogFooter>

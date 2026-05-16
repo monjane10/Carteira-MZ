@@ -101,16 +101,15 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label>Categoria</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Categoria</Label>
               <Select
                 value={watch("category_id")}
                 onValueChange={(value) => setValue("category_id", value)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione a categoria" />
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (
@@ -128,12 +127,13 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="amount_limit">Limite</Label>
+              <Label htmlFor="amount_limit" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Limite</Label>
               <Input
                 id="amount_limit"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.amount_limit}
                 {...register("amount_limit", { valueAsNumber: true })}
               />
@@ -143,14 +143,14 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
             </div>
 
             <div className="space-y-2">
-              <Label>Período</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Período</Label>
               <Select
                 value={watch("period")}
                 onValueChange={(value) =>
                   setValue("period", value as "WEEKLY" | "MONTHLY" | "YEARLY")
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione o período" />
                 </SelectTrigger>
                 <SelectContent>
@@ -165,10 +165,11 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="start_date">Data de Início</Label>
+                <Label htmlFor="start_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data de Início</Label>
                 <Input
                   id="start_date"
                   type="date"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   error={!!errors.start_date}
                   {...register("start_date")}
                 />
@@ -177,10 +178,11 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="end_date">Data de Fim</Label>
+                <Label htmlFor="end_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data de Fim</Label>
                 <Input
                   id="end_date"
                   type="date"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   error={!!errors.end_date}
                   {...register("end_date")}
                 />
@@ -196,10 +198,11 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || loadingData}>
+            <Button type="submit" disabled={isSubmitting || loadingData} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : editingBudget ? "Salvar" : "Criar Orçamento"}
             </Button>
           </DialogFooter>

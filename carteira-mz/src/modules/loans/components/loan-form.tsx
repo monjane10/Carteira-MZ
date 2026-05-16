@@ -99,12 +99,13 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label htmlFor="person_name">Nome da Pessoa</Label>
+              <Label htmlFor="person_name" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Nome da Pessoa</Label>
               <Input
                 id="person_name"
                 placeholder="Nome completo"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.person_name}
                 {...register("person_name")}
               />
@@ -112,18 +113,17 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
-              <Input id="phone" placeholder="+258 84 000 0000" {...register("phone")} />
+              <Label htmlFor="phone" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Telefone</Label>
+              <Input id="phone" placeholder="+258 84 000 0000" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("phone")} />
             </div>
 
             <div className="space-y-2">
-              <Label>Tipo</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</Label>
               <Select
                 value={watch("type")}
                 onValueChange={(value) => setValue("type", value as "GIVEN" | "TAKEN")}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione o tipo" />
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="GIVEN">{LOAN_TYPE_LABELS.GIVEN}</SelectItem>
@@ -133,13 +133,13 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
             </div>
 
             <div className="space-y-2">
-              <Label>Conta Associada</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta Associada</Label>
               <Select
                 value={watch("account_id") ?? ""}
                 onValueChange={(value) => setValue("account_id", value || null)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                   <SelectValue placeholder="Seleccione a conta (opcional)" />
                 </SelectTrigger>
                 <SelectContent>
@@ -155,12 +155,13 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="total_amount">Valor Total</Label>
+                <Label htmlFor="total_amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor Total</Label>
                 <Input
                   id="total_amount"
                   type="number"
                   step="0.01"
                   placeholder="0.00"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   error={!!errors.total_amount}
                   {...register("total_amount", { valueAsNumber: true })}
                 />
@@ -170,12 +171,13 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="interest_amount">Juros</Label>
+                <Label htmlFor="interest_amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Juros</Label>
                 <Input
                   id="interest_amount"
                   type="number"
                   step="0.01"
                   placeholder="0.00"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   {...register("interest_amount", { valueAsNumber: true })}
                 />
                 {errors.interest_amount && (
@@ -185,13 +187,13 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
-              <Input id="description" placeholder="Descrição do empréstimo" {...register("description")} />
+              <Label htmlFor="description" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Descrição</Label>
+              <Input id="description" placeholder="Descrição do empréstimo" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("description")} />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="due_date">Data de Vencimento</Label>
-              <Input id="due_date" type="date" {...register("due_date")} />
+              <Label htmlFor="due_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data de Vencimento</Label>
+              <Input id="due_date" type="date" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("due_date")} />
             </div>
           </div>
           <DialogFooter className="mt-4">
@@ -200,10 +202,11 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || loadingData}>
+            <Button type="submit" disabled={isSubmitting || loadingData} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : editingLoan ? "Salvar" : "Criar Empréstimo"}
             </Button>
           </DialogFooter>

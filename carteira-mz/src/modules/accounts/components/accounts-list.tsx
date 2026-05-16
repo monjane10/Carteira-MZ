@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Plus, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LoadingState } from "@/components/shared/loading-state"
@@ -20,6 +21,7 @@ export function AccountsList({
   onAddAccount,
   onAccountClick,
 }: AccountsListProps) {
+
   if (loading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -37,7 +39,7 @@ export function AccountsList({
         title="Nenhuma conta"
         description="Adicione a sua primeira conta para começar a controlar as suas finanças."
         actionLabel="Adicionar Conta"
-        onAction={onAddAccount}
+        onAction={() => window.location.href = "/contas/nova"}
       />
     )
   }
@@ -45,10 +47,12 @@ export function AccountsList({
   return (
     <div>
       <div className="mb-4 flex justify-end">
-        <Button onClick={onAddAccount} size="sm">
-          <Plus className="mr-1.5 h-4 w-4" />
-          Nova Conta
-        </Button>
+        <Link href="/contas/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Conta
+          </Button>
+        </Link>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {accounts.map((account) => (

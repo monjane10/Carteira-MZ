@@ -117,12 +117,13 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="space-y-4 py-2">
+          <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label htmlFor="title">Título</Label>
+              <Label htmlFor="title" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Título</Label>
               <Input
                 id="title"
                 placeholder="Ex: Fundo de Emergência"
+                className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                 error={!!errors.title}
                 {...register("title")}
               />
@@ -130,18 +131,19 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
-              <Input id="description" placeholder="Descrição opcional" {...register("description")} />
+              <Label htmlFor="description" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Descrição</Label>
+              <Input id="description" placeholder="Descrição opcional" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("description")} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="target_amount">Valor Alvo</Label>
+                <Label htmlFor="target_amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor Alvo</Label>
                 <Input
                   id="target_amount"
                   type="number"
                   step="0.01"
                   placeholder="0.00"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   error={!!errors.target_amount}
                   {...register("target_amount", { valueAsNumber: true })}
                 />
@@ -150,26 +152,26 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="current_amount">Valor Actual</Label>
+                <Label htmlFor="current_amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor Actual</Label>
                 <Input
                   id="current_amount"
                   type="number"
                   step="0.01"
                   placeholder="0.00"
+                  className="h-14 rounded-xl text-[15px] border-slate-200 w-full"
                   {...register("current_amount", { valueAsNumber: true })}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Conta Associada</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta Associada</Label>
               <Select
                 value={watch("account_id") ?? ""}
                 onValueChange={(value) => setValue("account_id", value || null)}
                 disabled={loadingData}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione a conta (opcional)" />
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Nenhuma</SelectItem>
@@ -183,18 +185,17 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="target_date">Data Alvo</Label>
-              <Input id="target_date" type="date" {...register("target_date")} />
+              <Label htmlFor="target_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data Alvo</Label>
+              <Input id="target_date" type="date" className="h-14 rounded-xl text-[15px] border-slate-200 w-full" {...register("target_date")} />
             </div>
 
             <div className="space-y-2">
-              <Label>Ícone</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Ícone</Label>
               <Select
                 value={watch("icon") ?? ""}
                 onValueChange={(value) => setValue("icon", value || null)}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione um ícone" />
+                <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Nenhum</SelectItem>
@@ -208,7 +209,7 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
             </div>
 
             <div className="space-y-2">
-              <Label>Cor</Label>
+              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</Label>
               <div className="flex gap-2">
                 {COLOR_OPTIONS.map((color) => (
                   <button
@@ -233,10 +234,11 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="h-14 rounded-xl text-[15px]"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || loadingData}>
+            <Button type="submit" disabled={isSubmitting || loadingData} className="h-14 rounded-xl bg-[#0F172A] text-[15px] font-semibold">
               {isSubmitting ? "Aguarde..." : editingGoal ? "Salvar" : "Criar Meta"}
             </Button>
           </DialogFooter>
