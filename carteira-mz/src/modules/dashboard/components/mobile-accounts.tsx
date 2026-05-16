@@ -1,8 +1,9 @@
 "use client"
 
+import Link from "next/link"
 import { formatCurrency } from "@/lib/utils"
 import type { Account } from "@/types"
-import { Building2, Smartphone, Wallet, PiggyBank } from "lucide-react"
+import { Building2, Smartphone, Wallet, PiggyBank, ChevronRight } from "lucide-react"
 
 interface MobileAccountsProps {
   accounts: Account[]
@@ -33,28 +34,40 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
 
   return (
     <div>
-      <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-        Minhas Contas
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+          Minhas Contas
+        </h2>
+        <Link
+          href="/contas"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+        >
+          Ver todas
+        </Link>
+      </div>
 
-      <div className="mt-3 flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+      <div className="mt-3 flex gap-3 overflow-x-auto pb-1 scrollbar-none">
         {active.map((account) => {
           const Icon = accountIcons[account.type] || Wallet
 
           return (
-            <div
+            <Link
               key={account.id}
-              className="flex-shrink-0 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
-              style={{ width: "160px" }}
+              href="/contas"
+              className="flex-shrink-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+              style={{ width: "165px" }}
             >
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-lg"
-                style={{ backgroundColor: account.color || "#0F172A" + "15" }}
-              >
-                <Icon
-                  className="h-4 w-4"
-                  style={{ color: account.color || "#0F172A" }}
-                />
+              <div className="flex items-center justify-between">
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: (account.color || "#0F172A") + "15" }}
+                >
+                  <Icon
+                    className="h-4.5 w-4.5"
+                    style={{ color: account.color || "#0F172A" }}
+                  />
+                </div>
+                <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
               </div>
               <p className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400">
                 {account.name}
@@ -62,7 +75,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <p className="mt-0.5 text-sm font-bold text-slate-900 dark:text-white">
                 {formatCurrency(account.balance)}
               </p>
-            </div>
+            </Link>
           )
         })}
       </div>

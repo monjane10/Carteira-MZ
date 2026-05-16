@@ -68,7 +68,7 @@ export function MobileDashboard() {
   }
 
   return (
-    <div className="space-y-5 pb-24">
+    <div className="flex flex-col gap-5">
       <MobileGreeting />
 
       {summary && <MobileBalanceCard summary={summary} />}

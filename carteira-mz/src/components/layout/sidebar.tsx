@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { Logo } from "@/components/shared/logo"
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -55,15 +56,8 @@ export function Sidebar() {
         )}
         style={{ width: "280px" }}
       >
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-6 dark:border-slate-800">
-          <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-white">
-              Carteira MZ
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Gestão Financeira
-            </p>
-          </div>
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+          <Logo size="sm" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 lg:hidden dark:hover:bg-slate-800 dark:hover:text-slate-300"

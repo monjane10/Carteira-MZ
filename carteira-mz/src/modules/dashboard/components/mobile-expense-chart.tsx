@@ -8,12 +8,12 @@ interface MobileExpenseChartProps {
   data: CategorySpending[]
 }
 
-const COLORS = ["#0F172A", "#10B981", "#1E293B", "#334155", "#475569", "#64748B", "#059669", "#94A3B8"]
+const COLORS = ["#0F172A", "#10B981", "#34D399", "#475569", "#94A3B8", "#64748B", "#059669", "#CBD5E1"]
 
 export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   if (data.length === 0) {
     return (
-      <div>
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Despesas por Categoria
         </h2>
@@ -25,13 +25,13 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   const total = data.reduce((s, d) => s + d.total, 0)
 
   return (
-    <div>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <h2 className="text-base font-semibold text-slate-900 dark:text-white">
         Despesas por Categoria
       </h2>
 
-      <div className="mt-3 flex items-center gap-4">
-        <div className="flex-shrink-0" style={{ width: 140, height: 140 }}>
+      <div className="mt-4 flex items-center gap-4">
+        <div className="relative flex-shrink-0" style={{ width: 130, height: 130 }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -40,8 +40,8 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 nameKey="category_name"
                 cx="50%"
                 cy="50%"
-                innerRadius={35}
-                outerRadius={65}
+                innerRadius={38}
+                outerRadius={60}
                 strokeWidth={0}
               >
                 {data.map((_, index) => (
@@ -50,21 +50,27 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <p className="text-[10px] font-medium text-slate-400">Total</p>
+            <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+              {formatCurrency(total)}
+            </p>
+          </div>
         </div>
 
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           {data.slice(0, 5).map((item, index) => (
-            <div key={item.category_id} className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5">
+            <div key={item.category_id} className="flex items-center justify-between">
+              <div className="flex items-center gap-2 min-w-0">
                 <div
                   className="h-2.5 w-2.5 rounded-full flex-shrink-0"
                   style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 />
-                <span className="text-slate-600 dark:text-slate-400 truncate max-w-[100px]">
+                <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
                   {item.category_name}
                 </span>
               </div>
-              <span className="font-medium text-slate-900 dark:text-white">
+              <span className="text-xs font-semibold text-slate-900 dark:text-white flex-shrink-0 ml-2">
                 {formatCurrency(item.total)}
               </span>
             </div>

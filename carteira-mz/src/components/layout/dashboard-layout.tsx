@@ -20,9 +20,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (isMobile === undefined) {
     return (
-      <div className="flex h-screen flex-col bg-slate-50 dark:bg-slate-950">
+      <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
         <ScrollArea className="flex-1">
-          <main className="p-4 pb-20">{children}</main>
+          <main className="px-4 pb-24">{children}</main>
         </ScrollArea>
       </div>
     )
@@ -30,9 +30,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (isMobile) {
     return (
-      <div className="flex h-screen flex-col bg-slate-50 dark:bg-slate-950">
+      <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
         <ScrollArea className="flex-1">
-          <main className="p-4 pb-20">{children}</main>
+          <main className="px-4 pb-24">{children}</main>
         </ScrollArea>
         <MobileNav />
       </div>

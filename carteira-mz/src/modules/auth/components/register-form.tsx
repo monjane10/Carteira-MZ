@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { registerSchema, type RegisterFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
+import { Logo } from "@/components/shared/logo"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,12 +43,8 @@ export function RegisterForm() {
       >
         <Card className="border-slate-200 shadow-lg">
           <CardContent className="p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-900 text-white mb-4">
-                <span className="text-lg font-bold">C</span>
-              </div>
-              <h1 className="text-2xl font-bold text-slate-900">Criar Conta</h1>
-              <p className="text-sm text-slate-500 mt-1">Gestão Financeira</p>
+            <div className="flex justify-center mb-8">
+              <Logo />
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { format } from "date-fns"
 import { pt } from "date-fns/locale"
+import { LogOut } from "lucide-react"
 
 function getMozambiqueTime(): Date {
   const now = new Date()
@@ -29,16 +30,33 @@ export function MobileGreeting() {
   const dateStr = format(time, "EEEE, dd 'de' MMMM", { locale: pt })
 
   return (
-    <div>
-      <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-        {greeting} 👋
-      </p>
-      <h1 className="mt-1 text-xl font-bold text-slate-900 dark:text-white">
-        Lourenço
-      </h1>
-      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 capitalize">
-        {dateStr}
-      </p>
+    <div className="flex items-start justify-between">
+      <div>
+        <div className="flex items-baseline gap-1.5">
+          <p className="text-lg font-medium text-emerald-600 dark:text-emerald-400">
+            {greeting},
+          </p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            Lourenço
+          </h1>
+        </div>
+        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500 capitalize">
+          {dateStr}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-2 pt-1">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white shadow-sm dark:bg-slate-700 flex-shrink-0">
+          L
+        </div>
+        <button
+          type="button"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors hover:text-red-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:text-red-400 flex-shrink-0"
+          aria-label="Sair"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   )
 }
