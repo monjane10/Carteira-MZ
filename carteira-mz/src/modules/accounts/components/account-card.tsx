@@ -41,7 +41,10 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
         style={{ backgroundColor: accentColor }}
       />
       <div className="flex items-center gap-3 pl-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800 flex-shrink-0">
+        <div
+          className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden flex-shrink-0"
+          style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
+        >
           {logoPath ? (
             <Image
               src={logoPath}

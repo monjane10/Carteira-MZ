@@ -48,7 +48,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
         </Link>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-2" style={{ WebkitOverflowScrolling: "touch" }}>
+      <div className="overflow-x-auto overflow-y-hidden pb-2 scrollbar-none" style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" }}>
         <div className="flex gap-3" style={{ width: "max-content", minWidth: "100%" }}>
           {active.map((account) => {
             const logoPath = getAccountLogo(account.name)
@@ -58,31 +58,31 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <Link
                 key={account.id}
                 href="/contas"
-                className="w-[170px] shrink-0 rounded-xl border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                className="w-[230px] shrink-0 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-700">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
                     {logoPath ? (
                       <Image
                         src={logoPath}
                         alt={account.name}
-                        width={24}
-                        height={24}
+                        width={40}
+                        height={40}
                         className="object-contain"
                       />
                     ) : (
                       <FallbackIcon
-                        className="h-3 w-3"
+                        className="h-5 w-5"
                         style={{ color: account.color || "#0F172A" }}
                       />
                     )}
                   </div>
-                  <ChevronRight className="h-3 w-3 text-slate-300 dark:text-slate-600 shrink-0" />
+                  <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600 shrink-0" />
                 </div>
-                <p className="mt-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
                   {account.name}
                 </p>
-                <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-white truncate">
+                <p className="mt-0.5 text-sm font-bold text-slate-900 dark:text-white truncate">
                   {formatCurrency(account.balance)}
                 </p>
               </Link>

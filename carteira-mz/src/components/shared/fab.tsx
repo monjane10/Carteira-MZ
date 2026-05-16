@@ -34,7 +34,7 @@ export function Fab() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-3 lg:hidden">
+      <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-2.5 lg:hidden">
         <AnimatePresence>
           {open && actions.map((action, i) => {
             const Icon = action.icon
@@ -66,7 +66,7 @@ export function Fab() {
           type="button"
           onClick={() => setOpen(!open)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all",
+            "flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-all",
             open
               ? "bg-slate-900 text-white rotate-45"
               : "bg-emerald-500 text-white hover:bg-emerald-600"
