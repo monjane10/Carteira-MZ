@@ -49,9 +49,12 @@ export async function createAccount(data: {
 }): Promise<Account> {
   try {
     logger.info("Creating account", { name: data.name, type: data.type })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("accounts")
       .insert({
+        user_id: user.id,
         name: data.name,
         type: data.type,
         balance: data.balance,
@@ -65,6 +68,18 @@ export async function createAccount(data: {
       .select("*, institution:financial_institutions(*)")
       .single()
     if (error) throw error
+
+    if (data.initial_balance > 0) {
+      await supabase.from("transactions").insert({
+        user_id: user.id,
+        account_id: result.id,
+        type: "INCOME",
+        amount: data.initial_balance,
+        description: "Saldo inicial",
+        transaction_date: new Date().toISOString(),
+      })
+    }
+
     return result as unknown as Account
   } catch (e) {
     return handleError(ENTITY, "criar", e)
