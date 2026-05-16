@@ -110,13 +110,13 @@ export function AccountCreateScreen() {
   }
 
   return (
-    <div className="min-h-dvh bg-white flex flex-col">
+    <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
       <div className="px-4 pt-5 pb-3">
         <h1 className="text-xl font-bold text-[#0F172A]">Nova Conta</h1>
         <p className="text-sm text-slate-500 mt-1">Adicione uma conta bancária ou carteira móvel</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-28">
+      <div className="flex-1 w-full max-w-full overflow-y-auto px-4 pb-28">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

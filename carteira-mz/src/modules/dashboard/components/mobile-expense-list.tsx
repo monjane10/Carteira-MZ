@@ -25,7 +25,7 @@ export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseLi
   }
 
   return (
-    <div>
+    <div className="w-full max-w-full">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Despesas Recentes

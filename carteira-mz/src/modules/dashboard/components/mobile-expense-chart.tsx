@@ -13,7 +13,7 @@ const COLORS = ["#0F172A", "#10B981", "#059669", "#0D9488", "#1E293B", "#334155"
 export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <div className="w-full max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Despesas por Categoria
         </h2>
@@ -25,13 +25,13 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   const total = data.reduce((s, d) => s + d.total, 0)
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+    <div className="w-full max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <h2 className="text-base font-semibold text-slate-900 dark:text-white">
         Despesas por Categoria
       </h2>
 
       <div className="mt-4 flex items-center gap-4">
-        <div className="relative flex-shrink-0" style={{ width: 160, height: 160 }}>
+        <div className="relative shrink-0 max-w-[45vw]" style={{ width: 160, height: 160 }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie

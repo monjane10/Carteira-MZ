@@ -15,7 +15,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
   const hidden = "••••••"
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5 text-white shadow-lg shadow-slate-900/10">
+    <div className="relative w-full max-w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5 text-white shadow-lg shadow-slate-900/10">
       <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-emerald-500/10 blur-xl" />
       <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-emerald-500/5 blur-lg" />
 

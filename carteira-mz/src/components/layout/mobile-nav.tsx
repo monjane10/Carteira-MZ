@@ -101,7 +101,7 @@ export function MobileNav() {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 rounded-t-2xl border-t border-slate-200 bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 w-full max-w-full rounded-t-2xl border-t border-slate-200 bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950 lg:hidden">
         <div className="flex items-center justify-around px-2 py-1.5">
           {mainItems.map((item) => {
             const Icon = item.icon

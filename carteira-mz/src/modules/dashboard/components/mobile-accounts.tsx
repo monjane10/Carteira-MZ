@@ -25,7 +25,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
 
   if (active.length === 0) {
     return (
-    <div className="max-w-full">
+      <div className="w-full">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Minhas Contas
         </h2>
@@ -35,60 +35,61 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
+    <section className="w-full">
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Minhas Contas
         </h2>
         <Link
           href="/contas"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 shrink-0"
         >
           Ver todas
         </Link>
       </div>
 
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 max-w-full">
-        {active.map((account) => {
-          const logoPath = getAccountLogo(account.name)
-          const FallbackIcon = fallbackIcons[account.type] || Wallet
+      <div className="overflow-x-auto overflow-y-hidden pb-2" style={{ WebkitOverflowScrolling: "touch" }}>
+        <div className="flex gap-3" style={{ width: "max-content", minWidth: "100%" }}>
+          {active.map((account) => {
+            const logoPath = getAccountLogo(account.name)
+            const FallbackIcon = fallbackIcons[account.type] || Wallet
 
-          return (
-            <Link
-              key={account.id}
-              href="/contas"
-              className="flex-shrink-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
-              style={{ width: "165px" }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
-                  {logoPath ? (
-                    <Image
-                      src={logoPath}
-                      alt={account.name}
-                      width={36}
-                      height={36}
-                      className="object-contain"
-                    />
-                  ) : (
-                    <FallbackIcon
-                      className="h-4.5 w-4.5"
-                      style={{ color: account.color || "#0F172A" }}
-                    />
-                  )}
+            return (
+              <Link
+                key={account.id}
+                href="/contas"
+                className="w-[260px] shrink-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
+                    {logoPath ? (
+                      <Image
+                        src={logoPath}
+                        alt={account.name}
+                        width={36}
+                        height={36}
+                        className="object-contain"
+                      />
+                    ) : (
+                      <FallbackIcon
+                        className="h-4.5 w-4.5"
+                        style={{ color: account.color || "#0F172A" }}
+                      />
+                    )}
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600 shrink-0" />
                 </div>
-                <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
-              </div>
-              <p className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400">
-                {account.name}
-              </p>
-              <p className="mt-0.5 text-sm font-bold text-slate-900 dark:text-white">
-                {formatCurrency(account.balance)}
-              </p>
-            </Link>
-          )
-        })}
+                <p className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                  {account.name}
+                </p>
+                <p className="mt-0.5 text-sm font-bold text-slate-900 dark:text-white truncate">
+                  {formatCurrency(account.balance)}
+                </p>
+              </Link>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

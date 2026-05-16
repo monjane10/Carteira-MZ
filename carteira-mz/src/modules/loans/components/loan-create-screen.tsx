@@ -76,13 +76,13 @@ export function LoanCreateScreen() {
   const selectClass = "w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] appearance-none cursor-pointer focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
 
   return (
-    <div className="min-h-dvh bg-white flex flex-col">
+    <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
       <div className="px-4 pt-5 pb-3">
         <h1 className="text-xl font-bold text-[#0F172A]">Novo Empréstimo</h1>
         <p className="text-sm text-slate-500 mt-1">Registe um empréstimo concedido ou obtido</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-28">
+      <div className="flex-1 w-full max-w-full overflow-y-auto px-4 pb-28">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

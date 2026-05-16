@@ -42,22 +42,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (isMobile === undefined) {
     return (
-      <div className="flex h-screen flex-col bg-white dark:bg-slate-950 overflow-x-hidden">
-        <ScrollArea className="flex-1">
+      <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
+        <div className="flex-1 overflow-y-auto">
           <main className="px-4 pt-5 pb-24">{children}</main>
-        </ScrollArea>
+        </div>
       </div>
     )
   }
 
   if (isMobile) {
     return (
-      <div className="flex h-screen flex-col bg-white dark:bg-slate-950 overflow-x-hidden">
-        <ScrollArea className="flex-1">
+      <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
+        <div className="flex-1 overflow-y-auto">
           <main className="px-4 pt-5 pb-24">
             <Back>{children}</Back>
           </main>
-        </ScrollArea>
+        </div>
         <MobileNav />
         <Fab />
       </div>
