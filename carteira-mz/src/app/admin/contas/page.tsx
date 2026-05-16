@@ -1,16 +1,28 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
+import { Search, Plus, Eye } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
 import { getAccounts } from "@/services/mock/accounts"
-import { type Account } from "@/types"
+import { type Account, type AccountType } from "@/types"
 import { ACCOUNT_TYPE_LABELS } from "@/constants"
 import { formatCurrency } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
 
+const ACCOUNT_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: "all", label: "Todos" },
+  ...(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(([value, label]) => ({
+    value,
+    label,
+  })),
+]
+
 export default function AdminContasPage() {
   const [accounts, setAccounts] = useState<Account[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [typeFilter, setTypeFilter] = useState<string>("all")
 
   useEffect(() => {
     async function load() {
@@ -20,6 +32,17 @@ export default function AdminContasPage() {
     }
     load()
   }, [])
+
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((account) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        account.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType =
+        typeFilter === "all" || account.type === typeFilter
+      return matchesSearch && matchesType
+    })
+  }, [accounts, searchQuery, typeFilter])
 
   if (loading) {
     return (
@@ -31,23 +54,56 @@ export default function AdminContasPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-slate-900">Contas</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-slate-900">Contas</h1>
+        <button
+          onClick={() => toast({ title: "Nova Conta", description: "Funcionalidade em desenvolvimento" })}
+          className="inline-flex items-center gap-2 h-10 rounded-xl bg-blue-600 text-white px-4 text-sm font-medium hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+          Nova Conta
+        </button>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input
+            placeholder="Pesquisar por nome da conta..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-10 rounded-xl border border-slate-200 pl-9 pr-4 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+          />
+        </div>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="h-10 rounded-xl border border-slate-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+        >
+          {ACCOUNT_TYPE_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
+              <tr className="border-b border-slate-100 bg-white">
                 <th className="text-left px-5 py-3 font-medium text-slate-500">Nome</th>
                 <th className="text-left px-5 py-3 font-medium text-slate-500">Tipo</th>
                 <th className="text-right px-5 py-3 font-medium text-slate-500">Saldo</th>
                 <th className="text-left px-5 py-3 font-medium text-slate-500">Moeda</th>
                 <th className="text-center px-5 py-3 font-medium text-slate-500">Estado</th>
+                <th className="text-center px-5 py-3 font-medium text-slate-500">Acções</th>
               </tr>
             </thead>
             <tbody>
-              {accounts.map((account) => (
-                <tr key={account.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+              {filteredAccounts.map((account) => (
+                <tr key={account.id} className="border-b border-slate-100 hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg flex items-center justify-center overflow-hidden bg-slate-50">
@@ -80,6 +136,15 @@ export default function AdminContasPage() {
                     }`}>
                       {account.is_active ? "Activa" : "Inactiva"}
                     </span>
+                  </td>
+                  <td className="px-5 py-3.5 text-center">
+                    <button
+                      onClick={() => toast({ title: "Ver Conta", description: `Detalhes de ${account.name}` })}
+                      className="inline-flex items-center gap-1.5 h-8 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      Ver
+                    </button>
                   </td>
                 </tr>
               ))}

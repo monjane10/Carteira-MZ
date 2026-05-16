@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutDashboard, Users, Building2, LogOut, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Logo } from "@/components/shared/logo"
+import Image from "next/image"
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
@@ -35,7 +35,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         sidebarOpen ? "w-64" : "w-0 overflow-hidden"
       )}>
         <div className="h-16 px-5 flex items-center justify-between border-b border-white/15">
-          <Logo size="sm" />
+          <div className="flex items-center gap-2.5">
+            <div className="relative w-8 h-8 shrink-0">
+              <Image src="/logo.png" alt="Carteira MZ" fill className="object-contain" />
+            </div>
+            <div>
+              <p className="text-sm font-bold leading-tight">Carteira MZ</p>
+              <p className="text-[10px] text-white/60 leading-tight">Admin</p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
