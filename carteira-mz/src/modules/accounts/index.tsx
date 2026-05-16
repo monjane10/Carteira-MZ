@@ -1,34 +1,22 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
+import { LoadingState } from "@/components/shared/loading-state"
 import { toast } from "@/hooks/use-toast"
 import { AccountsList } from "./components/accounts-list"
 import { AccountForm } from "./components/account-form"
-import * as accountService from "@/services/mock/accounts"
+import { useAccountStore } from "@/store"
 import type { Account } from "@/types"
 
 function AccountsPage() {
-  const [accounts, setAccounts] = useState<Account[]>([])
-  const [loading, setLoading] = useState(true)
+  const { accounts, isLoading, error, fetchAccounts, addAccount, updateAccount, removeAccount } = useAccountStore()
   const [formOpen, setFormOpen] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Account | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const fetchAccounts = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await accountService.getAccounts()
-      setAccounts(data)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível carregar as contas.", variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
 
   useEffect(() => {
     fetchAccounts()
@@ -40,7 +28,7 @@ function AccountsPage() {
     initial_balance: number
   }) => {
     try {
-      const newAccount = await accountService.createAccount({
+      await addAccount({
         name: data.name,
         type: data.type,
         currency: "MZN",
@@ -51,7 +39,6 @@ function AccountsPage() {
         institution_id: null,
         is_active: true,
       })
-      setAccounts((prev) => [newAccount, ...prev])
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível criar a conta.", variant: "error" })
@@ -65,18 +52,13 @@ function AccountsPage() {
   }) => {
     if (!editingAccount) return
     try {
-      const updated = await accountService.updateAccount(editingAccount.id, {
+      await updateAccount(editingAccount.id, {
         name: data.name,
         type: data.type,
         initial_balance: data.initial_balance,
         color: editingAccount.color ?? null,
       })
-      if (updated) {
-        setAccounts((prev) =>
-          prev.map((a) => (a.id === updated.id ? updated : a))
-        )
-        toast({ title: "Sucesso", description: "Conta actualizada com sucesso.", variant: "success" })
-      }
+      toast({ title: "Sucesso", description: "Conta actualizada com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível actualizar a conta.", variant: "error" })
     }
@@ -86,8 +68,7 @@ function AccountsPage() {
     if (!deleteConfirm) return
     setDeleting(true)
     try {
-      await accountService.deleteAccount(deleteConfirm.id)
-      setAccounts((prev) => prev.filter((a) => a.id !== deleteConfirm.id))
+      await removeAccount(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Conta removida com sucesso.", variant: "success" })
       setDeleteConfirm(null)
     } catch {
@@ -124,12 +105,23 @@ function AccountsPage() {
       <PageHeader title="Contas" description="Gerencie as suas contas bancárias e carteiras">
       </PageHeader>
 
-      <AccountsList
-        accounts={accounts}
-        loading={loading}
-        onAddAccount={handleOpenCreate}
-        onAccountClick={handleOpenEdit}
-      />
+      {error ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm text-red-500 mb-3">{error}</p>
+          <button onClick={fetchAccounts} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+            Tentar novamente
+          </button>
+        </div>
+      ) : isLoading ? (
+        <LoadingState type="card" />
+      ) : (
+        <AccountsList
+          accounts={accounts}
+          loading={false}
+          onAddAccount={handleOpenCreate}
+          onAccountClick={handleOpenEdit}
+        />
+      )}
 
       <AccountForm
         open={formOpen}

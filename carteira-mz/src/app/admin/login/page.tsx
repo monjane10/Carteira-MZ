@@ -20,6 +20,7 @@ export default function AdminLoginPage() {
     setLoading(true)
     await new Promise((r) => setTimeout(r, 400))
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+      document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
       router.push("/admin/dashboard")
     } else {
       setError("Credenciais inválidas. Tente novamente.")

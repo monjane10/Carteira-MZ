@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
+import { LoadingState } from "@/components/shared/loading-state"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { TransferList } from "./components/transfer-list"
@@ -18,14 +19,17 @@ type TransferFormValues = z.infer<typeof transferSchema>
 function TransfersPage() {
   const [transfers, setTransfers] = useState<Transfer[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
 
   const fetchTransfers = useCallback(async () => {
     setLoading(true)
+    setError(null)
     try {
       const data = await transferService.getTransfers()
       setTransfers(data)
     } catch {
+      setError("Não foi possível carregar as transferências.")
       toast({ title: "Erro", description: "Não foi possível carregar as transferências.", variant: "error" })
     } finally {
       setLoading(false)
@@ -64,7 +68,18 @@ function TransfersPage() {
         </Link>
       </PageHeader>
 
-      <TransferList transfers={transfers} loading={loading} />
+      {error ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm text-red-500 mb-3">{error}</p>
+          <button onClick={fetchTransfers} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+            Tentar novamente
+          </button>
+        </div>
+      ) : loading ? (
+        <LoadingState type="card" />
+      ) : (
+        <TransferList transfers={transfers} loading={false} />
+      )}
 
       <TransferForm open={formOpen} onOpenChange={setFormOpen} onSubmit={handleCreate} />
     </div>

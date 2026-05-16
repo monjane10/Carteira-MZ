@@ -20,9 +20,11 @@ function ReportsPage() {
   const [evolution, setEvolution] = useState<MonthlyEvolution[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
+    setError(null)
     try {
       const months = parseInt(dateRange)
       const now = new Date()
@@ -41,6 +43,7 @@ function ReportsPage() {
       setEvolution(evolutionData)
       setCategorySpending(spendingData)
     } catch {
+      setError("Não foi possível carregar os relatórios.")
       toast({ title: "Erro", description: "Não foi possível carregar os relatórios.", variant: "error" })
     } finally {
       setLoading(false)
@@ -53,6 +56,17 @@ function ReportsPage() {
 
   const handleExport = () => {
     toast({ title: "Exportar", description: "Funcionalidade de exportação em desenvolvimento.", variant: "info" })
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <p className="text-sm text-red-500 mb-3">{error}</p>
+        <button onClick={fetchData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+          Tentar novamente
+        </button>
+      </div>
+    )
   }
 
   return (

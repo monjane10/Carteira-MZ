@@ -23,12 +23,13 @@ export function LoginForm() {
   })
 
   function onSubmit(data: LoginFormData) {
+    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
     toast({
       title: "Autenticação",
       description: "Login simulado com sucesso",
       variant: "success",
     })
-    setTimeout(() => router.push("/dashboard"), 800)
+    setTimeout(() => router.push("/dashboard"), 500)
   }
 
   return (

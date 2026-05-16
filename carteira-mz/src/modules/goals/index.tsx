@@ -1,18 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { LoadingState } from "@/components/shared/loading-state"
-import { EmptyState } from "@/components/shared/empty-state"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { GoalCard } from "./components/goal-card"
 import { GoalForm } from "./components/goal-form"
 import { GoalDetail } from "./components/goal-detail"
-import * as goalService from "@/services/mock/goals"
+import { useGoalStore } from "@/store"
 import type { Goal } from "@/types"
 import type { z } from "zod"
 import type { goalSchema } from "@/validators"
@@ -21,25 +20,12 @@ import { Target } from "lucide-react"
 type GoalFormValues = z.infer<typeof goalSchema>
 
 function GoalsPage() {
-  const [goals, setGoals] = useState<Goal[]>([])
-  const [loading, setLoading] = useState(true)
+  const { goals, isLoading, error, fetchGoals, addGoal, updateGoal, removeGoal } = useGoalStore()
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Goal | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const fetchGoals = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await goalService.getGoals()
-      setGoals(data)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível carregar as metas.", variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
 
   useEffect(() => {
     fetchGoals()
@@ -47,7 +33,7 @@ function GoalsPage() {
 
   const handleCreate = async (data: GoalFormValues) => {
     try {
-      const newGoal = await goalService.createGoal({
+      await addGoal({
         account_id: data.account_id ?? null,
         title: data.title,
         description: data.description ?? null,
@@ -58,7 +44,6 @@ function GoalsPage() {
         icon: data.icon ?? null,
         status: "ACTIVE",
       })
-      setGoals((prev) => [newGoal, ...prev])
       toast({ title: "Sucesso", description: "Meta criada com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível criar a meta.", variant: "error" })
@@ -68,7 +53,7 @@ function GoalsPage() {
   const handleUpdate = async (data: GoalFormValues) => {
     if (!editingGoal) return
     try {
-      const updated = await goalService.updateGoal(editingGoal.id, {
+      await updateGoal(editingGoal.id, {
         account_id: data.account_id ?? null,
         title: data.title,
         description: data.description ?? null,
@@ -78,10 +63,7 @@ function GoalsPage() {
         color: data.color ?? null,
         icon: data.icon ?? null,
       })
-      if (updated) {
-        setGoals((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
-        toast({ title: "Sucesso", description: "Meta actualizada com sucesso.", variant: "success" })
-      }
+      toast({ title: "Sucesso", description: "Meta actualizada com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível actualizar a meta.", variant: "error" })
     }
@@ -91,8 +73,7 @@ function GoalsPage() {
     if (!deleteConfirm) return
     setDeleting(true)
     try {
-      await goalService.deleteGoal(deleteConfirm.id)
-      setGoals((prev) => prev.filter((g) => g.id !== deleteConfirm.id))
+      await removeGoal(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Meta removida com sucesso.", variant: "success" })
       setDeleteConfirm(null)
       if (selectedGoalId === deleteConfirm.id) setSelectedGoalId(null)
@@ -144,7 +125,14 @@ function GoalsPage() {
         </Link>
       </PageHeader>
 
-      {loading ? (
+      {error ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm text-red-500 mb-3">{error}</p>
+          <button onClick={fetchGoals} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+            Tentar novamente
+          </button>
+        </div>
+      ) : isLoading ? (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {Array.from({ length: 6 }).map((_, i) => (
             <LoadingState key={i} type="card" />

@@ -1,17 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
+import { LoadingState } from "@/components/shared/loading-state"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "@/hooks/use-toast"
 import { LoanCard } from "./components/loan-card"
 import { LoanForm } from "./components/loan-form"
 import { LoanDetail } from "./components/loan-detail"
-import * as loanService from "@/services/mock/loans"
+import { useLoanStore } from "@/store"
 import type { Loan } from "@/types"
 import type { z } from "zod"
 import type { loanSchema } from "@/validators"
@@ -19,25 +19,12 @@ import type { loanSchema } from "@/validators"
 type LoanFormValues = z.infer<typeof loanSchema>
 
 function LoansPage() {
-  const [loans, setLoans] = useState<Loan[]>([])
-  const [loading, setLoading] = useState(true)
+  const { loans, isLoading, error, fetchLoans, addLoan, updateLoan, removeLoan } = useLoanStore()
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingLoan, setEditingLoan] = useState<Loan | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Loan | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const fetchLoans = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await loanService.getLoans()
-      setLoans(data)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível carregar os empréstimos.", variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
 
   useEffect(() => {
     fetchLoans()
@@ -45,7 +32,7 @@ function LoansPage() {
 
   const handleCreate = async (data: LoanFormValues) => {
     try {
-      const newLoan = await loanService.createLoan({
+      await addLoan({
         account_id: data.account_id ?? null,
         person_name: data.person_name,
         phone: data.phone ?? null,
@@ -58,7 +45,6 @@ function LoansPage() {
         due_date: data.due_date ?? null,
         status: "PENDING",
       })
-      setLoans((prev) => [newLoan, ...prev])
       toast({ title: "Sucesso", description: "Empréstimo criado com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível criar o empréstimo.", variant: "error" })
@@ -68,7 +54,7 @@ function LoansPage() {
   const handleUpdate = async (data: LoanFormValues) => {
     if (!editingLoan) return
     try {
-      const updated = await loanService.updateLoan(editingLoan.id, {
+      await updateLoan(editingLoan.id, {
         account_id: data.account_id ?? null,
         person_name: data.person_name,
         phone: data.phone ?? null,
@@ -78,10 +64,7 @@ function LoansPage() {
         description: data.description ?? null,
         due_date: data.due_date ?? null,
       })
-      if (updated) {
-        setLoans((prev) => prev.map((l) => (l.id === updated.id ? updated : l)))
-        toast({ title: "Sucesso", description: "Empréstimo actualizado com sucesso.", variant: "success" })
-      }
+      toast({ title: "Sucesso", description: "Empréstimo actualizado com sucesso.", variant: "success" })
     } catch {
       toast({ title: "Erro", description: "Não foi possível actualizar o empréstimo.", variant: "error" })
     }
@@ -91,8 +74,7 @@ function LoansPage() {
     if (!deleteConfirm) return
     setDeleting(true)
     try {
-      await loanService.deleteLoan(deleteConfirm.id)
-      setLoans((prev) => prev.filter((l) => l.id !== deleteConfirm.id))
+      await removeLoan(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Empréstimo removido com sucesso.", variant: "success" })
       setDeleteConfirm(null)
       if (selectedLoanId === deleteConfirm.id) setSelectedLoanId(null)
@@ -143,10 +125,17 @@ function LoansPage() {
         </Link>
       </PageHeader>
 
-      {loading ? (
+      {error ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm text-red-500 mb-3">{error}</p>
+          <button onClick={fetchLoans} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+            Tentar novamente
+          </button>
+        </div>
+      ) : isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-48 rounded-xl" />
+            <LoadingState key={i} type="card" />
           ))}
         </div>
       ) : loans.length === 0 ? (

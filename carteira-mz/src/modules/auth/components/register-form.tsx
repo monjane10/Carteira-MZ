@@ -29,7 +29,8 @@ export function RegisterForm() {
       description: "Registo simulado com sucesso",
       variant: "success",
     })
-    setTimeout(() => router.push("/dashboard"), 800)
+    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
+    setTimeout(() => router.push("/dashboard"), 500)
   }
 
   return (
