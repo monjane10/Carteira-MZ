@@ -34,7 +34,7 @@ export function Fab() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2 lg:hidden">
+      <div className="fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2">
         <AnimatePresence>
           {open && actions.map((action, i) => {
             const Icon = action.icon

@@ -47,7 +47,7 @@ export function MobileNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
             onClick={() => setShowMore(false)}
           />
         )}
@@ -60,7 +60,7 @@ export function MobileNav() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 left-4 right-4 z-50 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900 lg:hidden"
+            className="fixed bottom-20 left-4 right-4 z-50 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -99,7 +99,7 @@ export function MobileNav() {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 w-full max-w-full rounded-t-2xl border-t border-slate-200 bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 w-full max-w-full rounded-t-2xl border-t border-slate-200 bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
         <div className="flex items-center justify-around px-2 py-1.5">
           {mainItems.map((item) => {
             const Icon = item.icon
