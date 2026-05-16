@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { categorySchema } from "@/validators"
 import { toast } from "@/hooks/use-toast"
-import * as categoryService from "@/services/mock/categories"
+import { categories as categoryService } from "@/services"
 import type { CategoryFormData } from "@/validators"
 
 const CATEGORY_TYPES = [
@@ -43,7 +43,6 @@ export function CategoryCreateScreen() {
         type: data.type,
         color: data.color ?? null,
         icon: data.icon ?? null,
-        is_default: false,
       })
       toast({ title: "Sucesso", description: "Categoria criada com sucesso.", variant: "success" })
       router.push("/categorias")

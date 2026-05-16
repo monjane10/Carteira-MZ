@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { format } from "date-fns"
 import { pt } from "date-fns/locale"
 import { LogOut } from "lucide-react"
+import { supabase } from "@/services"
 
 function getMozambiqueTime(): Date {
   const now = new Date()
@@ -22,6 +23,7 @@ function getGreeting(hour: number): string {
 export function MobileGreeting() {
   const router = useRouter()
   const [time, setTime] = useState(getMozambiqueTime())
+  const [userName, setUserName] = useState("")
   const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
@@ -29,8 +31,17 @@ export function MobileGreeting() {
     return () => clearInterval(timer)
   }, [])
 
-  const handleLogout = () => {
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const name = data.user?.user_metadata?.full_name as string | undefined
+      if (name) setUserName(name)
+    })
+  }, [])
+
+  const handleLogout = async () => {
     setShowConfirm(false)
+    await supabase.auth.signOut()
+    document.cookie = "carteira_session=; path=/; max-age=0"
     router.push("/login")
   }
 
@@ -46,7 +57,7 @@ export function MobileGreeting() {
             {greeting}
           </p>
           <h1 className="text-xl font-bold text-[#0F172A] dark:text-white">
-            Lourenço
+            {userName || "Utilizador"}
           </h1>
           <p className="mt-0.5 text-xs text-slate-400 capitalize">
             {dateStr}

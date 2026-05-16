@@ -9,7 +9,7 @@ import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
 import { IncomeVsExpenseChart } from "./components/income-vs-expense-chart"
 import { CategoryReport } from "./components/category-report"
-import * as dashboardService from "@/services/mock/dashboard"
+import { dashboard as dashboardService } from "@/services"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending } from "@/types"
 
 type DateRange = "3" | "6" | "12"

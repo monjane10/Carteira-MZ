@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Mail, Lock, ArrowRight } from "lucide-react"
-import { ADMIN_CREDENTIALS } from "@/services/mock/admin"
+import { supabase } from "@/services"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -18,13 +18,33 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 400))
-    if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-      document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
-      router.push("/admin/dashboard")
-    } else {
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (authError || !data.user) {
       setError("Credenciais inválidas. Tente novamente.")
+      setLoading(false)
+      return
     }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single()
+
+    if (profile?.role !== "admin") {
+      await supabase.auth.signOut()
+      setError("Acesso negado. Apenas administradores podem aceder.")
+      setLoading(false)
+      return
+    }
+
+    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
+    router.push("/admin/dashboard")
     setLoading(false)
   }
 

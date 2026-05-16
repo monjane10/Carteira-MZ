@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
 import { Search, Plus, Eye } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { getAccounts } from "@/services/mock/accounts"
+import { accounts as accountService } from "@/services"
 import { type Account, type AccountType } from "@/types"
 import { ACCOUNT_TYPE_LABELS } from "@/constants"
 import { formatCurrency } from "@/lib/utils"
@@ -26,7 +26,7 @@ export default function AdminContasPage() {
 
   useEffect(() => {
     async function load() {
-      const data = await getAccounts()
+      const data = await accountService.getAccounts()
       setAccounts(data)
       setLoading(false)
     }

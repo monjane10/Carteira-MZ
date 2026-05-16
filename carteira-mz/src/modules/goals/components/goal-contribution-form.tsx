@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { goalContributionSchema } from "@/validators"
-import * as accountService from "@/services/mock/accounts"
+import { accounts as accountService } from "@/services"
 import { formatCurrency } from "@/lib/utils"
 import type { Account } from "@/types"
 import type { z } from "zod"

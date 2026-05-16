@@ -7,9 +7,7 @@ import { MobileBalanceCard } from "./components/mobile-balance-card"
 import { MobileAccounts } from "./components/mobile-accounts"
 import { MobileExpenseChart } from "./components/mobile-expense-chart"
 import { MobileExpenseList } from "./components/mobile-expense-list"
-import * as dashboardService from "@/services/mock/dashboard"
-import * as accountService from "@/services/mock/accounts"
-import * as categoryService from "@/services/mock/categories"
+import { dashboard as dashboardService, accounts as accountService, categories as categoryService } from "@/services"
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
 
 export function MobileDashboard() {

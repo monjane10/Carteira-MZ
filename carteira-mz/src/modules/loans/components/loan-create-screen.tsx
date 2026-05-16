@@ -10,8 +10,7 @@ import { cn } from "@/lib/utils"
 import { LOAN_TYPE_LABELS } from "@/constants"
 import { loanSchema } from "@/validators"
 import { toast } from "@/hooks/use-toast"
-import * as accountService from "@/services/mock/accounts"
-import * as loanService from "@/services/mock/loans"
+import { accounts as accountService, loans as loanService } from "@/services"
 import type { Account } from "@/types"
 import type { z } from "zod"
 
@@ -57,12 +56,9 @@ export function LoanCreateScreen() {
         phone: data.phone ?? null,
         type: data.type,
         total_amount: data.total_amount,
-        paid_amount: 0,
-        remaining_amount: data.total_amount,
         interest_amount: data.interest_amount,
         description: data.description ?? null,
         due_date: data.due_date ?? null,
-        status: "PENDING",
       })
       toast({ title: "Sucesso", description: "Empréstimo criado com sucesso.", variant: "success" })
       router.push("/emprestimos")

@@ -8,9 +8,7 @@ import { MonthlyChart } from "./components/monthly-chart"
 import { CategoryPieChart } from "./components/category-pie-chart"
 import { RecentTransactions } from "./components/recent-transactions"
 import { GoalsOverview } from "./components/goals-overview"
-import * as dashboardService from "@/services/mock/dashboard"
-import * as categoryService from "@/services/mock/categories"
-import * as goalService from "@/services/mock/goals"
+import { dashboard as dashboardService, categories as categoryService, goals as goalService } from "@/services"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
 
 function DashboardPage() {

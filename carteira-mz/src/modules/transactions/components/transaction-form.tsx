@@ -23,8 +23,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { TRANSACTION_TYPE_LABELS } from "@/constants"
 import { transactionSchema } from "@/validators"
-import * as accountService from "@/services/mock/accounts"
-import * as categoryService from "@/services/mock/categories"
+import { accounts as accountService, categories as categoryService } from "@/services"
 import type { Account, Category, Transaction, TransactionType } from "@/types"
 import type { z } from "zod"
 

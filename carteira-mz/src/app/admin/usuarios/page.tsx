@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { Search, Plus, Eye } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { getAdminUsers, type AdminUser } from "@/services/mock/admin"
+import { admin, type AdminUser } from "@/services"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
 export default function AdminUsuariosPage() {
@@ -14,7 +14,7 @@ export default function AdminUsuariosPage() {
 
   useEffect(() => {
     async function load() {
-      const data = await getAdminUsers()
+      const data = await admin.getAdminUsers()
       setUsers(data)
       setLoading(false)
     }

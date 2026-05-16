@@ -5,7 +5,7 @@
 Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4.
 
 - **Path alias** `@/*` → `./src/*`
-- **State**: Zustand stores in `src/store/slices/`. Stores call mock services directly (see Data Layer).
+- **State**: Zustand stores in `src/store/slices/`. Stores import services from `@/services`.
 - **UI**: Radix UI primitives, Lucide icons, Recharts, Framer Motion. `cn()` utility (`clsx` + `tailwind-merge`) for class merging.
 - **Forms**: `react-hook-form` + `zod` + `@hookform/resolvers`.
 - **Layout**: Route groups `(auth)` (login/register) and `(dashboard)` (main app with sidebar). Each page in `src/app/` delegates to a module in `src/modules/`.
@@ -22,15 +22,13 @@ No test framework, no typecheck script.
 
 ## Data Layer
 
-- Two implementations: **mock** (`src/services/mock/`) and **Supabase** (`src/services/supabase/`).
-- Controlled by `NEXT_PUBLIC_USE_SUPABASE=false` in `.env` (committed, currently false).
-- **All stores currently import from `@/services/mock/...`**. To switch, update store imports to `@/services/supabase/`.
-- **Supabase services** (`src/services/supabase/`) are fully implemented with:
-  - Business logic (balance updates on transactions, status transitions on loans/goals)
-  - Error handling via custom `ServiceError` / `NotFoundError` / `handleError()`
-  - Structured logging via `logger` (levels INFO/WARN/ERROR/DEBUG)
-  - One file per entity (accounts, categories, transactions, transfers, loans, goals, budgets, notifications, dashboard, admin, auth)
-- Mock services use in-memory arrays with simulated async delay.
+- **Apenas Supabase** — `src/services/supabase/` is the single data source.
+- All services exported via namespace from `src/services/index.ts`:
+  `accounts`, `categories`, `transactions`, `transfers`, `loans`, `goals`, `budgets`, `notifications`, `dashboard`, `admin`, `supabase`
+- Business logic (balance updates on transactions, status transitions on loans/goals)
+- Error handling via custom `ServiceError` / `NotFoundError` / `handleError()`
+- Structured logging via `logger` (levels INFO/WARN/ERROR/DEBUG)
+- Auth via `supabase.auth` (signInWithPassword, signUp, signOut)
 
 ## Mobile Responsiveness
 
@@ -46,6 +44,7 @@ Portuguese (Mozambique) — `pt-MZ`, currency MZN. Labels in Portuguese (e.g. `A
 
 - Cookie-based session guard: `carteira_session` = `"authenticated"`.
 - The file `src/proxy.ts` defines auth middleware logic and a `config.matcher` but is **not wired up** (no `middleware.ts` exists). If you add middleware, copy the matcher routes and cookie check from `proxy.ts`.
+- Auth is handled by Supabase Auth (`supabase.auth.signInWithPassword`, `supabase.auth.signUp`).
 
 ## Supabase Schema
 
@@ -63,8 +62,8 @@ src/
     layout/       # dashboard-layout, sidebar, header, mobile-nav
   store/slices/   # Zustand stores (one per entity)
   services/
-    mock/         # Current data source
-    supabase/     # Supabase implementation (not yet connected)
+    supabase/     # Single data source — Supabase
+    mock/         # (deprecated, kept for reference)
   types/          # All TypeScript interfaces
   lib/            # supabase client, cn(), formatCurrency(), etc.
   constants/      # Labels, colors, nav items

@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { Transaction } from "@/types"
-import * as transactionService from "@/services/mock/transactions"
+import { transactions as transactionService } from "@/services"
 
 interface TransactionState {
   transactions: Transaction[]

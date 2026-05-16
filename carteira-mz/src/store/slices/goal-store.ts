@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { Goal, GoalContribution } from "@/types"
-import * as goalService from "@/services/mock/goals"
+import { goals as goalService } from "@/services"
 
 interface GoalState {
   goals: Goal[]

@@ -23,7 +23,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { BUDGET_PERIOD_LABELS } from "@/constants"
 import { budgetSchema } from "@/validators"
-import * as categoryService from "@/services/mock/categories"
+import { categories as categoryService } from "@/services"
 import type { Budget, Category } from "@/types"
 import type { z } from "zod"
 

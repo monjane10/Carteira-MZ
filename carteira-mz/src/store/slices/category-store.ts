@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { Category } from "@/types"
-import * as categoryService from "@/services/mock/categories"
+import { categories as categoryService } from "@/services"
 
 interface CategoryState {
   categories: Category[]

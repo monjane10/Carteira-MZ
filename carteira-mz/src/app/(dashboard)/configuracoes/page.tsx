@@ -1,24 +1,60 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { User, Mail, Globe, ChevronRight, Edit3 } from "lucide-react"
+import { User, Mail, Globe, Edit3 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { supabase } from "@/services"
 
 export default function SettingsPage() {
-  const [name, setName] = useState("Lourenço")
-  const [email, setEmail] = useState("lourenco@email.com")
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [currency, setCurrency] = useState("MZN")
-  const [phone, setPhone] = useState("+258 84 000 0000")
+  const [phone, setPhone] = useState("")
   const [editing, setEditing] = useState(false)
-  const [editName, setEditName] = useState(name)
-  const [editEmail, setEditEmail] = useState(email)
-  const [editPhone, setEditPhone] = useState(phone)
-  const [editCurrency, setEditCurrency] = useState(currency)
+  const [editName, setEditName] = useState("")
+  const [editEmail, setEditEmail] = useState("")
+  const [editPhone, setEditPhone] = useState("")
+  const [editCurrency, setEditCurrency] = useState("MZN")
 
-  const handleSave = () => {
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data.user
+      if (!user) return
+      const meta = user.user_metadata ?? {}
+      setName((meta.full_name as string) || "")
+      setEmail(user.email ?? "")
+      supabase
+        .from("profiles")
+        .select("phone, currency")
+        .eq("id", user.id)
+        .single()
+        .then(({ data: profile }) => {
+          if (profile) {
+            setPhone(profile.phone ?? "")
+            setCurrency(profile.currency ?? "MZN")
+          }
+        })
+    })
+  }, [])
+
+  const handleSave = async () => {
+    const { data: u } = await supabase.auth.getUser()
+    const userId = u.user?.id
+    if (!userId) return
+
+    await supabase.auth.updateUser({
+      data: { full_name: editName },
+    })
+
+    await supabase.from("profiles").upsert({
+      id: userId,
+      full_name: editName,
+      phone: editPhone,
+      currency: editCurrency,
+    })
+
     setName(editName)
-    setEmail(editEmail)
     setPhone(editPhone)
     setCurrency(editCurrency)
     setEditing(false)

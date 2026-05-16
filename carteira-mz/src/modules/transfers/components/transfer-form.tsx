@@ -23,7 +23,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { transferSchema } from "@/validators"
 import { formatCurrency } from "@/lib/utils"
-import * as accountService from "@/services/mock/accounts"
+import { accounts as accountService } from "@/services"
 import type { Account } from "@/types"
 import type { z } from "zod"
 

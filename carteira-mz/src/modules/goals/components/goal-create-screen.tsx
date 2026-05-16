@@ -9,8 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { goalSchema } from "@/validators"
 import { toast } from "@/hooks/use-toast"
-import * as accountService from "@/services/mock/accounts"
-import * as goalService from "@/services/mock/goals"
+import { accounts as accountService, goals as goalService } from "@/services"
 import type { Account } from "@/types"
 import type { z } from "zod"
 
@@ -53,11 +52,9 @@ export function GoalCreateScreen() {
         title: data.title,
         description: data.description ?? null,
         target_amount: data.target_amount,
-        current_amount: data.current_amount,
         target_date: data.target_date ?? null,
         color: data.color ?? null,
         icon: data.icon ?? null,
-        status: "ACTIVE",
       })
       toast({ title: "Sucesso", description: "Meta criada com sucesso.", variant: "success" })
       router.push("/metas")

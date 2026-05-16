@@ -13,7 +13,7 @@ import { getAccountLogo } from "@/lib/account-logos"
 import { ACCOUNT_TYPE_LABELS } from "@/constants"
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
-import * as accountService from "@/services/mock/accounts"
+import { accounts as accountService } from "@/services"
 
 const schema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),

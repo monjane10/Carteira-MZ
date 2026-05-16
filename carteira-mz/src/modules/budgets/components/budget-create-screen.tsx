@@ -10,8 +10,7 @@ import { cn } from "@/lib/utils"
 import { BUDGET_PERIOD_LABELS } from "@/constants"
 import { budgetSchema } from "@/validators"
 import { toast } from "@/hooks/use-toast"
-import * as categoryService from "@/services/mock/categories"
-import * as budgetService from "@/services/mock/budgets"
+import { categories as categoryService, budgets as budgetService } from "@/services"
 import type { Category } from "@/types"
 import type { z } from "zod"
 
@@ -56,7 +55,6 @@ export function BudgetCreateScreen() {
         period: data.period,
         start_date: data.start_date,
         end_date: data.end_date,
-        spent: 0,
       })
       toast({ title: "Sucesso", description: "Orçamento criado com sucesso.", variant: "success" })
       router.push("/orcamentos")

@@ -2,15 +2,7 @@
 import { logger } from "./logger"
 import { handleError } from "./errors"
 
-export interface AdminStats {
-  total_users: number
-  total_accounts: number
-  total_transactions: number
-  total_balance: number
-  active_users: number
-  total_loans: number
-  monthly_growth: number
-}
+const ENTITY = "admin"
 
 export interface AdminUser {
   id: string
@@ -22,7 +14,15 @@ export interface AdminUser {
   status: "active" | "inactive"
 }
 
-const ENTITY = "admin"
+export interface AdminStats {
+  total_users: number
+  total_accounts: number
+  total_transactions: number
+  total_balance: number
+  active_users: number
+  total_loans: number
+  monthly_growth: number
+}
 
 export async function getAdminStats(): Promise<AdminStats> {
   try {

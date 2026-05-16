@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Users, Building2, ArrowUpDown, Banknote } from "lucide-react"
-import { getAdminStats, getAdminUsers, type AdminStats, type AdminUser } from "@/services/mock/admin"
+import { admin, type AdminStats, type AdminUser } from "@/services"
 import { formatCurrency } from "@/lib/utils"
 
 function StatCard({ title, value, icon: Icon, subtitle, color }: { title: string; value: string; icon: React.ElementType; subtitle?: string; color: string }) {
@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     async function load() {
-      const [s, u] = await Promise.all([getAdminStats(), getAdminUsers()])
+      const [s, u] = await Promise.all([admin.getAdminStats(), admin.getAdminUsers()])
       setStats(s)
       setUsers(u.slice(0, 5))
       setLoading(false)

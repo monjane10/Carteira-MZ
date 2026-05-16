@@ -10,10 +10,12 @@ import Link from "next/link"
 import { loginSchema, type LoginFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
+import { supabase } from "@/services"
 
 export function LoginForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState("")
   const {
     register,
     handleSubmit,
@@ -22,14 +24,25 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   })
 
-  function onSubmit(data: LoginFormData) {
+  async function onSubmit(data: LoginFormData) {
+    setError("")
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
+
+    if (authError) {
+      setError("Email ou senha inválidos.")
+      return
+    }
+
     document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
     toast({
       title: "Autenticação",
-      description: "Login simulado com sucesso",
+      description: "Login efetuado com sucesso",
       variant: "success",
     })
-    setTimeout(() => router.push("/dashboard"), 500)
+    router.push("/dashboard")
   }
 
   return (
@@ -94,9 +107,15 @@ export function LoginForm() {
               {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
             </div>
 
+            {error && (
+              <div className="bg-red-50 text-red-600 text-sm px-4 py-2.5 rounded-xl border border-red-200 mb-4">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!error}
               className="w-full flex items-center justify-center gap-2 bg-[#0F172A] text-white transition-all hover:bg-[#1E293B] disabled:opacity-60"
               style={{ height: 48, fontSize: 15, fontWeight: 700, borderRadius: 12 }}
             >

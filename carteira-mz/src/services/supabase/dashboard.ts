@@ -3,6 +3,8 @@ import { logger } from "./logger"
 import { handleError } from "./errors"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending } from "@/types"
 
+export { getRecentTransactions } from "./transactions"
+
 const ENTITY = "dashboard"
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {

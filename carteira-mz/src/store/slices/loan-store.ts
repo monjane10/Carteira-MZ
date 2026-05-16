@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { Loan, LoanPayment } from "@/types"
-import * as loanService from "@/services/mock/loans"
+import { loans as loanService } from "@/services"
 
 interface LoanState {
   loans: Loan[]

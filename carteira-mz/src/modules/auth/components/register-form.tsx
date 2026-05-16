@@ -10,11 +10,13 @@ import Link from "next/link"
 import { registerSchema, type RegisterFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
+import { supabase } from "@/services"
 
 export function RegisterForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [error, setError] = useState("")
   const {
     register,
     handleSubmit,
@@ -23,14 +25,30 @@ export function RegisterForm() {
     resolver: zodResolver(registerSchema),
   })
 
-  function onSubmit(data: RegisterFormData) {
+  async function onSubmit(data: RegisterFormData) {
+    setError("")
+
+    const { error: authError } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          full_name: data.full_name,
+        },
+      },
+    })
+
+    if (authError) {
+      setError(authError.message)
+      return
+    }
+
     toast({
       title: "Conta criada",
-      description: "Registo simulado com sucesso",
+      description: "Registo efetuado com sucesso! Verifique o seu email para confirmar.",
       variant: "success",
     })
-    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
-    setTimeout(() => router.push("/dashboard"), 500)
+    router.push("/login")
   }
 
   return (
@@ -138,9 +156,15 @@ export function RegisterForm() {
               {errors.confirm_password && <p className="text-xs text-red-500 mt-1">{errors.confirm_password.message}</p>}
             </div>
 
+            {error && (
+              <div className="bg-red-50 text-red-600 text-sm px-4 py-2.5 rounded-xl border border-red-200 mb-4">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!error}
               className="w-full flex items-center justify-center gap-2 bg-[#0F172A] text-white transition-all hover:bg-[#1E293B] disabled:opacity-60"
               style={{ height: 48, fontSize: 15, fontWeight: 700, borderRadius: 12, marginTop: 4 }}
             >

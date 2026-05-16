@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { Notification } from "@/types"
-import * as notificationService from "@/services/mock/notifications"
+import { notifications as notificationService } from "@/services"
 
 interface NotificationState {
   notifications: Notification[]

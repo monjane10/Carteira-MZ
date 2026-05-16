@@ -23,7 +23,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { LOAN_TYPE_LABELS } from "@/constants"
 import { loanSchema } from "@/validators"
-import * as accountService from "@/services/mock/accounts"
+import { accounts as accountService } from "@/services"
 import type { Account, Loan } from "@/types"
 import type { z } from "zod"
 
