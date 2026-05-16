@@ -79,7 +79,7 @@ export default function SettingsPage() {
     try {
       const { data: u } = await supabase.auth.getUser()
       const userId = u.user?.id
-      if (!userId) return
+      if (!userId) throw new Error("Sem sessão")
 
       await supabase.from("accounts").delete().eq("user_id", userId)
       await supabase.from("transactions").delete().eq("user_id", userId)
@@ -90,6 +90,16 @@ export default function SettingsPage() {
       await supabase.from("recurring_transactions").delete().eq("user_id", userId)
       await supabase.from("notifications").delete().eq("user_id", userId)
       await supabase.from("profiles").delete().eq("id", userId)
+
+      const { data: sessionData } = await supabase.auth.getSession()
+      const token = sessionData.session?.access_token
+
+      if (token) {
+        await fetch("/api/delete-account", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      }
 
       await supabase.auth.signOut()
       router.push("/login")

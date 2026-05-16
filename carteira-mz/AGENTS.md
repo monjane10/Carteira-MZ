@@ -25,6 +25,11 @@ No test framework, no typecheck script.
 - **Apenas Supabase** — `src/services/supabase/` is the single data source.
 - All services exported via namespace from `src/services/index.ts`:
   `accounts`, `categories`, `transactions`, `transfers`, `loans`, `goals`, `budgets`, `notifications`, `dashboard`, `admin`, `supabase`
+- **Server-side API routes** bypass RLS using `SUPABASE_SERVICE_ROLE_KEY`:
+  - `src/app/api/admin/stats/route.ts` — aggregated stats (all users)
+  - `src/app/api/admin/users/route.ts` — all users with account counts
+  - `src/app/api/delete-account/route.ts` — deletes `auth.users` row via `admin.deleteUser()`
+  - Client code calls these via `fetch()` with auth token in `Authorization: Bearer` header
 - Business logic (balance updates on transactions, status transitions on loans/goals)
 - Error handling via custom `ServiceError` / `NotFoundError` / `handleError()`
 - Structured logging via `logger` (levels INFO/WARN/ERROR/DEBUG)
