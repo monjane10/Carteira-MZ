@@ -123,14 +123,14 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       </Button>
 
       <Card>
-        <CardContent className="p-6">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <CardContent className="p-4">
+          <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
-                <Target className="h-6 w-6" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
+                <Target className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{goal.title}</h2>
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">{goal.title}</h2>
                 {goal.description && (
                   <p className="text-sm text-slate-500 dark:text-slate-400">{goal.description}</p>
                 )}
@@ -141,28 +141,28 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
             </Badge>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Actual</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Actual</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
                 {formatCurrency(goal.current_amount)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Meta</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Meta</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
                 {formatCurrency(goal.target_amount)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Restante</p>
-              <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Restante</p>
+              <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
                 {formatCurrency(remaining)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Progresso</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Progresso</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
                 {progress}%
               </p>
             </div>
@@ -190,12 +190,12 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
 
       {chartData.length > 0 && (
         <Card>
-          <CardContent className="p-6">
-            <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+          <CardContent className="p-4">
+            <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Histórico de Contribuições
             </h3>
-            <div className="h-48">
+            <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
                   <XAxis dataKey="date" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />

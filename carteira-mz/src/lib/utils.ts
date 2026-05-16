@@ -9,8 +9,8 @@ export function formatCurrency(value: number, currency = "MZN"): string {
   return new Intl.NumberFormat("pt-MZ", {
     style: "currency",
     currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(value)
 }
 

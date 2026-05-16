@@ -2,6 +2,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@media (max-width: 639px) {
+  html {
+    font-size: 90%;
+  }
+}
+
 @theme inline {
   --color-background: #FFFFFF;
   --color-foreground: #0F172A;
