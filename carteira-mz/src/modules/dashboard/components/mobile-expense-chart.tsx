@@ -1,6 +1,7 @@
 "use client"
 
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
+import { useState } from "react"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 import { formatCurrency } from "@/lib/utils"
 import type { CategorySpending } from "@/types"
 
@@ -10,7 +11,25 @@ interface MobileExpenseChartProps {
 
 const COLORS = ["#10B981", "#0F172A", "#1E293B", "#334155", "#64748B", "#94A3B8", "#CBD5E1", "#059669", "#047857"]
 
+function formatWhole(value: number): string {
+  return new Intl.NumberFormat("pt-MZ", { style: "currency", currency: "MZN", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value)
+}
+
+function CustomTooltip({ active, payload }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-md text-xs">
+        <p className="font-semibold text-slate-900">{payload[0].name}</p>
+        <p className="text-emerald-600 font-bold">{formatWhole(payload[0].value)}</p>
+      </div>
+    )
+  }
+  return null
+}
+
 export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
+
   if (data.length === 0) {
     return (
       <div className="w-full rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
@@ -43,24 +62,32 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 innerRadius={38}
                 outerRadius={60}
                 strokeWidth={0}
+                onMouseEnter={(_, index) => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(undefined)}
               >
                 {data.map((_, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
             <p className="text-[10px] font-medium text-slate-400 leading-none">Total</p>
             <p className="text-[11px] font-bold text-slate-900 dark:text-white leading-tight text-center px-1 break-all">
-              {formatCurrency(total)}
+              {formatWhole(total)}
             </p>
           </div>
         </div>
 
         <div className="flex-1 space-y-2 min-w-0">
           {data.slice(0, 5).map((item, index) => (
-            <div key={item.category_id} className="flex items-center justify-between">
+            <div
+              key={item.category_id}
+              className="flex items-center justify-between cursor-pointer transition-opacity hover:opacity-80"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(undefined)}
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <div
                   className="h-2.5 w-2.5 rounded-full shrink-0"
@@ -71,7 +98,7 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 </span>
               </div>
               <span className="text-xs font-semibold text-slate-900 dark:text-white shrink-0 ml-1">
-                {formatCurrency(item.total)}
+                {formatWhole(item.total)}
               </span>
             </div>
           ))}

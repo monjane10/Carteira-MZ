@@ -14,11 +14,6 @@ import * as goalService from "@/services/mock/goals"
 import type { Account } from "@/types"
 import type { z } from "zod"
 
-const COLOR_OPTIONS = [
-  "#10B981", "#3B82F6", "#F59E0B", "#EF4444",
-  "#8B5CF6", "#EC4899", "#14B8A6", "#F97316",
-]
-
 export function GoalCreateScreen() {
   const router = useRouter()
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -168,33 +163,6 @@ export function GoalCreateScreen() {
                 className={inputClass}
                 {...register("target_date")}
               />
-            </div>
-
-            {/* Cor */}
-            <div className="mb-5">
-              <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</label>
-              <div className="flex gap-2 items-center">
-                {COLOR_OPTIONS.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setValue("color", color)}
-                    className={cn(
-                      "h-7 w-7 rounded-full border-2 transition-all",
-                      watch("color") === color
-                        ? "border-slate-900 scale-110"
-                        : "border-transparent"
-                    )}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-                <input
-                  type="color"
-                  value={watch("color") ?? "#10B981"}
-                  onChange={(e) => setValue("color", e.target.value)}
-                  className="h-12 w-14 rounded-xl p-1 cursor-pointer"
-                />
-              </div>
             </div>
 
             {/* Botão */}

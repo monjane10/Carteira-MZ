@@ -31,22 +31,21 @@ const accountFormSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
   type: z.enum(["BANK", "MOBILE_MONEY", "CASH", "SAVINGS", "INVESTMENT", "OTHER"] as const),
   initial_balance: z.number(),
-  color: z.string().nullable().optional(),
 })
 
 type AccountFormValues = z.infer<typeof accountFormSchema>
 
 const bankOperators = [
-  { name: "BCI", color: "#0F172A" },
-  { name: "Millennium BIM", color: "#1E293B" },
-  { name: "ABSA", color: "#334155" },
-  { name: "Standard Bank", color: "#475569" },
+  { name: "BCI" },
+  { name: "Millennium BIM" },
+  { name: "ABSA" },
+  { name: "Standard Bank" },
 ]
 
 const mobileOperators = [
-  { name: "M-Pesa", color: "#10B981" },
-  { name: "e-Mola", color: "#059669" },
-  { name: "mKesh", color: "#0D9488" },
+  { name: "M-Pesa" },
+  { name: "e-Mola" },
+  { name: "mKesh" },
 ]
 
 interface AccountFormProps {
@@ -75,7 +74,6 @@ export function AccountForm({
       name: "",
       type: "BANK",
       initial_balance: 0,
-      color: "#0F172A",
     },
   })
 
@@ -94,9 +92,8 @@ export function AccountForm({
     handleOpenChange(false)
   }
 
-  const selectOperator = (op: { name: string; color: string }) => {
+  const selectOperator = (op: { name: string }) => {
     setValue("name", op.name)
-    setValue("color", op.color)
   }
 
   return (
@@ -123,7 +120,6 @@ export function AccountForm({
                   const isOperator = [...bankOperators, ...mobileOperators].some((o) => o.name === currentName)
                   if (value !== "BANK" && value !== "MOBILE_MONEY" && isOperator) {
                     setValue("name", "")
-                    setValue("color", "#0F172A")
                   }
                 }}
               >
@@ -261,20 +257,6 @@ export function AccountForm({
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="color">Cor</Label>
-              <div className="flex items-center gap-3">
-                <Input
-                  id="color"
-                  type="color"
-                  className="h-10 w-14 cursor-pointer p-1"
-                  {...register("color")}
-                />
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  Cor do acento da conta
-                </span>
-              </div>
-            </div>
           </div>
           <DialogFooter className="mt-4">
             <Button

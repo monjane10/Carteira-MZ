@@ -21,7 +21,6 @@ const schema = z.object({
   institution: z.string().min(1, "Seleccione uma instituição"),
   initial_balance: z.number().min(0).default(0),
   currency: z.enum(["MZN", "USD"]),
-  color: z.string(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -37,16 +36,6 @@ const mobiles = [
   { name: "M-Pesa", color: "#10B981" },
   { name: "e-Mola", color: "#F59E0B" },
   { name: "mKesh", color: "#0D9488" },
-]
-
-const colorOptions = [
-  { value: "#10B981", label: "Verde" },
-  { value: "#3B82F6", label: "Azul" },
-  { value: "#8B5CF6", label: "Roxo" },
-  { value: "#F59E0B", label: "Laranja" },
-  { value: "#EC4899", label: "Rosa" },
-  { value: "#14B8A6", label: "Turquesa" },
-  { value: "#64748B", label: "Cinza" },
 ]
 
 export function AccountCreateScreen() {
@@ -67,24 +56,17 @@ export function AccountCreateScreen() {
       institution: "",
       initial_balance: 0,
       currency: "MZN",
-      color: "#10B981",
     },
   })
 
   const selectedInstitution = watch("institution")
   const selectedCurrency = watch("currency")
-  const selectedColor = watch("color")
   const accountName = watch("name")
   const balance = watch("initial_balance")
   const currentType = watch("type")
 
   const institutions = accountType === "BANK" ? banks : mobiles
 
-  const instColors: Record<string, string> = {}
-  for (const b of banks) instColors[b.name] = b.color
-  for (const m of mobiles) instColors[m.name] = m.color
-
-  const selectedInstColor = selectedInstitution ? instColors[selectedInstitution] : selectedColor
   const logoPath = selectedInstitution ? getAccountLogo(selectedInstitution) : null
 
   const previewName = accountName || selectedInstitution || "Nome da Conta"
@@ -97,7 +79,7 @@ export function AccountCreateScreen() {
         currency: data.currency,
         balance: data.initial_balance,
         initial_balance: data.initial_balance,
-        color: data.color,
+        color: "#0F172A",
         icon: null,
         institution_id: null,
         is_active: true,
@@ -175,10 +157,7 @@ export function AccountCreateScreen() {
                   <button
                     key={inst.name}
                     type="button"
-                    onClick={() => {
-                      setValue("institution", inst.name)
-                      setValue("color", inst.color)
-                    }}
+                    onClick={() => setValue("institution", inst.name)}
                     className={cn(
                       "flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all",
                       isSelected
@@ -270,29 +249,6 @@ export function AccountCreateScreen() {
             </div>
           </div>
 
-          {/* Cor */}
-          <div className="mb-5">
-            <p className="text-sm font-semibold text-[#0F172A] block mb-3">Cor (opcional)</p>
-            <div className="flex gap-2 flex-wrap">
-              {colorOptions.map((c) => {
-                const isSelected = selectedColor === c.value
-                return (
-                  <button
-                    key={c.value}
-                    type="button"
-                    onClick={() => setValue("color", c.value)}
-                    className={cn(
-                      "h-7 w-7 rounded-full transition-all",
-                      isSelected && "ring-2 ring-offset-2 ring-emerald-500"
-                    )}
-                    style={{ backgroundColor: c.value }}
-                    aria-label={c.label}
-                  />
-                )
-              })}
-            </div>
-          </div>
-
           {/* Separador */}
           <div className="border-t border-slate-100 mb-5" />
 
@@ -301,16 +257,13 @@ export function AccountCreateScreen() {
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
               Pré-visualização da conta
             </p>
-            <div
-              className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4"
-            >
-              <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: selectedInstColor }} />
-              <div className="flex items-center gap-2 pl-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden bg-slate-50">
+            <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden bg-slate-100">
                   {logoPath ? (
                     <Image src={logoPath} alt={previewName} width={40} height={40} className="object-contain" />
                   ) : (
-                    <div className="h-10 w-10 rounded-xl flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: selectedColor }}>
+                    <div className="h-10 w-10 rounded-xl flex items-center justify-center text-sm font-bold text-slate-600 bg-slate-100">
                       {previewName[0]}
                     </div>
                   )}

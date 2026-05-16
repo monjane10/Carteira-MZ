@@ -38,7 +38,6 @@ function AccountsPage() {
     name: string
     type: "BANK" | "MOBILE_MONEY" | "CASH" | "SAVINGS" | "INVESTMENT" | "OTHER"
     initial_balance: number
-    color?: string | null
   }) => {
     try {
       const newAccount = await accountService.createAccount({
@@ -47,7 +46,7 @@ function AccountsPage() {
         currency: "MZN",
         balance: data.initial_balance,
         initial_balance: data.initial_balance,
-        color: data.color ?? null,
+        color: "#0F172A",
         icon: null,
         institution_id: null,
         is_active: true,
@@ -63,7 +62,6 @@ function AccountsPage() {
     name: string
     type: "BANK" | "MOBILE_MONEY" | "CASH" | "SAVINGS" | "INVESTMENT" | "OTHER"
     initial_balance: number
-    color?: string | null
   }) => {
     if (!editingAccount) return
     try {
@@ -71,7 +69,7 @@ function AccountsPage() {
         name: data.name,
         type: data.type,
         initial_balance: data.initial_balance,
-        color: data.color ?? null,
+        color: editingAccount.color ?? null,
       })
       if (updated) {
         setAccounts((prev) =>
@@ -113,7 +111,6 @@ function AccountsPage() {
     name: string
     type: "BANK" | "MOBILE_MONEY" | "CASH" | "SAVINGS" | "INVESTMENT" | "OTHER"
     initial_balance: number
-    color?: string | null
   }) => {
     if (editingAccount) {
       await handleUpdate(data)

@@ -39,14 +39,13 @@ function CategoriesPage() {
   const handleCreate = async (data: {
     name: string
     type: TransactionType
-    color?: string | null
     icon?: string | null
   }) => {
     try {
       const newCategory = await categoryService.createCategory({
         name: data.name,
         type: data.type,
-        color: data.color ?? null,
+        color: null,
         icon: data.icon ?? null,
         is_default: false,
       })
@@ -60,7 +59,6 @@ function CategoriesPage() {
   const handleUpdate = async (data: {
     name: string
     type: TransactionType
-    color?: string | null
     icon?: string | null
   }) => {
     if (!editingCategory) return
@@ -68,7 +66,7 @@ function CategoriesPage() {
       const updated = await categoryService.updateCategory(editingCategory.id, {
         name: data.name,
         type: data.type,
-        color: data.color ?? null,
+        color: editingCategory.color ?? null,
         icon: data.icon ?? null,
       })
       if (updated) {
@@ -110,7 +108,6 @@ function CategoriesPage() {
   const handleFormSubmit = async (data: {
     name: string
     type: TransactionType
-    color?: string | null
     icon?: string | null
   }) => {
     if (editingCategory) {

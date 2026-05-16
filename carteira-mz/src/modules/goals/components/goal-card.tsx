@@ -40,20 +40,10 @@ export function GoalCard({ goal, onClick, onDelete }: GoalCardProps) {
         )}
         onClick={onClick}
       >
-        <div
-          className="h-1.5 w-full"
-          style={{ backgroundColor: goal.color ?? "#0F172A" }}
-        />
         <CardContent className="p-5">
           <div className="mb-3 flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-lg"
-                style={{
-                  backgroundColor: goal.color ? `${goal.color}20` : "#0F172A20",
-                  color: goal.color ?? "#0F172A",
-                }}
-              >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
                 <Target className="h-5 w-5" />
               </div>
               <div className="min-w-0">
@@ -104,7 +94,7 @@ export function GoalCard({ goal, onClick, onDelete }: GoalCardProps) {
           <Progress value={progress} className="mb-2" />
 
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-medium" style={{ color: goal.color ?? undefined }}>
+            <span className="font-medium text-slate-900 dark:text-white">
               {progress}%
             </span>
             {goal.target_date && (

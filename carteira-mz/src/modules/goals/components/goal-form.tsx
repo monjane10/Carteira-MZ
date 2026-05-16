@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { goalSchema } from "@/validators"
 import * as accountService from "@/services/mock/accounts"
 import type { Account, Goal } from "@/types"
@@ -38,11 +37,6 @@ const ICON_OPTIONS = [
   { value: "shopping-bag", label: "Compras" },
   { value: "gift", label: "Presente" },
   { value: "shield-check", label: "Segurança" },
-]
-
-const COLOR_OPTIONS = [
-  "#10B981", "#3B82F6", "#F59E0B", "#EF4444",
-  "#8B5CF6", "#EC4899", "#14B8A6", "#F97316",
 ]
 
 interface GoalFormProps {
@@ -208,25 +202,6 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</Label>
-              <div className="flex gap-2">
-                {COLOR_OPTIONS.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setValue("color", color)}
-                    className={cn(
-                      "h-8 w-8 rounded-full border-2 transition-all",
-                      watch("color") === color
-                        ? "border-slate-900 scale-110 dark:border-white"
-                        : "border-transparent"
-                    )}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
           </div>
           <DialogFooter className="mt-4">
             <Button

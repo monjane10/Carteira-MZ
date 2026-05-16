@@ -35,7 +35,6 @@ const categoryFormSchema = z.object({
     "LOAN_TAKEN",
     "LOAN_PAYMENT",
   ] as const),
-  color: z.string().nullable().optional(),
   icon: z.string().nullable().optional(),
 })
 
@@ -66,7 +65,6 @@ export function CategoryForm({
     defaultValues: {
       name: "",
       type: "EXPENSE",
-      color: "#64748B",
       icon: null,
     },
   })
@@ -148,20 +146,6 @@ export function CategoryForm({
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="color" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</Label>
-              <div className="flex items-center gap-3">
-                <Input
-                  id="color"
-                  type="color"
-                  className="h-10 w-14 cursor-pointer p-1"
-                  {...register("color")}
-                />
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  Cor da categoria
-                </span>
-              </div>
-            </div>
           </div>
           <DialogFooter className="mt-4">
             <Button

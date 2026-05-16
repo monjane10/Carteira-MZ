@@ -58,31 +58,31 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <Link
                 key={account.id}
                 href="/contas"
-                className="w-[200px] shrink-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                className="w-[170px] shrink-0 rounded-xl border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-700">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-700">
                     {logoPath ? (
                       <Image
                         src={logoPath}
                         alt={account.name}
-                        width={28}
-                        height={28}
+                        width={24}
+                        height={24}
                         className="object-contain"
                       />
                     ) : (
                       <FallbackIcon
-                        className="h-3.5 w-3.5"
+                        className="h-3 w-3"
                         style={{ color: account.color || "#0F172A" }}
                       />
                     )}
                   </div>
-                  <ChevronRight className="h-3.5 w-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                  <ChevronRight className="h-3 w-3 text-slate-300 dark:text-slate-600 shrink-0" />
                 </div>
-                <p className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="mt-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate">
                   {account.name}
                 </p>
-                <p className="mt-0.5 text-sm font-bold text-slate-900 dark:text-white truncate">
+                <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-white truncate">
                   {formatCurrency(account.balance)}
                 </p>
               </Link>

@@ -145,7 +145,7 @@ function GoalsPage() {
       </PageHeader>
 
       {loading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <LoadingState key={i} type="card" />
           ))}
@@ -162,7 +162,7 @@ function GoalsPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {goals.map((goal) => (
             <GoalCard
               key={goal.id}

@@ -30,7 +30,6 @@ export function CategoryCreateScreen() {
     defaultValues: {
       name: "",
       type: "EXPENSE",
-      color: "#64748B",
       icon: null,
     },
   })
@@ -98,16 +97,6 @@ export function CategoryCreateScreen() {
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               </div>
               {errors.type && <p className="text-xs text-red-500 mt-1">{errors.type.message}</p>}
-            </div>
-
-            <div className="mb-5">
-              <label htmlFor="color" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Cor</label>
-              <input
-                id="color"
-                type="color"
-                className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 cursor-pointer"
-                {...register("color")}
-              />
             </div>
 
             <div className="mb-5">

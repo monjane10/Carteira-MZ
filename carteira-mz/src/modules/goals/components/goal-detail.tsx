@@ -123,17 +123,10 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       </Button>
 
       <Card>
-        <div className="h-2 w-full" style={{ backgroundColor: goal.color ?? "#0F172A" }} />
         <CardContent className="p-6">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-xl"
-                style={{
-                  backgroundColor: goal.color ? `${goal.color}20` : "#0F172A20",
-                  color: goal.color ?? "#0F172A",
-                }}
-              >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
                 <Target className="h-6 w-6" />
               </div>
               <div>
@@ -169,7 +162,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
             </div>
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">Progresso</p>
-              <p className="text-lg font-bold" style={{ color: goal.color ?? undefined }}>
+              <p className="text-lg font-bold text-slate-900 dark:text-white">
                 {progress}%
               </p>
             </div>
@@ -215,7 +208,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
                     }}
                     formatter={(value) => [formatCurrency(Number(value)), "Valor"]}
                   />
-                  <Bar dataKey="amount" fill={goal.color ?? "#10B981"} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="amount" fill="#10B981" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
