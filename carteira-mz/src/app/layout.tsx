@@ -10,13 +10,10 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Carteira MZ - Gestão Financeira",
+  title: "Carteira MZ",
   description: "Aplicação moderna de gestão financeira pessoal",
   manifest: "/manifest.json",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
+
 }
 
 export default function RootLayout({

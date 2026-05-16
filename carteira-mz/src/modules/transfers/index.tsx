@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { Plus, ArrowRight, Calendar, Edit3 } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
