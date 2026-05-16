@@ -1,5 +1,6 @@
 ﻿import { logger } from "./logger"
 import { handleError } from "./errors"
+import type { Account } from "@/types"
 
 const ENTITY = "admin"
 
@@ -11,6 +12,17 @@ export interface AdminUser {
   total_balance: number
   created_at: string
   status: "active" | "inactive"
+}
+
+export async function getAdminAccounts(): Promise<Account[]> {
+  try {
+    logger.info("Fetching admin accounts")
+    const res = await fetch("/api/admin/accounts")
+    if (!res.ok) throw new Error("Falha ao carregar contas")
+    return await res.json()
+  } catch (e) {
+    return handleError(ENTITY, "listar contas", e) as unknown as Account[]
+  }
 }
 
 export interface AdminStats {
