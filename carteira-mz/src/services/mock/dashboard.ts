@@ -4,7 +4,7 @@ import { getTransactions, getRecentTransactions as getRecentTx } from "./transac
 const MOCK_USER_ID = "user_1"
 
 function delay(): Promise<void> {
-  const ms = Math.floor(Math.random() * 201) + 200
+  const ms = Math.floor(Math.random() * 51) + 30
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 

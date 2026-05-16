@@ -159,7 +159,7 @@ let loanPayments: LoanPayment[] = [
 ]
 
 function delay(): Promise<void> {
-  const ms = Math.floor(Math.random() * 201) + 200
+  const ms = Math.floor(Math.random() * 51) + 30
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 

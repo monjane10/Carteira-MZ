@@ -1,0 +1,61 @@
+const CACHE_NAME = "carteira-mz-v1"
+
+const STATIC_ASSETS = [
+  "/",
+  "/login",
+  "/register",
+  "/dashboard",
+  "/contas",
+  "/contas/nova",
+  "/transacoes",
+  "/transacoes/nova",
+  "/transferencias",
+  "/transferencias/nova",
+  "/emprestimos",
+  "/emprestimos/nova",
+  "/metas",
+  "/metas/nova",
+  "/orcamentos",
+  "/orcamentos/nova",
+  "/relatorios",
+  "/configuracoes",
+  "/logo.png",
+  "/BCI.png",
+  "/BIM.png",
+  "/mpesa.png",
+  "/emola.png",
+  "/absa.png",
+  "/standard-Bank.png",
+  "/mkesh.png",
+]
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_ASSETS)
+    })
+  )
+})
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    })
+  )
+})
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      const fetchPromise = fetch(event.request).then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone()
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
+        }
+        return response
+      })
+      return cached || fetchPromise
+    })
+  )
+})
