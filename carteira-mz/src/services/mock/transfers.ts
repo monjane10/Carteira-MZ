@@ -86,3 +86,19 @@ export async function createTransfer(
   transfers.push(transfer)
   return transfer
 }
+
+export async function getTransferById(id: string): Promise<Transfer | null> {
+  await delay()
+  return transfers.find((t) => t.id === id) ?? null
+}
+
+export async function updateTransfer(
+  id: string,
+  data: Partial<Omit<Transfer, "id" | "user_id" | "created_at">>
+): Promise<Transfer | null> {
+  await delay()
+  const index = transfers.findIndex((t) => t.id === id)
+  if (index === -1) return null
+  transfers[index] = { ...transfers[index], ...data }
+  return transfers[index]
+}

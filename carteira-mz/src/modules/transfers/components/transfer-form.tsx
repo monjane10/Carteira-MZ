@@ -27,13 +27,16 @@ import * as accountService from "@/services/mock/accounts"
 import type { Account } from "@/types"
 import type { z } from "zod"
 
+import type { Transfer } from "@/types"
+
 interface TransferFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (data: z.infer<typeof transferSchema>) => Promise<void>
+  editingTransfer?: Transfer | null
 }
 
-export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps) {
+export function TransferForm({ open, onOpenChange, onSubmit, editingTransfer }: TransferFormProps) {
   const [accounts, setAccounts] = useState<Account[]>([])
   const [loadingData, setLoadingData] = useState(false)
 
@@ -55,6 +58,17 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
       transfer_date: new Date().toISOString().split("T")[0],
     },
   })
+
+  useEffect(() => {
+    if (open && editingTransfer) {
+      setValue("from_account_id", editingTransfer.from_account_id)
+      setValue("to_account_id", editingTransfer.to_account_id)
+      setValue("amount", editingTransfer.amount)
+      setValue("fee", editingTransfer.fee)
+      setValue("description", editingTransfer.description ?? "")
+      setValue("transfer_date", editingTransfer.transfer_date.split("T")[0])
+    }
+  }, [open, editingTransfer, setValue])
 
   const fromAccount = watch("from_account_id")
   const toAccount = watch("to_account_id")
@@ -81,7 +95,7 @@ export function TransferForm({ open, onOpenChange, onSubmit }: TransferFormProps
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Nova Transferência</DialogTitle>
+          <DialogTitle>{editingTransfer ? "Editar Transferência" : "Nova Transferência"}</DialogTitle>
           <DialogDescription>Transfira valores entre as suas contas.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>

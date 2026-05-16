@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Repeat } from "lucide-react"
+import { ArrowRight, Repeat, ChevronRight } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shared/empty-state"
 import { formatCurrency, formatDate } from "@/lib/utils"
@@ -10,9 +10,10 @@ import type { Transfer } from "@/types"
 interface TransferListProps {
   transfers: Transfer[]
   loading: boolean
+  onEdit?: (transfer: Transfer) => void
 }
 
-export function TransferList({ transfers, loading }: TransferListProps) {
+export function TransferList({ transfers, loading, onEdit }: TransferListProps) {
   if (loading) {
     return (
       <div className="space-y-3">
@@ -51,7 +52,8 @@ export function TransferList({ transfers, loading }: TransferListProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.03 }}
-          className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+          className="rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50 cursor-pointer dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900"
+          onClick={() => onEdit?.(transfer)}
         >
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
@@ -73,6 +75,7 @@ export function TransferList({ transfers, loading }: TransferListProps) {
               </p>
               <p className="text-xs text-slate-400">{formatDate(transfer.transfer_date)}</p>
             </div>
+            <ChevronRight className="h-4 w-4 text-slate-300 shrink-0" />
           </div>
           {transfer.fee > 0 && (
             <p className="mt-2 text-xs text-slate-400">Taxa: {formatCurrency(transfer.fee)}</p>

@@ -21,6 +21,7 @@ function TransfersPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
+  const [editingTransfer, setEditingTransfer] = useState<Transfer | null>(null)
 
   const fetchTransfers = useCallback(async () => {
     setLoading(true)
@@ -57,6 +58,45 @@ function TransfersPage() {
     }
   }
 
+  const handleUpdate = async (data: TransferFormValues) => {
+    if (!editingTransfer) return
+    try {
+      const updated = await transferService.updateTransfer(editingTransfer.id, {
+        from_account_id: data.from_account_id,
+        to_account_id: data.to_account_id,
+        amount: data.amount,
+        fee: data.fee ?? 0,
+        description: data.description ?? null,
+        transfer_date: data.transfer_date,
+      })
+      if (updated) {
+        setTransfers((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
+        toast({ title: "Sucesso", description: "Transferência actualizada com sucesso.", variant: "success" })
+      }
+    } catch {
+      toast({ title: "Erro", description: "Não foi possível actualizar a transferência.", variant: "error" })
+    }
+  }
+
+  const handleOpenCreate = () => {
+    setEditingTransfer(null)
+    setFormOpen(true)
+  }
+
+  const handleOpenEdit = (transfer: Transfer) => {
+    setEditingTransfer(transfer)
+    setFormOpen(true)
+  }
+
+  const handleFormSubmit = async (data: TransferFormValues) => {
+    if (editingTransfer) {
+      await handleUpdate(data)
+    } else {
+      await handleCreate(data)
+    }
+    setFormOpen(false)
+  }
+
   return (
     <div>
       <PageHeader title="Transferências" description="Gerencie as transferências entre as suas contas">
@@ -78,10 +118,19 @@ function TransfersPage() {
       ) : loading ? (
         <LoadingState type="card" />
       ) : (
-        <TransferList transfers={transfers} loading={false} />
+        <TransferList
+          transfers={transfers}
+          loading={false}
+          onEdit={handleOpenEdit}
+        />
       )}
 
-      <TransferForm open={formOpen} onOpenChange={setFormOpen} onSubmit={handleCreate} />
+      <TransferForm
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        onSubmit={handleFormSubmit}
+        editingTransfer={editingTransfer}
+      />
     </div>
   )
 }
