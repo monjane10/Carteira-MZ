@@ -9,6 +9,7 @@ import { Sidebar } from "./sidebar"
 import { Header } from "./header"
 import { MobileNav } from "./mobile-nav"
 import { BackButton } from "@/components/shared/back-button"
+import { Fab } from "@/components/shared/fab"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -58,6 +59,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </main>
         </ScrollArea>
         <MobileNav />
+        <Fab />
       </div>
     )
   }
