@@ -213,7 +213,7 @@ export function AccountCreateScreen() {
                 className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 pr-16 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">
-                {selectedCurrency === "MZN" ? "MTn" : "$"}
+                {selectedCurrency === "MZN" ? "Mzn" : "$"}
               </span>
             </div>
           </div>
@@ -232,7 +232,7 @@ export function AccountCreateScreen() {
                     : "border border-slate-200 bg-white text-slate-600"
                 )}
               >
-                MTn
+                Mzn
               </button>
               <button
                 type="button"
@@ -274,7 +274,7 @@ export function AccountCreateScreen() {
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-sm font-bold text-[#0F172A]">
-                    {balance > 0 ? formatCurrency(balance) : `0,00 ${selectedCurrency === "MZN" ? "MTn" : "$"}`}
+                    {balance > 0 ? formatCurrency(balance) : `0,00 ${selectedCurrency === "MZN" ? "Mzn" : "$"}`}
                   </p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-slate-300" />

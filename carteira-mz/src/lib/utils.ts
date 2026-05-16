@@ -11,7 +11,7 @@ export function formatCurrency(value: number, currency = "MZN"): string {
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value)
+  }).format(value).replace("MTn", "Mzn")
 }
 
 export function formatDate(date: string | Date, format: "short" | "long" | "relative" = "short"): string {
