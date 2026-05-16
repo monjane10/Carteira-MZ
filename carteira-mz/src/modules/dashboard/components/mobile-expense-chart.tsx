@@ -9,7 +9,7 @@ interface MobileExpenseChartProps {
   data: CategorySpending[]
 }
 
-const COLORS = ["#10B981", "#0F172A", "#1E293B", "#334155", "#64748B", "#94A3B8", "#CBD5E1", "#059669", "#047857"]
+const COLORS = ["#0F172A", "#10B981", "#F59E0B", "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316", "#64748B"]
 
 function formatWhole(value: number): string {
   return new Intl.NumberFormat("pt-MZ", { style: "currency", currency: "MZN", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value)
@@ -18,7 +18,7 @@ function formatWhole(value: number): string {
 function CustomTooltip({ active, payload }: any) {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-md text-xs">
+      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm text-xs">
         <p className="font-semibold text-slate-900">{payload[0].name}</p>
         <p className="text-emerald-600 font-bold">{formatWhole(payload[0].value)}</p>
       </div>

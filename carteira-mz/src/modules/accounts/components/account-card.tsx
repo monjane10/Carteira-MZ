@@ -32,7 +32,7 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950",
+        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:shadow-sm dark:border-slate-800 dark:bg-slate-950",
         onClick && "cursor-pointer"
       )}
     >

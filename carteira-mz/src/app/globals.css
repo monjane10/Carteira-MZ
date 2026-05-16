@@ -8,6 +8,16 @@
   }
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+
 @theme inline {
   --color-background: #FFFFFF;
   --color-foreground: #0F172A;

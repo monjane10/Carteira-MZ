@@ -34,7 +34,7 @@ export function Fab() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-2.5 lg:hidden">
+      <div className="fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2 lg:hidden">
         <AnimatePresence>
           {open && actions.map((action, i) => {
             const Icon = action.icon
@@ -50,7 +50,7 @@ export function Fab() {
                   href={action.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium shadow-md transition-colors",
+                    "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
                     action.color
                   )}
                 >
@@ -66,7 +66,7 @@ export function Fab() {
           type="button"
           onClick={() => setOpen(!open)}
           className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-all",
+            "flex h-10 w-10 items-center justify-center rounded-full transition-all",
             open
               ? "bg-slate-900 text-white rotate-45"
               : "bg-emerald-500 text-white hover:bg-emerald-600"

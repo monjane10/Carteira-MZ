@@ -287,7 +287,7 @@ export function AccountCreateScreen() {
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={isSubmitting}
-            className="w-full h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] shadow-sm transition-all hover:bg-[#1E293B] disabled:opacity-60"
+            className="w-full h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B] disabled:opacity-60"
           >
             <Save className="h-5 w-5" />
             {isSubmitting ? "A guardar..." : "Guardar Conta"}

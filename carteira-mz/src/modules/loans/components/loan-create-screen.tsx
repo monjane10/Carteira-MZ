@@ -202,7 +202,7 @@ export function LoanCreateScreen() {
             <button
               type="submit"
               disabled={isSubmitting || loadingData}
-              className="w-full h-[56px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] shadow-sm transition-all hover:bg-[#1E293B] disabled:opacity-60"
+              className="w-full h-[56px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B] disabled:opacity-60"
             >
               {isSubmitting ? "A guardar..." : "Criar Empréstimo"}
             </button>

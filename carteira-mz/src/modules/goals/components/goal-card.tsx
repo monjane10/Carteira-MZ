@@ -34,7 +34,7 @@ export function GoalCard({ goal, onClick, onDelete }: GoalCardProps) {
     >
       <Card
         className={cn(
-          "cursor-pointer transition-all hover:shadow-md overflow-hidden",
+          "cursor-pointer transition-all hover:shadow-sm overflow-hidden",
           goal.status === "COMPLETED" && "border-emerald-200 dark:border-emerald-900",
           goal.status === "CANCELLED" && "opacity-70"
         )}

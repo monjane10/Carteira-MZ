@@ -16,7 +16,7 @@ export function MobileDashboard() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
-  const [expenses, setExpenses] = useState<Transaction[]>([])
+  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [categoryMap, setCategoryMap] = useState<Record<string, Category>>({})
   const [loading, setLoading] = useState(true)
 
@@ -39,7 +39,7 @@ export function MobileDashboard() {
       setSummary(summaryData)
       setAccounts(accountsData)
       setCategorySpending(spendingData)
-      setExpenses(transactionsData)
+      setRecentTransactions(transactionsData)
 
       const map: Record<string, Category> = {}
       for (const cat of categories) {
@@ -77,7 +77,7 @@ export function MobileDashboard() {
 
       <MobileExpenseChart data={categorySpending} />
 
-      <MobileExpenseList transactions={expenses} categoryMap={categoryMap} />
+      <MobileExpenseList transactions={recentTransactions} categoryMap={categoryMap} />
     </div>
   )
 }

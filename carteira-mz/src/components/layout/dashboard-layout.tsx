@@ -43,7 +43,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   if (isMobile === undefined) {
     return (
       <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto hide-scrollbar">
           <main className="px-4 pt-5 pb-24">{children}</main>
         </div>
       </div>
@@ -53,7 +53,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   if (isMobile) {
     return (
       <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto hide-scrollbar">
           <main className="px-4 pt-5 pb-24">
             <Back>{children}</Back>
           </main>
