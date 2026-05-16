@@ -126,7 +126,6 @@ function LoansPage() {
       <div>
         <LoanDetail
           loanId={selectedLoanId}
-          onBack={() => setSelectedLoanId(null)}
           onLoanUpdated={fetchLoans}
         />
       </div>

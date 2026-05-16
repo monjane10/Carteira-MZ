@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { ArrowLeft, User, Phone, Calendar, Plus, TrendingUp } from "lucide-react"
+import { User, Phone, Calendar, Plus, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -21,7 +21,6 @@ type LoanPaymentFormValues = z.infer<typeof loanPaymentSchema>
 
 interface LoanDetailProps {
   loanId: string
-  onBack: () => void
   onLoanUpdated: () => void
 }
 
@@ -32,7 +31,7 @@ const STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" |
   OVERDUE: "error",
 }
 
-export function LoanDetail({ loanId, onBack, onLoanUpdated }: LoanDetailProps) {
+export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
   const [loan, setLoan] = useState<Loan | null>(null)
   const [payments, setPayments] = useState<LoanPayment[]>([])
   const [loading, setLoading] = useState(true)
@@ -88,9 +87,6 @@ export function LoanDetail({ loanId, onBack, onLoanUpdated }: LoanDetailProps) {
     return (
       <div className="flex flex-col items-center py-16 text-center">
         <p className="text-sm text-slate-500">Empréstimo não encontrado.</p>
-        <Button variant="outline" size="sm" className="mt-4" onClick={onBack}>
-          Voltar
-        </Button>
       </div>
     )
   }
@@ -109,11 +105,6 @@ export function LoanDetail({ loanId, onBack, onLoanUpdated }: LoanDetailProps) {
       animate={{ opacity: 1, x: 0 }}
       className="space-y-6"
     >
-      <Button variant="ghost" size="sm" onClick={onBack}>
-        <ArrowLeft className="mr-1.5 h-4 w-4" />
-        Voltar
-      </Button>
-
       <Card>
         <CardContent className="p-6">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
