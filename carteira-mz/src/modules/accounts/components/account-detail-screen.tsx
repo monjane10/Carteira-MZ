@@ -106,7 +106,7 @@ export function AccountDetailScreen() {
         is_active: account.is_active,
         currency: account.currency,
       })
-      setAccount((prev) => prev ? { ...prev, name: editName.trim(), type: editType, balance: Number(editBalance) || prev.balance, institution_id: institutionId, institution: institutionId ? prev?.institution : null } : prev)
+      setAccount((prev) => prev ? { ...prev, name: editName.trim(), type: editType, balance: Number(editBalance) || prev.balance, institution_id: institutionId, institution: institutionId ? prev?.institution : undefined } : prev)
       setShowEdit(false)
       toast({ title: "Conta actualizada", variant: "success" })
     } catch {
