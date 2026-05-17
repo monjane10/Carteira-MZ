@@ -5,6 +5,15 @@ import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Edit3, Trash2, Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle, Check } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
 import { formatCurrency, cn } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
 import { ACCOUNT_TYPE_LABELS, ACCOUNT_TYPE_COLORS } from "@/constants"
@@ -61,8 +70,28 @@ export function AccountDetailScreen() {
 
   if (loading) {
     return (
-      <div className="min-h-dvh bg-white flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600" />
+      <div className="min-h-dvh bg-white flex flex-col px-4 pt-5 pb-28">
+        <Skeleton className="h-6 w-48 mb-6" />
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 mt-2 text-center">
+          <div className="flex justify-center mb-4">
+            <Skeleton className="h-20 w-20 rounded-2xl" />
+          </div>
+          <Skeleton className="h-5 w-32 mx-auto" />
+          <Skeleton className="h-3 w-20 mx-auto mt-1" />
+          <Skeleton className="h-8 w-36 mx-auto mt-4" />
+          <Skeleton className="h-3 w-28 mx-auto mt-1" />
+        </div>
+        <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
+              <Skeleton className="h-8 w-8 rounded-xl" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -219,20 +248,24 @@ export function AccountDetailScreen() {
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</label>
-                <select
+                <Select
                   value={editType}
-                  onChange={(e) => {
-                    setEditType(e.target.value as AccountType)
-                    if (e.target.value !== "BANK" && e.target.value !== "MOBILE_MONEY") {
+                  onValueChange={(value) => {
+                    setEditType(value as AccountType)
+                    if (value !== "BANK" && value !== "MOBILE_MONEY") {
                       setEditInstitution("")
                     }
                   }}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 >
-                  {(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full h-12 rounded-xl border border-slate-200 px-4 text-[15px] text-[#0F172A]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {(editType === "BANK" || editType === "MOBILE_MONEY") && (
@@ -283,21 +316,21 @@ export function AccountDetailScreen() {
 
               <div>
                 <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Nome</label>
-                <input
+                <Input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  className="h-12"
                 />
               </div>
               <div>
                 <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Saldo</label>
-                <input
+                <Input
                   type="number"
                   step="0.01"
                   value={editBalance}
                   onChange={(e) => setEditBalance(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  className="h-12"
                 />
               </div>
             </div>

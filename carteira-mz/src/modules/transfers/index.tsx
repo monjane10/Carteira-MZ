@@ -1,107 +1,22 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { LoadingState } from "@/components/shared/loading-state"
 import { Button } from "@/components/ui/button"
-import { toast } from "@/hooks/use-toast"
 import { TransferList } from "./components/transfer-list"
-import { TransferForm } from "./components/transfer-form"
-import { transfers as transferService, accounts as accountService } from "@/services"
-import { formatCurrency, formatDate } from "@/lib/utils"
-import type { Transfer, Account } from "@/types"
-import type { z } from "zod"
-import type { transferSchema } from "@/validators"
-import { motion } from "framer-motion"
-
-type TransferFormValues = z.infer<typeof transferSchema>
+import { useTransferStore } from "@/store"
 
 function TransfersPage() {
   const router = useRouter()
-  const [transfers, setTransfers] = useState<Transfer[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [formOpen, setFormOpen] = useState(false)
-  const [editingTransfer, setEditingTransfer] = useState<Transfer | null>(null)
-  const [accounts, setAccounts] = useState<Account[]>([])
-
-  const fetchTransfers = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const [data, accs] = await Promise.all([
-        transferService.getTransfers(),
-        accountService.getAccounts(),
-      ])
-      setTransfers(data)
-      setAccounts(accs)
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const { transfers, isLoading, error, fetchTransfers } = useTransferStore()
 
   useEffect(() => {
     fetchTransfers()
   }, [fetchTransfers])
-
-  const handleCreate = async (data: TransferFormValues) => {
-    try {
-      const newTransfer = await transferService.createTransfer({
-        from_account_id: data.from_account_id,
-        to_account_id: data.to_account_id,
-        amount: data.amount,
-        fee: data.fee ?? 0,
-        description: data.description ?? null,
-        transfer_date: data.transfer_date,
-      })
-      setTransfers((prev) => [newTransfer, ...prev])
-      toast({ title: "Sucesso", description: "Transferência criada com sucesso.", variant: "success" })
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    }
-  }
-
-  const handleUpdate = async (data: TransferFormValues) => {
-    if (!editingTransfer) return
-    try {
-      const updated = await transferService.updateTransfer(editingTransfer.id, {
-        from_account_id: data.from_account_id,
-        to_account_id: data.to_account_id,
-        amount: data.amount,
-        fee: data.fee ?? 0,
-        description: data.description ?? null,
-        transfer_date: data.transfer_date,
-      })
-      if (updated) {
-        setTransfers((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
-        toast({ title: "Sucesso", description: "Transferência actualizada com sucesso.", variant: "success" })
-      }
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    }
-  }
-
-  const handleOpenEdit = (transfer: Transfer) => {
-    setEditingTransfer(transfer)
-    setFormOpen(true)
-  }
-
-  const handleFormSubmit = async (data: TransferFormValues) => {
-    if (editingTransfer) {
-      await handleUpdate(data)
-    } else {
-      await handleCreate(data)
-    }
-    setFormOpen(false)
-  }
 
   return (
     <div>
@@ -121,7 +36,7 @@ function TransfersPage() {
             Tentar novamente
           </button>
         </div>
-      ) : loading ? (
+      ) : isLoading ? (
         <LoadingState type="card" />
       ) : (
         <TransferList
@@ -130,13 +45,6 @@ function TransfersPage() {
           onClick={(t) => router.push(`/transferencias/${t.id}`)}
         />
       )}
-
-      <TransferForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        onSubmit={handleFormSubmit}
-        editingTransfer={editingTransfer}
-      />
     </div>
   )
 }

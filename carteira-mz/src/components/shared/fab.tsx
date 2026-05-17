@@ -8,8 +8,8 @@ import { Plus, TrendingUp, TrendingDown, ArrowLeftRight, HandCoins } from "lucid
 import { cn } from "@/lib/utils"
 
 const actions = [
-  { label: "Receita", icon: TrendingUp, href: "/transacoes/nova", color: "text-emerald-600 bg-emerald-50" },
-  { label: "Despesa", icon: TrendingDown, href: "/transacoes/nova", color: "text-red-500 bg-red-50" },
+  { label: "Receita", icon: TrendingUp, href: "/transacoes/nova?type=INCOME", color: "text-emerald-600 bg-emerald-50" },
+  { label: "Despesa", icon: TrendingDown, href: "/transacoes/nova?type=EXPENSE", color: "text-red-500 bg-red-50" },
   { label: "Transferência", icon: ArrowLeftRight, href: "/transferencias/nova", color: "text-blue-500 bg-blue-50" },
   { label: "Empréstimo", icon: HandCoins, href: "/emprestimos/nova", color: "text-orange-500 bg-orange-50" },
 ]

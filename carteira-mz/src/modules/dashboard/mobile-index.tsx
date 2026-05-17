@@ -1,7 +1,9 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import dynamic from "next/dynamic"
+import { motion } from "framer-motion"
+import { Loader2 } from "lucide-react"
 import { MonthNavigator } from "./components/month-navigator"
 import { LoadingState } from "@/components/shared/loading-state"
 import { MobileGreeting } from "./components/mobile-greeting"
@@ -24,6 +26,10 @@ export function MobileDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [targetYear, setTargetYear] = useState(new Date().getFullYear())
   const [targetMonth, setTargetMonth] = useState(new Date().getMonth())
+  const [refreshing, setRefreshing] = useState(false)
+  const [pullDistance, setPullDistance] = useState(0)
+  const touchStartY = useRef(0)
+  const pulling = useRef(false)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -60,9 +66,68 @@ export function MobileDashboard() {
     }
   }, [targetYear, targetMonth])
 
+  const refresh = useCallback(async () => {
+    setRefreshing(true)
+    setPullDistance(0)
+    try {
+      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
+      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
+      const targetDate = new Date(targetYear, targetMonth, 1)
+
+      const [summaryData, accountsData, spendingData, transactionsData, categories] =
+        await Promise.all([
+          dashboardService.getDashboardSummary(targetDate),
+          accountService.getAccounts(),
+          dashboardService.getCategorySpending(startOfMonth, endOfMonth),
+          dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
+          categoryService.getCategories(),
+        ])
+
+      setSummary(summaryData)
+      setAccounts(accountsData)
+      setCategorySpending(spendingData)
+      setRecentTransactions(transactionsData)
+
+      const map: Record<string, Category> = {}
+      for (const cat of categories) {
+        map[cat.id] = cat
+      }
+      setCategoryMap(map)
+    } catch (error) {
+      console.error("Failed to refresh:", error)
+    } finally {
+      setRefreshing(false)
+    }
+  }, [targetYear, targetMonth])
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (window.scrollY === 0) {
+      touchStartY.current = e.touches[0].clientY
+      pulling.current = true
+    }
+  }, [])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!pulling.current) return
+    const diff = e.touches[0].clientY - touchStartY.current
+    if (diff > 0) {
+      setPullDistance(Math.min(diff * 0.5, 100))
+    }
+  }, [])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!pulling.current) return
+    pulling.current = false
+    if (pullDistance > 60) {
+      refresh()
+    } else {
+      setPullDistance(0)
+    }
+  }, [pullDistance, refresh])
 
   if (loading) {
     return (
@@ -86,7 +151,25 @@ export function MobileDashboard() {
   }
 
   return (
-    <div className="flex w-full max-w-full min-w-0 flex-col gap-5">
+    <div
+      className="flex w-full max-w-full min-w-0 flex-col gap-5"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {(pullDistance > 0 || refreshing) && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: pullDistance > 0 ? pullDistance : 40 }}
+          className="flex items-center justify-center overflow-hidden"
+        >
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Loader2 className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "A actualizar..." : "Solte para actualizar"}
+          </div>
+        </motion.div>
+      )}
+
       <MobileGreeting />
 
       <MonthNavigator

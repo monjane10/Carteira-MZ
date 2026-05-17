@@ -4,12 +4,13 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Edit3, Trash2, ArrowRightLeft, Calendar, Percent } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { formatCurrency } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
-import { transfers as transferService, accounts as accountService } from "@/services"
+import { transfers as transferService } from "@/services"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { TransferForm } from "./transfer-form"
-import type { Transfer, Account } from "@/types"
+import type { Transfer } from "@/types"
 import type { z } from "zod"
 import type { transferSchema } from "@/validators"
 
@@ -36,8 +37,26 @@ export function TransferDetailScreen() {
 
   if (loading) {
     return (
-      <div className="min-h-dvh bg-white flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600" />
+      <div className="min-h-dvh bg-white flex flex-col px-4 pt-5 pb-28">
+        <Skeleton className="h-6 w-48 mb-6" />
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 mt-2 text-center">
+          <div className="flex justify-center mb-4">
+            <Skeleton className="h-20 w-20 rounded-2xl" />
+          </div>
+          <Skeleton className="h-8 w-36 mx-auto" />
+          <Skeleton className="h-4 w-44 mx-auto mt-3" />
+        </div>
+        <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
+              <Skeleton className="h-8 w-8 rounded-xl" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }

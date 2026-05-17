@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -16,6 +16,8 @@ import type { z } from "zod"
 
 export function TransactionCreateScreen() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialType = (searchParams.get("type") as TransactionType) ?? "EXPENSE"
   const [accounts, setAccounts] = useState<Account[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loadingData, setLoadingData] = useState(true)
@@ -31,7 +33,7 @@ export function TransactionCreateScreen() {
     defaultValues: {
       account_id: "",
       category_id: null,
-      type: "EXPENSE",
+      type: initialType,
       amount: 0,
       description: "",
       transaction_date: new Date().toISOString().split("T")[0],

@@ -14,6 +14,7 @@ import {
   Filter,
   X,
   Trash2,
+  Download,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -92,6 +93,28 @@ export function TransactionList({ transactions, loading, onEdit, onDelete }: Tra
     )
   }
 
+  function exportTransactionsCSV() {
+    const BOM = "\uFEFF"
+    const headers = "Data,Tipo,Descrição,Categoria,Conta,Valor (MZN)"
+    const rows = filtered.map((t) => {
+      const date = new Date(t.transaction_date).toLocaleDateString("pt-MZ")
+      const type = TRANSACTION_TYPE_LABELS[t.type] ?? t.type
+      const desc = (t.description ?? "").replace(/,/g, " ")
+      const cat = t.category?.name ?? ""
+      const acc = t.account?.name ?? ""
+      const value = t.type === "INCOME" ? t.amount : -t.amount
+      return `${date},${type},${desc},${cat},${acc},${value.toFixed(2)}`
+    })
+    const csv = BOM + headers + "\n" + rows.join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `transacoes_${new Date().toISOString().split("T")[0]}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   if (transactions.length === 0) {
     return (
       <EmptyState
@@ -136,6 +159,16 @@ export function TransactionList({ transactions, loading, onEdit, onDelete }: Tra
             ))}
           </SelectContent>
         </Select>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={exportTransactionsCSV}
+          className="shrink-0"
+          aria-label="Exportar CSV"
+        >
+          <Download className="mr-1.5 h-4 w-4" />
+          CSV
+        </Button>
       </div>
 
       {filtered.length === 0 ? (

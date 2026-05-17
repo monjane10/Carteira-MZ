@@ -1,5 +1,10 @@
+import { Suspense } from "react"
 import { TransactionCreateScreen } from "@/modules/transactions/components/transaction-create-screen"
 
 export default function NovaTransacaoPage() {
-  return <TransactionCreateScreen />
+  return (
+    <Suspense fallback={null}>
+      <TransactionCreateScreen />
+    </Suspense>
+  )
 }
