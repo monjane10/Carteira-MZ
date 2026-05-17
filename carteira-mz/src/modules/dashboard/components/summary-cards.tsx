@@ -36,12 +36,12 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
     >
       <motion.div variants={item} className="sm:col-span-2 lg:col-span-1">
-        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] p-5 shadow-sm">
+        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-[#1E3A5F] via-[#2563EB] to-[#3B82F6] p-5 shadow-sm">
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/5" />
           <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/[0.03]" />
 
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-medium tracking-wide text-slate-400 uppercase">
+            <span className="text-[11px] font-medium tracking-wide text-blue-200 uppercase">
               Saldo Total
             </span>
             <button
