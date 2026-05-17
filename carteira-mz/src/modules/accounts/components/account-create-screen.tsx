@@ -20,7 +20,7 @@ const schema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
   type: z.enum(["BANK", "MOBILE_MONEY"]),
   institution: z.string().min(1, "Seleccione uma instituição"),
-  initial_balance: z.number().min(0).default(0),
+  initial_balance: z.number().min(0),
   currency: z.enum(["MZN", "USD"]),
 })
 
@@ -69,7 +69,7 @@ export function AccountCreateScreen() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       type: "BANK",

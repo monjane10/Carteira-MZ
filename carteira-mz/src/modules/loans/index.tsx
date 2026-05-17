@@ -38,12 +38,9 @@ function LoansPage() {
         phone: data.phone ?? null,
         type: data.type,
         total_amount: data.total_amount,
-        paid_amount: 0,
-        remaining_amount: data.total_amount,
         interest_amount: data.interest_amount ?? 0,
         description: data.description ?? null,
         due_date: data.due_date ?? null,
-        status: "PENDING",
       })
       toast({ title: "Sucesso", description: "Empréstimo criado com sucesso.", variant: "success" })
     } catch (e) {

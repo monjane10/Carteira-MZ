@@ -8,8 +8,8 @@ interface CategoryState {
   error: string | null
   fetchCategories: () => Promise<void>
   getCategoryById: (id: string) => Category | undefined
-  addCategory: (data: any) => Promise<void>
-  updateCategory: (id: string, data: any) => Promise<void>
+  addCategory: (data: Parameters<typeof categoryService.createCategory>[0]) => Promise<void>
+  updateCategory: (id: string, data: Parameters<typeof categoryService.updateCategory>[1]) => Promise<void>
   removeCategory: (id: string) => Promise<void>
 }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { User, Phone, Calendar, Plus, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -37,7 +37,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
   const [loading, setLoading] = useState(true)
   const [showPaymentForm, setShowPaymentForm] = useState(false)
 
-  const fetchData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true)
     try {
       const [loanData, paymentsData] = await Promise.all([
@@ -52,11 +52,11 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [loanId])
 
   useEffect(() => {
-    fetchData()
-  }, [loanId])
+    loadData()
+  }, [loadData])
 
   const handleAddPayment = async (data: LoanPaymentFormValues) => {
     try {
@@ -68,7 +68,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       toast({ title: "Sucesso", description: "Pagamento registado com sucesso.", variant: "success" })
       setShowPaymentForm(false)
       onLoanUpdated()
-      fetchData()
+      loadData()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       toast({ title: "Erro", description: msg, variant: "error" })

@@ -9,11 +9,11 @@ interface GoalState {
   error: string | null
   fetchGoals: () => Promise<void>
   getGoalById: (id: string) => Goal | undefined
-  addGoal: (data: any) => Promise<void>
-  updateGoal: (id: string, data: any) => Promise<void>
+  addGoal: (data: Parameters<typeof goalService.createGoal>[0]) => Promise<void>
+  updateGoal: (id: string, data: Parameters<typeof goalService.updateGoal>[1]) => Promise<void>
   removeGoal: (id: string) => Promise<void>
   fetchGoalContributions: (goalId: string) => Promise<void>
-  addGoalContribution: (goalId: string, data: any) => Promise<void>
+  addGoalContribution: (goalId: string, data: Parameters<typeof goalService.createGoalContribution>[1]) => Promise<void>
 }
 
 export const useGoalStore = create<GoalState>((set, get) => ({

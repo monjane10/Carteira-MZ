@@ -18,7 +18,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { goalSchema } from "@/validators"
@@ -58,7 +57,7 @@ export function GoalForm({ open, onOpenChange, onSubmit, editingGoal }: GoalForm
     watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof goalSchema>>({
-    resolver: zodResolver(goalSchema) as any,
+    resolver: zodResolver(goalSchema),
     defaultValues: {
       title: "",
       description: "",

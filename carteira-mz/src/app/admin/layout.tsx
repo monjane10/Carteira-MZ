@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { LayoutDashboard, Users, Building2, LogOut, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { supabase } from "@/services"
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
@@ -22,8 +23,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const isLoginPage = pathname === "/admin/login"
 
-  const handleLogout = () => {
-    setShowLogoutConfirm(false)
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     router.push("/admin/login")
   }
 

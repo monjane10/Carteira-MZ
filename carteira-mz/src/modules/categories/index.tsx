@@ -35,7 +35,6 @@ function CategoriesPage() {
         type: data.type,
         color: null,
         icon: data.icon ?? null,
-        is_default: false,
       })
       toast({ title: "Sucesso", description: "Categoria criada com sucesso.", variant: "success" })
     } catch (e) {

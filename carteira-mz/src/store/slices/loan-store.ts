@@ -9,11 +9,11 @@ interface LoanState {
   error: string | null
   fetchLoans: () => Promise<void>
   getLoanById: (id: string) => Loan | undefined
-  addLoan: (data: any) => Promise<void>
-  updateLoan: (id: string, data: any) => Promise<void>
+  addLoan: (data: Parameters<typeof loanService.createLoan>[0]) => Promise<void>
+  updateLoan: (id: string, data: Parameters<typeof loanService.updateLoan>[1]) => Promise<void>
   removeLoan: (id: string) => Promise<void>
   fetchLoanPayments: (loanId: string) => Promise<void>
-  addLoanPayment: (loanId: string, data: any) => Promise<void>
+  addLoanPayment: (loanId: string, data: Parameters<typeof loanService.createLoanPayment>[1]) => Promise<void>
 }
 
 export const useLoanStore = create<LoanState>((set, get) => ({

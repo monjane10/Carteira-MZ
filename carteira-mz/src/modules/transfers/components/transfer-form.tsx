@@ -48,7 +48,7 @@ export function TransferForm({ open, onOpenChange, onSubmit, editingTransfer }: 
     watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof transferSchema>>({
-    resolver: zodResolver(transferSchema) as any,
+    resolver: zodResolver(transferSchema),
     defaultValues: {
       from_account_id: "",
       to_account_id: "",

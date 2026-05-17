@@ -46,11 +46,11 @@ export function LoadingState({ type = "card" }: LoadingStateProps) {
     return (
       <div className="space-y-4">
         <div className="flex items-end gap-2" style={{ height: 200 }}>
-          {Array.from({ length: 7 }).map((_, i) => (
+          {[60, 85, 45, 70, 90, 55, 75].map((h, i) => (
             <Skeleton
               key={i}
               className="flex-1 rounded-b-none"
-              style={{ height: `${40 + Math.random() * 60}%` }}
+              style={{ height: `${h}%` }}
             />
           ))}
         </div>

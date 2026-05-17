@@ -222,13 +222,6 @@ function AutoDismissToast({
 
 function Toaster() {
   const { toasts, dismissToast } = useToast()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
 
   return (
     <ToastProvider>

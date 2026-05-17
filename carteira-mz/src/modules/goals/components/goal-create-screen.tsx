@@ -25,7 +25,7 @@ export function GoalCreateScreen() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof goalSchema>>({
-    resolver: zodResolver(goalSchema) as any,
+    resolver: zodResolver(goalSchema),
     defaultValues: {
       title: "",
       description: "",

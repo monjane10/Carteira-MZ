@@ -27,7 +27,7 @@ function DashboardPage() {
   const [targetYear, setTargetYear] = useState(new Date().getFullYear())
   const [targetMonth, setTargetMonth] = useState(new Date().getMonth())
 
-  const fetchData = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -50,23 +50,25 @@ function DashboardPage() {
       setCategorySpending(spendingData)
       setRecentTransactions(transactionsData)
       setGoals(goalsData)
-
-      const map: Record<string, Category> = {}
-      for (const cat of categories) {
-        map[cat.id] = cat
-      }
-      setCategoryMap(map)
-    } catch (error) {
-      console.error("Failed to fetch dashboard data:", error)
-      setError("Não foi possível carregar o dashboard.")
+      setCategoryMap(
+        categories.reduce<Record<string, Category>>((acc, cat) => {
+          acc[cat.id] = cat
+          return acc
+        }, {})
+      )
+      setError(null)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      /* empty state instead of toast */
+      setError(msg)
     } finally {
       setLoading(false)
     }
   }, [targetYear, targetMonth])
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    loadDashboard()
+  }, [loadDashboard])
 
   if (loading) {
     return (
@@ -91,7 +93,7 @@ function DashboardPage() {
         <PageHeader title="Dashboard" description="Visão geral das suas finanças" />
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="text-sm text-red-500 mb-3">{error}</p>
-          <button onClick={fetchData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+          <button onClick={loadDashboard} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
             Tentar novamente
           </button>
         </div>

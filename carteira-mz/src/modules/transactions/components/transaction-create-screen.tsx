@@ -29,7 +29,7 @@ export function TransactionCreateScreen() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof transactionSchema>>({
-    resolver: zodResolver(transactionSchema) as any,
+    resolver: zodResolver(transactionSchema),
     defaultValues: {
       account_id: "",
       category_id: null,

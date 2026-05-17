@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Target, Calendar, Plus, TrendingUp, PiggyBank, BarChart3 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -38,7 +38,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
   const [loading, setLoading] = useState(true)
   const [showContributionForm, setShowContributionForm] = useState(false)
 
-  const fetchData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true)
     try {
       const [goalData, contributionsData] = await Promise.all([
@@ -53,11 +53,11 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [goalId])
 
   useEffect(() => {
-    fetchData()
-  }, [goalId])
+    loadData()
+  }, [loadData])
 
   const handleAddContribution = async (data: GoalContributionFormValues) => {
     try {
@@ -69,7 +69,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       toast({ title: "Sucesso", description: "Contribuição registada com sucesso.", variant: "success" })
       setShowContributionForm(false)
       onGoalUpdated()
-      fetchData()
+      loadData()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       toast({ title: "Erro", description: msg, variant: "error" })

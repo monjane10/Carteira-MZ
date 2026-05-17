@@ -7,8 +7,8 @@ interface TransferState {
   isLoading: boolean
   error: string | null
   fetchTransfers: () => Promise<void>
-  addTransfer: (data: any) => Promise<void>
-  updateTransfer: (id: string, data: any) => Promise<void>
+  addTransfer: (data: Parameters<typeof transferService.createTransfer>[0]) => Promise<void>
+  updateTransfer: (id: string, data: Parameters<typeof transferService.updateTransfer>[1]) => Promise<void>
   removeTransfer: (id: string) => Promise<void>
 }
 

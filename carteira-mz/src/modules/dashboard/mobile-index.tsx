@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { Loader2 } from "lucide-react"
@@ -31,7 +31,7 @@ export function MobileDashboard() {
   const touchStartY = useRef(0)
   const pulling = useRef(false)
 
-  const fetchData = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -66,68 +66,59 @@ export function MobileDashboard() {
     }
   }, [targetYear, targetMonth])
 
-  const refresh = useCallback(async () => {
-    setRefreshing(true)
-    setPullDistance(0)
-    try {
-      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
-      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
-      const targetDate = new Date(targetYear, targetMonth, 1)
-
-      const [summaryData, accountsData, spendingData, transactionsData, categories] =
-        await Promise.all([
-          dashboardService.getDashboardSummary(targetDate),
-          accountService.getAccounts(),
-          dashboardService.getCategorySpending(startOfMonth, endOfMonth),
-          dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
-          categoryService.getCategories(),
-        ])
-
-      setSummary(summaryData)
-      setAccounts(accountsData)
-      setCategorySpending(spendingData)
-      setRecentTransactions(transactionsData)
-
-      const map: Record<string, Category> = {}
-      for (const cat of categories) {
-        map[cat.id] = cat
-      }
-      setCategoryMap(map)
-    } catch (error) {
-      console.error("Failed to refresh:", error)
-    } finally {
-      setRefreshing(false)
-    }
-  }, [targetYear, targetMonth])
-
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    loadDashboard()
+  }, [loadDashboard])
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     if (window.scrollY === 0) {
       touchStartY.current = e.touches[0].clientY
       pulling.current = true
     }
-  }, [])
+  }
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent) => {
     if (!pulling.current) return
     const diff = e.touches[0].clientY - touchStartY.current
     if (diff > 0) {
       setPullDistance(Math.min(diff * 0.5, 100))
     }
-  }, [])
+  }
 
-  const handleTouchEnd = useCallback(() => {
+  const handleTouchEnd = () => {
     if (!pulling.current) return
     pulling.current = false
     if (pullDistance > 60) {
-      refresh()
+      setRefreshing(true)
+      setPullDistance(0)
+      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
+      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
+      const targetDate = new Date(targetYear, targetMonth, 1)
+      Promise.all([
+        dashboardService.getDashboardSummary(targetDate),
+        accountService.getAccounts(),
+        dashboardService.getCategorySpending(startOfMonth, endOfMonth),
+        dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
+        categoryService.getCategories(),
+      ]).then(([summaryData, accountsData, spendingData, transactionsData, categories]) => {
+        setSummary(summaryData)
+        setAccounts(accountsData)
+        setCategorySpending(spendingData)
+        setRecentTransactions(transactionsData)
+        const map: Record<string, Category> = {}
+        for (const cat of categories) {
+          map[cat.id] = cat
+        }
+        setCategoryMap(map)
+      }).catch((error) => {
+        console.error("Failed to refresh:", error)
+      }).finally(() => {
+        setRefreshing(false)
+      })
     } else {
       setPullDistance(0)
     }
-  }, [pullDistance, refresh])
+  }
 
   if (loading) {
     return (
@@ -143,7 +134,7 @@ export function MobileDashboard() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={fetchData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+        <button onClick={loadDashboard} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>

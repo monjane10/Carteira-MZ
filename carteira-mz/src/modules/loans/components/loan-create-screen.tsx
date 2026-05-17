@@ -28,12 +28,13 @@ export function LoanCreateScreen() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof loanSchema>>({
-    resolver: zodResolver(loanSchema) as any,
+    resolver: zodResolver(loanSchema),
     defaultValues: {
       person_name: "",
       phone: "",
       type: "GIVEN",
       total_amount: 0,
+      paid_amount: 0,
       interest_amount: 0,
       account_id: null,
       description: "",

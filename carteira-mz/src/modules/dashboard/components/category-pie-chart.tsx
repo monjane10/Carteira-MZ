@@ -67,7 +67,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
                 fontSize: 12,
               }}
               formatter={(value: any, name: any) => [
-                formatCurrency(Number(value)),
+                formatCurrency(Number(value ?? 0)),
                 name,
               ]}
             />

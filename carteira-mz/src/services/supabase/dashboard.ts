@@ -31,12 +31,21 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
     const totalIncome = txList.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
     const totalExpenses = txList.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
 
-    const monthlyTx = txList.filter(
-      (t) => t.transaction_date >= startOfMonth && t.transaction_date <= endOfMonth,
-    )
-    const prevTx = txList.filter(
-      (t) => t.transaction_date >= startOfPrevMonth && t.transaction_date < startOfMonth,
-    )
+    const [monthlyData, prevData] = await Promise.all([
+      supabase
+        .from("transactions")
+        .select("type, amount")
+        .gte("transaction_date", startOfMonth)
+        .lte("transaction_date", endOfMonth),
+      supabase
+        .from("transactions")
+        .select("type, amount")
+        .gte("transaction_date", startOfPrevMonth)
+        .lt("transaction_date", startOfMonth),
+    ])
+
+    const monthlyTx = (monthlyData.data ?? []) as { type: string; amount: number }[]
+    const prevTx = (prevData.data ?? []) as { type: string; amount: number }[]
 
     const monthlyIncome = monthlyTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
     const monthlyExpenses = monthlyTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
@@ -85,12 +94,15 @@ export async function getMonthlyEvolution(months = 6): Promise<MonthlyEvolution[
       "Jul", "Ago", "Set", "Out", "Nov", "Dez",
     ]
 
-    const { data: allTx } = await supabase
+    const now = new Date()
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
+
+    const { data: txData } = await supabase
       .from("transactions")
       .select("type, amount, transaction_date")
+      .gte("transaction_date", sixMonthsAgo.toISOString())
 
-    const txList = (allTx ?? []) as { type: string; amount: number; transaction_date: string }[]
-    const now = new Date()
+    const txList = (txData ?? []) as { type: string; amount: number; transaction_date: string }[]
     const result: MonthlyEvolution[] = []
 
     for (let i = months - 1; i >= 0; i--) {

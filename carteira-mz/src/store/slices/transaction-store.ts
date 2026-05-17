@@ -8,8 +8,8 @@ interface TransactionState {
   error: string | null
   fetchTransactions: () => Promise<void>
   getTransactionById: (id: string) => Transaction | undefined
-  addTransaction: (data: any) => Promise<void>
-  updateTransaction: (id: string, data: any) => Promise<void>
+  addTransaction: (data: Parameters<typeof transactionService.createTransaction>[0]) => Promise<void>
+  updateTransaction: (id: string, data: Parameters<typeof transactionService.updateTransaction>[1]) => Promise<void>
   removeTransaction: (id: string) => Promise<void>
 }
 

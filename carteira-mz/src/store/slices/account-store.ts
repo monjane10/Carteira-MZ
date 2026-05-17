@@ -8,8 +8,8 @@ interface AccountState {
   error: string | null
   fetchAccounts: () => Promise<void>
   getAccountById: (id: string) => Account | undefined
-  addAccount: (data: any) => Promise<void>
-  updateAccount: (id: string, data: any) => Promise<void>
+  addAccount: (data: Parameters<typeof accountService.createAccount>[0]) => Promise<void>
+  updateAccount: (id: string, data: Parameters<typeof accountService.updateAccount>[1]) => Promise<void>
   removeAccount: (id: string) => Promise<void>
 }
 

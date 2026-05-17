@@ -24,7 +24,7 @@ function ReportsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchData = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -53,8 +53,8 @@ function ReportsPage() {
   }, [dateRange])
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    loadData()
+  }, [loadData])
 
   const handleExport = () => {
     toast({ title: "Exportar", description: "Funcionalidade de exportação em desenvolvimento.", variant: "info" })
@@ -64,7 +64,7 @@ function ReportsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={fetchData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+        <button onClick={loadData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>

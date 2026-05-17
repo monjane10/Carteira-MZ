@@ -7,8 +7,8 @@ interface BudgetState {
   isLoading: boolean
   error: string | null
   fetchBudgets: () => Promise<void>
-  addBudget: (data: any) => Promise<void>
-  updateBudget: (id: string, data: any) => Promise<void>
+  addBudget: (data: Parameters<typeof budgetService.createBudget>[0]) => Promise<void>
+  updateBudget: (id: string, data: Parameters<typeof budgetService.updateBudget>[1]) => Promise<void>
   removeBudget: (id: string) => Promise<void>
 }
 

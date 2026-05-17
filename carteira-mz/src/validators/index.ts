@@ -20,7 +20,7 @@ export const transactionSchema = z.object({
   description: z.string().nullable().optional(),
   reference_code: z.string().nullable().optional(),
   transaction_date: z.string().min(1, "Data é obrigatória"),
-  is_recurring: z.boolean().default(false),
+  is_recurring: z.boolean(),
 })
 
 export const categorySchema = z.object({
@@ -34,7 +34,7 @@ export const transferSchema = z.object({
   from_account_id: z.string().min(1, "Conta de origem é obrigatória"),
   to_account_id: z.string().min(1, "Conta de destino é obrigatória"),
   amount: z.number().min(0.01, "Valor deve ser maior que zero"),
-  fee: z.number().min(0).default(0),
+  fee: z.number().min(0),
   description: z.string().nullable().optional(),
   transfer_date: z.string().min(1, "Data é obrigatória"),
 })
@@ -45,8 +45,8 @@ export const loanSchema = z.object({
   phone: z.string().nullable().optional(),
   type: z.enum(["GIVEN", "TAKEN"]),
   total_amount: z.number().min(1, "Valor deve ser maior que zero"),
-  paid_amount: z.number().min(0).default(0),
-  interest_amount: z.number().min(0).default(0),
+  paid_amount: z.number().min(0),
+  interest_amount: z.number().min(0),
   description: z.string().nullable().optional(),
   due_date: z.string().nullable().optional(),
 })
@@ -62,7 +62,7 @@ export const goalSchema = z.object({
   title: z.string().min(2, "Título deve ter pelo menos 2 caracteres").max(150),
   description: z.string().nullable().optional(),
   target_amount: z.number().min(1, "Valor alvo deve ser maior que zero"),
-  current_amount: z.number().min(0).default(0),
+  current_amount: z.number().min(0),
   target_date: z.string().nullable().optional(),
   color: z.string().nullable().optional(),
   icon: z.string().nullable().optional(),
