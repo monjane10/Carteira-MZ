@@ -53,6 +53,13 @@ Portuguese (Mozambique) — `pt-MZ`, currency MZN. Labels in Portuguese (e.g. `A
 
 Full schema in `supabase-schema.sql` — 14 tables, RLS policies, auto-insert profile trigger, seed data for institutions and default categories.
 
+## Deployment
+
+- **Production**: `https://carteira-mz.vercel.app/`
+- **Supabase Redirect URLs** (Authentication > Settings > Redirect URLs):
+  - `https://carteira-mz.vercel.app/reset-password`
+  - `http://localhost:3000/reset-password`
+
 ## Project Structure
 
 ```
