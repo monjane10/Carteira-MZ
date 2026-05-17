@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Plus, ArrowRight, Calendar, Edit3 } from "lucide-react"
+import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { LoadingState } from "@/components/shared/loading-state"
 import { Button } from "@/components/ui/button"
@@ -19,12 +20,12 @@ import { motion } from "framer-motion"
 type TransferFormValues = z.infer<typeof transferSchema>
 
 function TransfersPage() {
+  const router = useRouter()
   const [transfers, setTransfers] = useState<Transfer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingTransfer, setEditingTransfer] = useState<Transfer | null>(null)
-  const [selectedTransfer, setSelectedTransfer] = useState<Transfer | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
 
   const fetchTransfers = useCallback(async () => {
@@ -48,15 +49,6 @@ function TransfersPage() {
   useEffect(() => {
     fetchTransfers()
   }, [fetchTransfers])
-
-  useEffect(() => {
-    if (selectedTransfer) {
-      window.history.pushState({ view: "detail" }, "")
-      const onPop = () => setSelectedTransfer(null)
-      window.addEventListener("popstate", onPop)
-      return () => window.removeEventListener("popstate", onPop)
-    }
-  }, [selectedTransfer])
 
   const handleCreate = async (data: TransferFormValues) => {
     try {
@@ -89,7 +81,6 @@ function TransfersPage() {
       })
       if (updated) {
         setTransfers((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
-        setSelectedTransfer(updated)
         toast({ title: "Sucesso", description: "Transferência actualizada com sucesso.", variant: "success" })
       }
     } catch (e) {
@@ -110,70 +101,6 @@ function TransfersPage() {
       await handleCreate(data)
     }
     setFormOpen(false)
-  }
-
-  const fromAccount = selectedTransfer ? accounts.find((a) => a.id === selectedTransfer.from_account_id) : null
-  const toAccount = selectedTransfer ? accounts.find((a) => a.id === selectedTransfer.to_account_id) : null
-
-  if (selectedTransfer) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="space-y-5"
-      >
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-              <ArrowRight className="h-6 w-6" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-[#0F172A]">Transferência</h2>
-              <p className="text-sm text-slate-500">{selectedTransfer.description || "Sem descrição"}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <div>
-              <p className="text-xs text-slate-400 font-medium">Origem</p>
-              <p className="text-sm font-bold text-[#0F172A] mt-0.5">{fromAccount?.name || "—"}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-medium">Destino</p>
-              <p className="text-sm font-bold text-[#0F172A] mt-0.5">{toAccount?.name || "—"}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-medium">Valor</p>
-              <p className="text-sm font-bold text-[#0F172A] mt-0.5">{formatCurrency(selectedTransfer.amount)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-medium">Taxa</p>
-              <p className="text-sm font-bold text-[#0F172A] mt-0.5">{selectedTransfer.fee > 0 ? formatCurrency(selectedTransfer.fee) : "Sem taxa"}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Calendar className="h-3.5 w-3.5" />
-            {formatDate(selectedTransfer.transfer_date, "long")}
-          </div>
-        </div>
-
-        <button
-          onClick={() => handleOpenEdit(selectedTransfer)}
-          className="w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-sm font-bold text-white transition-all hover:bg-[#1E293B]"
-        >
-          <Edit3 className="h-4 w-4" />
-          Editar Transferência
-        </button>
-
-        <TransferForm
-          open={formOpen}
-          onOpenChange={setFormOpen}
-          onSubmit={handleFormSubmit}
-          editingTransfer={editingTransfer}
-        />
-      </motion.div>
-    )
   }
 
   return (
@@ -200,7 +127,7 @@ function TransfersPage() {
         <TransferList
           transfers={transfers}
           loading={false}
-          onClick={(t) => setSelectedTransfer(t)}
+          onClick={(t) => router.push(`/transferencias/${t.id}`)}
         />
       )}
 

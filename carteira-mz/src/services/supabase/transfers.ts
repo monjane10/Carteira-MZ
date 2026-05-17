@@ -171,3 +171,43 @@ export async function updateTransfer(
     return handleError(ENTITY, "actualizar", e)
   }
 }
+
+export async function deleteTransfer(id: string): Promise<void> {
+  try {
+    const old = await getTransferById(id)
+    if (!old) throw new NotFoundError(ENTITY, id)
+
+    const totalDebit = old.amount + old.fee
+
+    const { data: fromAcc } = await supabase
+      .from("accounts")
+      .select("balance")
+      .eq("id", old.from_account_id)
+      .single()
+    if (fromAcc) {
+      await supabase
+        .from("accounts")
+        .update({ balance: (fromAcc.balance as number) + totalDebit })
+        .eq("id", old.from_account_id)
+    }
+
+    const { data: toAcc } = await supabase
+      .from("accounts")
+      .select("balance")
+      .eq("id", old.to_account_id)
+      .single()
+    if (toAcc) {
+      await supabase
+        .from("accounts")
+        .update({ balance: (toAcc.balance as number) - old.amount })
+        .eq("id", old.to_account_id)
+    }
+
+    const { error } = await supabase.from("transfers").delete().eq("id", id)
+    if (error) throw error
+
+    logger.info("Transfer deleted", { id })
+  } catch (e) {
+    return handleError(ENTITY, "remover", e)
+  }
+}

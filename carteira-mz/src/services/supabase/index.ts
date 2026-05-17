@@ -36,6 +36,7 @@ export {
   getTransferById,
   createTransfer,
   updateTransfer,
+  deleteTransfer,
 } from "./transfers"
 
 export {

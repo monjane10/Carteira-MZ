@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import {
   Search,
@@ -50,6 +51,7 @@ const EXPENSE_LIKE_TYPES = new Set(["EXPENSE", "ADJUSTMENT", "LOAN_GIVEN", "LOAN
 const ITEMS_PER_PAGE = 10
 
 export function TransactionList({ transactions, loading, onEdit, onDelete }: TransactionListProps) {
+  const router = useRouter()
   const [search, setSearch] = useState("")
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
@@ -170,7 +172,7 @@ export function TransactionList({ transactions, loading, onEdit, onDelete }: Tra
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.03 }}
                   className="group flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-slate-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700"
-                  onClick={() => onEdit(transaction)}
+                  onClick={() => router.push(`/transacoes/${transaction.id}`)}
                 >
                   <div
                     className={cn(
