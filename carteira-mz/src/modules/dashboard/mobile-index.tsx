@@ -36,7 +36,7 @@ export function MobileDashboard() {
           dashboardService.getDashboardSummary(targetDate),
           accountService.getAccounts(),
           dashboardService.getCategorySpending(startOfMonth, endOfMonth),
-          dashboardService.getRecentTransactions(10),
+          dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
           categoryService.getCategories(),
         ])
 

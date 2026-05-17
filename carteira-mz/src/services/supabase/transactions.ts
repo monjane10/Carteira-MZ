@@ -184,11 +184,22 @@ export async function getTransactionsByDateRange(
   }
 }
 
-export async function getRecentTransactions(limit = 5): Promise<Transaction[]> {
+export async function getRecentTransactions(
+  limit = 5,
+  startDate?: string,
+  endDate?: string,
+): Promise<Transaction[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("transactions")
       .select("*, account:accounts(*), category:categories(*)")
+    if (startDate) {
+      query = query.gte("transaction_date", startDate)
+    }
+    if (endDate) {
+      query = query.lte("transaction_date", endDate)
+    }
+    const { data, error } = await query
       .order("transaction_date", { ascending: false })
       .limit(limit)
     if (error) throw error

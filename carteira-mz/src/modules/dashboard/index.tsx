@@ -38,7 +38,7 @@ function DashboardPage() {
           dashboardService.getDashboardSummary(targetDate),
           dashboardService.getMonthlyEvolution(6),
           dashboardService.getCategorySpending(startOfMonth, endOfMonth),
-          dashboardService.getRecentTransactions(5),
+          dashboardService.getRecentTransactions(5, startOfMonth, endOfMonth),
           goalService.getGoals(),
           categoryService.getCategories(),
         ])

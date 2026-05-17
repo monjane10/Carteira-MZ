@@ -15,12 +15,13 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
     const m = now.getMonth()
     const startOfMonth = new Date(y, m, 1).toISOString()
     const startOfPrevMonth = new Date(y, m - 1, 1).toISOString()
+    const endOfMonth = new Date(y, m + 1, 0, 23, 59, 59, 999).toISOString()
 
     const { data: accounts } = await supabase
       .from("accounts")
       .select("balance")
       .eq("is_active", true)
-    const totalBalance = (accounts ?? []).reduce((s: number, a: { balance: number }) => s + a.balance, 0)
+    const currentBalance = (accounts ?? []).reduce((s: number, a: { balance: number }) => s + a.balance, 0)
 
     const { data: allTx } = await supabase
       .from("transactions")
@@ -30,7 +31,9 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
     const totalIncome = txList.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
     const totalExpenses = txList.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
 
-    const monthlyTx = txList.filter((t) => t.transaction_date >= startOfMonth)
+    const monthlyTx = txList.filter(
+      (t) => t.transaction_date >= startOfMonth && t.transaction_date <= endOfMonth,
+    )
     const prevTx = txList.filter(
       (t) => t.transaction_date >= startOfPrevMonth && t.transaction_date < startOfMonth,
     )
@@ -43,6 +46,14 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
 
     const incomeChange = prevIncome > 0 ? Math.round(((monthlyIncome - prevIncome) / prevIncome) * 10000) / 100 : 0
     const expenseChange = prevExpenses > 0 ? Math.round(((monthlyExpenses - prevExpenses) / prevExpenses) * 10000) / 100 : 0
+
+    let totalBalance = currentBalance
+    if (targetDate) {
+      const afterTx = txList.filter((t) => t.transaction_date > endOfMonth)
+      const incomeAfter = afterTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
+      const expensesAfter = afterTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
+      totalBalance = Math.round((currentBalance - incomeAfter + expensesAfter) * 100) / 100
+    }
 
     const { data: loansGiven } = await supabase
       .from("loans")
