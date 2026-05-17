@@ -58,8 +58,9 @@ export function GoalCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Meta criada com sucesso.", variant: "success" })
       router.push("/metas")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a meta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

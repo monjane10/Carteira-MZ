@@ -38,15 +38,14 @@ function GoalsPage() {
         title: data.title,
         description: data.description ?? null,
         target_amount: data.target_amount,
-        current_amount: data.current_amount ?? 0,
         target_date: data.target_date ?? null,
         color: data.color ?? null,
         icon: data.icon ?? null,
-        status: "ACTIVE",
       })
       toast({ title: "Sucesso", description: "Meta criada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a meta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -64,8 +63,9 @@ function GoalsPage() {
         icon: data.icon ?? null,
       })
       toast({ title: "Sucesso", description: "Meta actualizada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar a meta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -77,8 +77,9 @@ function GoalsPage() {
       toast({ title: "Sucesso", description: "Meta removida com sucesso.", variant: "success" })
       setDeleteConfirm(null)
       if (selectedGoalId === deleteConfirm.id) setSelectedGoalId(null)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível remover a meta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setDeleting(false)
     }

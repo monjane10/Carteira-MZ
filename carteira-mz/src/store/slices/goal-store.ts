@@ -36,8 +36,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     try {
       const goal = await goalService.createGoal(data)
       set(state => ({ goals: [...state.goals, goal].filter(Boolean) as Goal[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar meta", isLoading: false })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateGoal: async (id, data) => {
@@ -48,8 +50,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
         goals: state.goals.map(g => g.id === id ? updated : g).filter(Boolean) as Goal[],
         isLoading: false,
       }))
-    } catch {
-      set({ error: "Erro ao actualizar meta", isLoading: false })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeGoal: async (id) => {
@@ -57,8 +61,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     try {
       await goalService.deleteGoal(id)
       set(state => ({ goals: state.goals.filter(g => g.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover meta", isLoading: false })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   fetchGoalContributions: async (goalId) => {
