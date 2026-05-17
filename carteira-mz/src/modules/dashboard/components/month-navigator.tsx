@@ -39,20 +39,16 @@ export function MonthNavigator({ year, month, onPrev, onNext, isCurrent }: Month
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={onNext}
-        disabled={isCurrent}
-        className={cn(
-          "flex h-9 w-9 items-center justify-center rounded-xl transition-colors active:scale-95",
-          isCurrent
-            ? "text-slate-200 cursor-not-allowed"
-            : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-        )}
-        aria-label="Mês seguinte"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
+      {!isCurrent && (
+        <button
+          type="button"
+          onClick={onNext}
+          className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors active:scale-95"
+          aria-label="Mês seguinte"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      )}
     </div>
   )
 }
