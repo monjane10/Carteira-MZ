@@ -40,6 +40,9 @@
     "zod": "^4.4.3",
     "zustand": "^5.0.13"
   },
+  "overrides": {
+    "resolve": "2.0.0-next.6"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
