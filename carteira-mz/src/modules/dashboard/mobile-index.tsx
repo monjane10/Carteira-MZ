@@ -100,16 +100,16 @@ export function MobileDashboard() {
           }
           setMonthOffset(monthOffset - 1)
         }}
-        onNext={() => {
-          if (targetMonth === 11) {
-            setTargetYear(targetYear + 1)
-            setTargetMonth(0)
-          } else {
-            setTargetMonth(targetMonth + 1)
-          }
-          setMonthOffset(monthOffset + 1)
-        }}
-      />
+          onNext={() => {
+            if (targetMonth === 11) {
+              setTargetYear(targetYear + 1)
+              setTargetMonth(0)
+            } else {
+              setTargetMonth(targetMonth + 1)
+            }
+            setMonthOffset(monthOffset + 1)
+          }}
+        />
 
       {summary && <MobileBalanceCard summary={summary} />}
 
