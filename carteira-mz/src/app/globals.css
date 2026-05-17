@@ -2,10 +2,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@media (max-width: 639px) {
-  html {
-    font-size: 90%;
-  }
+html {
+  font-size: 105%;
 }
 
 .hide-scrollbar {
