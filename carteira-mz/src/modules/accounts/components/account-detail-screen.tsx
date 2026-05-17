@@ -109,8 +109,9 @@ export function AccountDetailScreen() {
       setAccount((prev) => prev ? { ...prev, name: editName.trim(), type: editType, balance: Number(editBalance) || prev.balance, institution_id: institutionId, institution: institutionId ? prev?.institution : undefined } : prev)
       setShowEdit(false)
       toast({ title: "Conta actualizada", variant: "success" })
-    } catch {
-      toast({ title: "Erro ao actualizar", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setSaving(false)
     }
@@ -122,8 +123,9 @@ export function AccountDetailScreen() {
       await accountService.deleteAccount(account.id)
       toast({ title: "Conta removida", variant: "success" })
       router.push("/contas")
-    } catch {
-      toast({ title: "Erro ao remover", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
       setDeleting(false)
     }
   }

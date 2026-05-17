@@ -46,8 +46,9 @@ function LoansPage() {
         status: "PENDING",
       })
       toast({ title: "Sucesso", description: "Empréstimo criado com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar o empréstimo.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -65,8 +66,9 @@ function LoansPage() {
         due_date: data.due_date ?? null,
       })
       toast({ title: "Sucesso", description: "Empréstimo actualizado com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar o empréstimo.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -78,8 +80,9 @@ function LoansPage() {
       toast({ title: "Sucesso", description: "Empréstimo removido com sucesso.", variant: "success" })
       setDeleteConfirm(null)
       if (selectedLoanId === deleteConfirm.id) setSelectedLoanId(null)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível remover o empréstimo.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setDeleting(false)
     }

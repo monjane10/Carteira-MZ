@@ -62,8 +62,9 @@ export function LoanCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Empréstimo criado com sucesso.", variant: "success" })
       router.push("/emprestimos")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar o empréstimo.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

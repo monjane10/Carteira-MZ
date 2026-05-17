@@ -107,8 +107,9 @@ export function AccountCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
       router.push("/contas")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a conta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

@@ -46,8 +46,9 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       ])
       setLoan(loanData)
       setPayments(paymentsData)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível carregar os dados do empréstimo.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setLoading(false)
     }
@@ -68,8 +69,9 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       setShowPaymentForm(false)
       onLoanUpdated()
       fetchData()
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível registar o pagamento.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

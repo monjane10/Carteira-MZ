@@ -47,8 +47,9 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       ])
       setGoal(goalData)
       setContributions(contributionsData)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível carregar os dados da meta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setLoading(false)
     }
@@ -69,8 +70,9 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       setShowContributionForm(false)
       onGoalUpdated()
       fetchData()
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível registar a contribuição.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

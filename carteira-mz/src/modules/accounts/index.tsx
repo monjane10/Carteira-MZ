@@ -59,8 +59,9 @@ function AccountsPage() {
         is_active: true,
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a conta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -78,8 +79,9 @@ function AccountsPage() {
         color: editingAccount.color ?? null,
       })
       toast({ title: "Sucesso", description: "Conta actualizada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar a conta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -90,8 +92,9 @@ function AccountsPage() {
       await removeAccount(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Conta removida com sucesso.", variant: "success" })
       setDeleteConfirm(null)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível remover a conta.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setDeleting(false)
     }

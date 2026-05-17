@@ -42,9 +42,9 @@ function ReportsPage() {
       setSummary(summaryData)
       setEvolution(evolutionData)
       setCategorySpending(spendingData)
-    } catch {
-      setError("Não foi possível carregar os relatórios.")
-      toast({ title: "Erro", description: "Não foi possível carregar os relatórios.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setLoading(false)
     }

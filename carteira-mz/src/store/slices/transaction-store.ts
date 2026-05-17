@@ -28,33 +28,36 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
   getTransactionById: (id) => get().transactions.find(t => t.id === id),
   addTransaction: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const transaction = await transactionService.createTransaction(data)
-      set(state => ({ transactions: [...state.transactions, transaction].filter(Boolean) as Transaction[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar transação", isLoading: false })
+      await transactionService.createTransaction(data)
+      await get().fetchTransactions()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateTransaction: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await transactionService.updateTransaction(id, data)
-      set(state => ({
-        transactions: state.transactions.map(t => t.id === id ? updated : t).filter(Boolean) as Transaction[],
-        isLoading: false,
-      }))
-    } catch {
-      set({ error: "Erro ao actualizar transação", isLoading: false })
+      await transactionService.updateTransaction(id, data)
+      await get().fetchTransactions()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeTransaction: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await transactionService.deleteTransaction(id)
-      set(state => ({ transactions: state.transactions.filter(t => t.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover transação", isLoading: false })
+      await get().fetchTransactions()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))

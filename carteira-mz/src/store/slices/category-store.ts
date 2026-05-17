@@ -28,33 +28,36 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   },
   getCategoryById: (id) => get().categories.find(c => c.id === id),
   addCategory: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const category = await categoryService.createCategory(data)
-      set(state => ({ categories: [...state.categories, category].filter(Boolean) as Category[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar categoria", isLoading: false })
+      await categoryService.createCategory(data)
+      await get().fetchCategories()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateCategory: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await categoryService.updateCategory(id, data)
-      set(state => ({
-        categories: state.categories.map(c => c.id === id ? updated : c).filter(Boolean) as Category[],
-        isLoading: false,
-      }))
-    } catch {
-      set({ error: "Erro ao actualizar categoria", isLoading: false })
+      await categoryService.updateCategory(id, data)
+      await get().fetchCategories()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeCategory: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await categoryService.deleteCategory(id)
-      set(state => ({ categories: state.categories.filter(c => c.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover categoria", isLoading: false })
+      await get().fetchCategories()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))

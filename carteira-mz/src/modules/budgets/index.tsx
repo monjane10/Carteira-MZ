@@ -39,8 +39,9 @@ function BudgetsPage() {
         end_date: data.end_date,
       })
       toast({ title: "Sucesso", description: "Orçamento criado com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar o orçamento.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -55,8 +56,9 @@ function BudgetsPage() {
         end_date: data.end_date,
       })
       toast({ title: "Sucesso", description: "Orçamento actualizado com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar o orçamento.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -67,8 +69,9 @@ function BudgetsPage() {
       await removeBudget(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Orçamento removido com sucesso.", variant: "success" })
       setDeleteConfirm(null)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível remover o orçamento.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setDeleting(false)
     }

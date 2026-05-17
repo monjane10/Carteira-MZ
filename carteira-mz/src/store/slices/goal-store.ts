@@ -32,10 +32,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
   },
   getGoalById: (id) => get().goals.find(g => g.id === id),
   addGoal: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const goal = await goalService.createGoal(data)
-      set(state => ({ goals: [...state.goals, goal].filter(Boolean) as Goal[], isLoading: false }))
+      await goalService.createGoal(data)
+      await get().fetchGoals()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -43,13 +43,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     }
   },
   updateGoal: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await goalService.updateGoal(id, data)
-      set(state => ({
-        goals: state.goals.map(g => g.id === id ? updated : g).filter(Boolean) as Goal[],
-        isLoading: false,
-      }))
+      await goalService.updateGoal(id, data)
+      await get().fetchGoals()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -57,10 +54,10 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     }
   },
   removeGoal: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await goalService.deleteGoal(id)
-      set(state => ({ goals: state.goals.filter(g => g.id !== id), isLoading: false }))
+      await get().fetchGoals()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -77,14 +74,15 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     }
   },
   addGoalContribution: async (goalId, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await goalService.createGoalContribution(goalId, data)
-      const goalContributions = await goalService.getGoalContributions(goalId)
-      const goals = await goalService.getGoals()
-      set({ goals: goals.filter(Boolean) as Goal[], goalContributions: goalContributions.filter(Boolean) as GoalContribution[], isLoading: false })
-    } catch {
-      set({ error: "Erro ao adicionar contribuição", isLoading: false })
+      await get().fetchGoalContributions(goalId)
+      await get().fetchGoals()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))

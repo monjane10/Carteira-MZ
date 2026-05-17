@@ -37,8 +37,9 @@ function TransfersPage() {
       ])
       setTransfers(data)
       setAccounts(accs)
-    } catch {
-      setError("Não foi possível carregar as transferências.")
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setLoading(false)
     }
@@ -69,8 +70,9 @@ function TransfersPage() {
       })
       setTransfers((prev) => [newTransfer, ...prev])
       toast({ title: "Sucesso", description: "Transferência criada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a transferência.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -90,8 +92,9 @@ function TransfersPage() {
         setSelectedTransfer(updated)
         toast({ title: "Sucesso", description: "Transferência actualizada com sucesso.", variant: "success" })
       }
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar a transferência.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

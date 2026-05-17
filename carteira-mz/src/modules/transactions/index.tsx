@@ -42,8 +42,9 @@ function TransactionsPage() {
         attachment_url: null,
       })
       toast({ title: "Sucesso", description: "Transacção criada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a transacção.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -60,8 +61,9 @@ function TransactionsPage() {
         is_recurring: data.is_recurring ?? false,
       })
       toast({ title: "Sucesso", description: "Transacção actualizada com sucesso.", variant: "success" })
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível actualizar a transacção.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 
@@ -72,8 +74,9 @@ function TransactionsPage() {
       await removeTransaction(deleteConfirm.id)
       toast({ title: "Sucesso", description: "Transacção removida com sucesso.", variant: "success" })
       setDeleteConfirm(null)
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível remover a transacção.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     } finally {
       setDeleting(false)
     }

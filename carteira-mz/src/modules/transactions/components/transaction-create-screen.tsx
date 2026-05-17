@@ -70,8 +70,9 @@ export function TransactionCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Transacção criada com sucesso.", variant: "success" })
       router.push("/transacoes")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a transacção.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

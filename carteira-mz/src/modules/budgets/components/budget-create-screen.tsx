@@ -58,8 +58,9 @@ export function BudgetCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Orçamento criado com sucesso.", variant: "success" })
       router.push("/orcamentos")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar o orçamento.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

@@ -28,33 +28,36 @@ export const useAccountStore = create<AccountState>((set, get) => ({
   },
   getAccountById: (id) => get().accounts.find(a => a.id === id),
   addAccount: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const account = await accountService.createAccount(data)
-      set(state => ({ accounts: [...state.accounts, account].filter(Boolean) as Account[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar conta", isLoading: false })
+      await accountService.createAccount(data)
+      await get().fetchAccounts()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateAccount: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await accountService.updateAccount(id, data)
-      set(state => ({
-        accounts: state.accounts.map(a => a.id === id ? updated : a).filter(Boolean) as Account[],
-        isLoading: false,
-      }))
-    } catch {
-      set({ error: "Erro ao actualizar conta", isLoading: false })
+      await accountService.updateAccount(id, data)
+      await get().fetchAccounts()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeAccount: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await accountService.deleteAccount(id)
-      set(state => ({ accounts: state.accounts.filter(a => a.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover conta", isLoading: false })
+      await get().fetchAccounts()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))

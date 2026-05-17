@@ -32,33 +32,36 @@ export const useLoanStore = create<LoanState>((set, get) => ({
   },
   getLoanById: (id) => get().loans.find(l => l.id === id),
   addLoan: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const loan = await loanService.createLoan(data)
-      set(state => ({ loans: [...state.loans, loan].filter(Boolean) as Loan[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar empréstimo", isLoading: false })
+      await loanService.createLoan(data)
+      await get().fetchLoans()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateLoan: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await loanService.updateLoan(id, data)
-      set(state => ({
-        loans: state.loans.map(l => l.id === id ? updated : l).filter(Boolean) as Loan[],
-        isLoading: false,
-      }))
-    } catch {
-      set({ error: "Erro ao actualizar empréstimo", isLoading: false })
+      await loanService.updateLoan(id, data)
+      await get().fetchLoans()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeLoan: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await loanService.deleteLoan(id)
-      set(state => ({ loans: state.loans.filter(l => l.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover empréstimo", isLoading: false })
+      await get().fetchLoans()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   fetchLoanPayments: async (loanId) => {
@@ -71,14 +74,15 @@ export const useLoanStore = create<LoanState>((set, get) => ({
     }
   },
   addLoanPayment: async (loanId, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await loanService.createLoanPayment(loanId, data)
-      const loanPayments = await loanService.getLoanPayments(loanId)
-      const loans = await loanService.getLoans()
-      set({ loans: loans.filter(Boolean) as Loan[], loanPayments: loanPayments.filter(Boolean) as LoanPayment[], isLoading: false })
-    } catch {
-      set({ error: "Erro ao adicionar pagamento", isLoading: false })
+      await get().fetchLoanPayments(loanId)
+      await get().fetchLoans()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))

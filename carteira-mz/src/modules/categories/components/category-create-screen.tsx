@@ -46,8 +46,9 @@ export function CategoryCreateScreen() {
       })
       toast({ title: "Sucesso", description: "Categoria criada com sucesso.", variant: "success" })
       router.push("/categorias")
-    } catch {
-      toast({ title: "Erro", description: "Não foi possível criar a categoria.", variant: "error" })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
     }
   }
 

@@ -12,7 +12,7 @@ interface BudgetState {
   removeBudget: (id: string) => Promise<void>
 }
 
-export const useBudgetStore = create<BudgetState>((set) => ({
+export const useBudgetStore = create<BudgetState>((set, get) => ({
   budgets: [],
   isLoading: false,
   error: null,
@@ -26,33 +26,36 @@ export const useBudgetStore = create<BudgetState>((set) => ({
     }
   },
   addBudget: async (data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const budget = await budgetService.createBudget(data)
-      set(state => ({ budgets: [...state.budgets, budget].filter(Boolean) as Budget[], isLoading: false }))
-    } catch {
-      set({ error: "Erro ao adicionar orçamento", isLoading: false })
+      await budgetService.createBudget(data)
+      await get().fetchBudgets()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   updateBudget: async (id, data) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
-      const updated = await budgetService.updateBudget(id, data)
-      set(state => ({
-        budgets: state.budgets.map(b => b.id === id ? updated : b).filter(Boolean) as Budget[],
-        isLoading: false,
-      }))
-    } catch {
-      set({ error: "Erro ao actualizar orçamento", isLoading: false })
+      await budgetService.updateBudget(id, data)
+      await get().fetchBudgets()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
   removeBudget: async (id) => {
-    set({ isLoading: true, error: null })
+    set({ error: null })
     try {
       await budgetService.deleteBudget(id)
-      set(state => ({ budgets: state.budgets.filter(b => b.id !== id), isLoading: false }))
-    } catch {
-      set({ error: "Erro ao remover orçamento", isLoading: false })
+      await get().fetchBudgets()
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg, isLoading: false })
+      throw e
     }
   },
 }))
