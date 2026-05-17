@@ -7,10 +7,10 @@ export { getRecentTransactions } from "./transactions"
 
 const ENTITY = "dashboard"
 
-export async function getDashboardSummary(): Promise<DashboardSummary> {
+export async function getDashboardSummary(targetDate?: Date): Promise<DashboardSummary> {
   try {
     logger.info("Fetching dashboard summary")
-    const now = new Date()
+    const now = targetDate ?? new Date()
     const y = now.getFullYear()
     const m = now.getMonth()
     const startOfMonth = new Date(y, m, 1).toISOString()

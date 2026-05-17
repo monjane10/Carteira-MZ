@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { PageHeader } from "@/components/shared/page-header"
 import { LoadingState } from "@/components/shared/loading-state"
+import { MonthNavigator } from "./components/month-navigator"
 import { SummaryCards } from "./components/summary-cards"
 import { MonthlyChart } from "./components/monthly-chart"
 import { CategoryPieChart } from "./components/category-pie-chart"
@@ -12,6 +13,7 @@ import { dashboard as dashboardService, categories as categoryService, goals as 
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
 
 function DashboardPage() {
+  const [monthOffset, setMonthOffset] = useState(0)
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [monthlyEvolution, setMonthlyEvolution] = useState<MonthlyEvolution[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
@@ -20,18 +22,20 @@ function DashboardPage() {
   const [categoryMap, setCategoryMap] = useState<Record<string, Category>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [targetYear, setTargetYear] = useState(new Date().getFullYear())
+  const [targetMonth, setTargetMonth] = useState(new Date().getMonth())
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const now = new Date()
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
+      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
+      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
+      const targetDate = new Date(targetYear, targetMonth, 1)
 
       const [summaryData, evolutionData, spendingData, transactionsData, goalsData, categories] =
         await Promise.all([
-          dashboardService.getDashboardSummary(),
+          dashboardService.getDashboardSummary(targetDate),
           dashboardService.getMonthlyEvolution(6),
           dashboardService.getCategorySpending(startOfMonth, endOfMonth),
           dashboardService.getRecentTransactions(5),
@@ -56,7 +60,7 @@ function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [targetYear, targetMonth])
 
   useEffect(() => {
     fetchData()
@@ -96,6 +100,32 @@ function DashboardPage() {
   return (
     <div>
       <PageHeader title="Dashboard" description="Visão geral das suas finanças" />
+
+      <div className="mb-4 mt-2">
+        <MonthNavigator
+          year={targetYear}
+          month={targetMonth}
+          isCurrent={monthOffset === 0}
+          onPrev={() => {
+            if (targetMonth === 0) {
+              setTargetYear(targetYear - 1)
+              setTargetMonth(11)
+            } else {
+              setTargetMonth(targetMonth - 1)
+            }
+            setMonthOffset(monthOffset - 1)
+          }}
+          onNext={() => {
+            if (targetMonth === 11) {
+              setTargetYear(targetYear + 1)
+              setTargetMonth(0)
+            } else {
+              setTargetMonth(targetMonth + 1)
+            }
+            setMonthOffset(monthOffset + 1)
+          }}
+        />
+      </div>
 
       {summary && <SummaryCards summary={summary} />}
 

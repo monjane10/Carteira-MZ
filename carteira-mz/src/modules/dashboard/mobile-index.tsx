@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { MonthNavigator } from "./components/month-navigator"
 import { LoadingState } from "@/components/shared/loading-state"
 import { MobileGreeting } from "./components/mobile-greeting"
 import { MobileBalanceCard } from "./components/mobile-balance-card"
@@ -11,6 +12,7 @@ import { dashboard as dashboardService, accounts as accountService, categories a
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
 
 export function MobileDashboard() {
+  const [monthOffset, setMonthOffset] = useState(0)
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
@@ -18,18 +20,20 @@ export function MobileDashboard() {
   const [categoryMap, setCategoryMap] = useState<Record<string, Category>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [targetYear, setTargetYear] = useState(new Date().getFullYear())
+  const [targetMonth, setTargetMonth] = useState(new Date().getMonth())
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const now = new Date()
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
+      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
+      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
+      const targetDate = new Date(targetYear, targetMonth, 1)
 
       const [summaryData, accountsData, spendingData, transactionsData, categories] =
         await Promise.all([
-          dashboardService.getDashboardSummary(),
+          dashboardService.getDashboardSummary(targetDate),
           accountService.getAccounts(),
           dashboardService.getCategorySpending(startOfMonth, endOfMonth),
           dashboardService.getRecentTransactions(10),
@@ -52,7 +56,7 @@ export function MobileDashboard() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [targetYear, targetMonth])
 
   useEffect(() => {
     fetchData()
@@ -82,6 +86,30 @@ export function MobileDashboard() {
   return (
     <div className="flex w-full max-w-full min-w-0 flex-col gap-5">
       <MobileGreeting />
+
+      <MonthNavigator
+        year={targetYear}
+        month={targetMonth}
+        isCurrent={monthOffset === 0}
+        onPrev={() => {
+          if (targetMonth === 0) {
+            setTargetYear(targetYear - 1)
+            setTargetMonth(11)
+          } else {
+            setTargetMonth(targetMonth - 1)
+          }
+          setMonthOffset(monthOffset - 1)
+        }}
+        onNext={() => {
+          if (targetMonth === 11) {
+            setTargetYear(targetYear + 1)
+            setTargetMonth(0)
+          } else {
+            setTargetMonth(targetMonth + 1)
+          }
+          setMonthOffset(monthOffset + 1)
+        }}
+      />
 
       {summary && <MobileBalanceCard summary={summary} />}
 
