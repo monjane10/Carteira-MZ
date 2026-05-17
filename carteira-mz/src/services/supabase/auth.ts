@@ -48,3 +48,25 @@ export async function getSession() {
     return handleError(ENTITY, "obter sessao", e)
   }
 }
+
+export async function resetPassword(email: string, redirectTo: string) {
+  try {
+    logger.info("Sending password reset email", { email })
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    })
+    if (error) throw error
+  } catch (e) {
+    return handleError(ENTITY, "recuperar senha", e)
+  }
+}
+
+export async function updatePassword(password: string) {
+  try {
+    logger.info("Updating password")
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) throw error
+  } catch (e) {
+    return handleError(ENTITY, "actualizar senha", e)
+  }
+}

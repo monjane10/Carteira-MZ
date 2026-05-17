@@ -132,7 +132,7 @@ export function LoginForm() {
             </button>
 
             <div className="text-center mt-5">
-              <Link href="#" className="text-slate-500 hover:text-slate-700 transition-colors" style={{ fontSize: 14 }}>
+              <Link href="/forgot-password" className="text-slate-500 hover:text-slate-700 transition-colors" style={{ fontSize: 14 }}>
                 Esqueceu a senha?
               </Link>
             </div>
