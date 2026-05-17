@@ -19,10 +19,26 @@ function AccountsPage() {
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Account | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [institutionMap, setInstitutionMap] = useState<Map<string, string>>(new Map())
+  const [loadingInstitutions, setLoadingInstitutions] = useState(true)
 
   useEffect(() => {
     fetchAccounts()
+    loadInstitutions()
   }, [fetchAccounts])
+
+  async function loadInstitutions() {
+    setLoadingInstitutions(true)
+    const { data: existing, error } = await supabase
+      .from("financial_institutions")
+      .select("id, name")
+    if (error) {
+      console.error("Erro ao carregar instituições:", error)
+    } else if (existing && existing.length > 0) {
+      setInstitutionMap(new Map(existing.map(i => [i.name, i.id])))
+    }
+    setLoadingInstitutions(false)
+  }
 
   const handleCreate = async (data: {
     name: string
@@ -30,11 +46,7 @@ function AccountsPage() {
     initial_balance: number
   }) => {
     try {
-      const { data: inst } = await supabase
-        .from("financial_institutions")
-        .select("id")
-        .eq("name", data.name)
-        .maybeSingle()
+      const institutionId = institutionMap.get(data.name) ?? null
       await addAccount({
         name: data.name,
         type: data.type,
@@ -43,7 +55,7 @@ function AccountsPage() {
         initial_balance: data.initial_balance,
         color: "#0F172A",
         icon: null,
-        institution_id: inst?.id ?? null,
+        institution_id: institutionId,
         is_active: true,
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
@@ -86,6 +98,7 @@ function AccountsPage() {
   }
 
   const handleOpenCreate = () => {
+    if (loadingInstitutions) return
     setEditingAccount(null)
     setFormOpen(true)
   }

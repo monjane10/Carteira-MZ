@@ -4,14 +4,15 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { ArrowLeft, Edit3, Trash2, Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle } from "lucide-react"
+import { ArrowLeft, Edit3, Trash2, Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle, Check } from "lucide-react"
 import { formatCurrency, cn } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
 import { ACCOUNT_TYPE_LABELS, ACCOUNT_TYPE_COLORS } from "@/constants"
 import { toast } from "@/hooks/use-toast"
 import { accounts as accountService } from "@/services"
+import { supabase } from "@/services/supabase/client"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
-import type { Account } from "@/types"
+import type { Account, AccountType } from "@/types"
 
 const TYPE_ICONS = {
   BANK: Building2,
@@ -27,12 +28,26 @@ export function AccountDetailScreen() {
   const router = useRouter()
   const [account, setAccount] = useState<Account | null>(null)
   const [loading, setLoading] = useState(true)
+  const [institutionMap, setInstitutionMap] = useState<Map<string, string>>(new Map())
   const [showEdit, setShowEdit] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   const [editName, setEditName] = useState("")
+  const [editType, setEditType] = useState<AccountType>("BANK")
+  const [editInstitution, setEditInstitution] = useState("")
   const [editBalance, setEditBalance] = useState("")
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    supabase
+      .from("financial_institutions")
+      .select("id, name")
+      .then(({ data }) => {
+        if (data) {
+          setInstitutionMap(new Map(data.map(i => [i.name, i.id])))
+        }
+      })
+  }, [])
 
   useEffect(() => {
     if (!id) return
@@ -69,6 +84,8 @@ export function AccountDetailScreen() {
 
   const handleEdit = () => {
     setEditName(account.name)
+    setEditType(account.type)
+    setEditInstitution(account.institution?.name ?? "")
     setEditBalance(String(account.balance))
     setShowEdit(true)
   }
@@ -77,18 +94,19 @@ export function AccountDetailScreen() {
     if (!editName.trim()) return
     setSaving(true)
     try {
+      const institutionId = editInstitution ? (institutionMap.get(editInstitution) ?? null) : null
       await accountService.updateAccount(account.id, {
         name: editName.trim(),
+        type: editType,
         initial_balance: Number(editBalance) || account.initial_balance,
         balance: Number(editBalance) || account.balance,
         color: account.color ?? null,
         icon: account.icon ?? null,
-        institution_id: account.institution_id ?? null,
+        institution_id: institutionId,
         is_active: account.is_active,
         currency: account.currency,
-        type: account.type,
       })
-      setAccount((prev) => prev ? { ...prev, name: editName.trim(), balance: Number(editBalance) || prev.balance } : prev)
+      setAccount((prev) => prev ? { ...prev, name: editName.trim(), type: editType, balance: Number(editBalance) || prev.balance, institution_id: institutionId, institution: institutionId ? prev?.institution : null } : prev)
       setShowEdit(false)
       toast({ title: "Conta actualizada", variant: "success" })
     } catch {
@@ -197,11 +215,75 @@ export function AccountDetailScreen() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto"
           >
             <h3 className="text-lg font-bold text-[#0F172A] text-center mb-1">Editar Conta</h3>
             <p className="text-xs text-slate-400 text-center mb-6">Altere os dados da sua conta</p>
             <div className="space-y-4">
+              <div>
+                <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</label>
+                <select
+                  value={editType}
+                  onChange={(e) => {
+                    setEditType(e.target.value as AccountType)
+                    if (e.target.value !== "BANK" && e.target.value !== "MOBILE_MONEY") {
+                      setEditInstitution("")
+                    }
+                  }}
+                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                >
+                  {(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(([value, label]) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {(editType === "BANK" || editType === "MOBILE_MONEY") && (
+                <div>
+                  <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Instituição</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[...(editType === "BANK"
+                      ? [{ name: "BCI" }, { name: "Millennium BIM" }, { name: "ABSA" }, { name: "Standard Bank" }]
+                      : [{ name: "M-Pesa" }, { name: "e-Mola" }, { name: "mKesh" }]
+                    )].map((inst) => {
+                      const logoPath = getAccountLogo(inst.name)
+                      const isSelected = editInstitution === inst.name
+                      return (
+                        <button
+                          key={inst.name}
+                          type="button"
+                          onClick={() => setEditInstitution(inst.name)}
+                          className={cn(
+                            "flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all relative",
+                            isSelected
+                              ? "border-emerald-500 bg-emerald-50/50"
+                              : "border-slate-200 bg-white hover:border-slate-300"
+                          )}
+                        >
+                          {logoPath ? (
+                            <div className="h-7 w-7 relative">
+                              <Image src={logoPath} alt={inst.name} fill className="object-contain" />
+                            </div>
+                          ) : (
+                            <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-slate-400">
+                              {inst.name[0]}
+                            </div>
+                          )}
+                          <span className="text-[11px] font-medium text-slate-600 text-center leading-tight">
+                            {inst.name}
+                          </span>
+                          {isSelected && (
+                            <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                              <Check className="h-3 w-3 text-white" />
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Nome</label>
                 <input

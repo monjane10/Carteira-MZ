@@ -327,6 +327,7 @@ CREATE TRIGGER trigger_recurring_transactions_updated_at
 -- 6. ROW LEVEL SECURITY (RLS)
 -- ============================================================
 
+ALTER TABLE financial_institutions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
@@ -357,6 +358,11 @@ CREATE POLICY "Users can insert own profile"
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = id);
+
+-- Financial Institutions (dados de referência — toda a gente autenticada pode ler)
+CREATE POLICY "Anyone can view financial institutions"
+  ON financial_institutions FOR SELECT
+  USING (true);
 
 -- Accounts
 CREATE POLICY "Users can view own accounts"

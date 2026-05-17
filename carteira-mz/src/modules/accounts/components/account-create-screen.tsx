@@ -42,6 +42,25 @@ const mobiles = [
 export function AccountCreateScreen() {
   const router = useRouter()
   const [accountType, setAccountType] = useState<"BANK" | "MOBILE_MONEY">("BANK")
+  const [institutionMap, setInstitutionMap] = useState<Map<string, string>>(new Map())
+  const [loadingInstitutions, setLoadingInstitutions] = useState(true)
+
+  useEffect(() => {
+    loadInstitutions()
+  }, [])
+
+  async function loadInstitutions() {
+    setLoadingInstitutions(true)
+    const { data: existing, error } = await supabase
+      .from("financial_institutions")
+      .select("id, name")
+    if (error) {
+      console.error("Erro ao carregar instituições:", error)
+    } else if (existing && existing.length > 0) {
+      setInstitutionMap(new Map(existing.map(i => [i.name, i.id])))
+    }
+    setLoadingInstitutions(false)
+  }
 
   const {
     register,
@@ -74,11 +93,7 @@ export function AccountCreateScreen() {
 
   async function onSubmit(data: FormData) {
     try {
-      const { data: insts } = await supabase
-        .from("financial_institutions")
-        .select("id")
-        .eq("name", data.institution)
-        .maybeSingle()
+      const institutionId = institutionMap.get(data.institution) ?? null
       await accountService.createAccount({
         name: data.name || data.institution,
         type: data.type,
@@ -87,7 +102,7 @@ export function AccountCreateScreen() {
         initial_balance: data.initial_balance,
         color: "#0F172A",
         icon: null,
-        institution_id: insts?.id ?? null,
+        institution_id: institutionId,
         is_active: true,
       })
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
@@ -292,11 +307,11 @@ export function AccountCreateScreen() {
           <button
             type="button"
             onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
+            disabled={isSubmitting || loadingInstitutions}
             className="w-full h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B] disabled:opacity-60"
           >
             <Save className="h-5 w-5" />
-            {isSubmitting ? "A guardar..." : "Guardar Conta"}
+            {loadingInstitutions ? "A carregar..." : isSubmitting ? "A guardar..." : "Guardar Conta"}
           </button>
 
           {/* Cancelar */}
