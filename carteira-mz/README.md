@@ -21,7 +21,6 @@ Aplicação de finanças pessoais para Moçambique — gestão de contas, transa
 | Formulários | react-hook-form + Zod |
 | Estado | Zustand |
 | API | Supabase (PostgreSQL + Auth) |
-| Cache/RPC | TanStack React Query |
 
 ---
 
@@ -116,8 +115,7 @@ carteira-mz/
 │   ├── validators/             # Schemas Zod
 │   ├── hooks/                  # use-media-query, use-toast
 │   ├── lib/                    # Cliente Supabase, cn(), formatCurrency()
-│   ├── providers/              # Provider de tema
-│   └── proxy.ts               # Pass-through middleware (Next.js 16)
+│   └── providers/              # Provider de tema (Toast, Tooltip)
 ├── public/                     # Ícones, manifest, logos
 ├── supabase-schema.sql         # Schema SQL completo
 ├── netlify.toml               # Configuração Netlify
@@ -145,8 +143,10 @@ carteira-mz/
 | `/contas/[id]` | Detalhe da conta |
 | `/transacoes` | Lista de transacções |
 | `/transacoes/nova` | Criar transacção |
+| `/transacoes/[id]` | Detalhe da transacção (ver/editar/remover) |
 | `/transferencias` | Lista de transferências |
 | `/transferencias/nova` | Criar transferência |
+| `/transferencias/[id]` | Detalhe da transferência (ver/editar/remover) |
 | `/emprestimos` | Lista de empréstimos |
 | `/emprestimos/novo` | Novo empréstimo |
 | `/emprestimos/[id]` | Detalhe do empréstimo |
@@ -423,6 +423,11 @@ Todas as stores refazem fetch do servidor após cada mutação CRUD.
 8. **Metas com contribuições** — contribuições descontam da conta automaticamente
 9. **Painel administrativo** — visão geral de todos os utilizadores (protegido)
 10. **Manual do utilizador integrado** — botão `?` flutuante nas páginas de auth
+11. **PWA com suporte offline parcial** — Service Worker com network-first para HTML e cache de assets estáticos; app instalável no telemóvel
+12. **Telas de detalhe** — todas as entidades (contas, transacções, transferências, empréstimos, metas) com páginas dedicadas de visualização, edição e remoção
+13. **Optimistic updates** — CRUD nas stores actualiza o estado local instantaneamente sem esperar pelo servidor
+14. **Lazy loading de gráficos** — Recharts carregado sob demanda com `next/dynamic` + `ssr: false`
+15. **Meta tags Open Graph** — preview ao partilhar no WhatsApp, Facebook e Twitter
 
 ---
 
