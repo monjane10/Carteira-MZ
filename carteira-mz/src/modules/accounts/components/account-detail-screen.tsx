@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { ArrowLeft, Edit3, Trash2, Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle, Check } from "lucide-react"
+import { Edit3, Trash2, Building2, Smartphone, Wallet, PiggyBank, TrendingUp, HelpCircle, Check } from "lucide-react"
 import { formatCurrency, cn } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
 import { ACCOUNT_TYPE_LABELS, ACCOUNT_TYPE_COLORS } from "@/constants"
@@ -130,12 +130,7 @@ export function AccountDetailScreen() {
 
   return (
     <div className="min-h-dvh bg-white flex flex-col">
-      <div className="flex items-center gap-3 px-4 pt-5 pb-3">
-        <button onClick={() => router.back()} className="flex h-9 w-9 items-center justify-center rounded-xl hover:bg-slate-50 transition-colors">
-          <ArrowLeft className="h-5 w-5 text-slate-700" />
-        </button>
-        <h1 className="text-xl font-bold text-[#0F172A]">Detalhes da Conta</h1>
-      </div>
+      <h1 className="text-xl font-bold text-[#0F172A] px-4 pt-5 pb-3">Detalhes da Conta</h1>
 
       <div className="flex-1 overflow-y-auto px-4 pb-28">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
