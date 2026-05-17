@@ -69,9 +69,12 @@ export async function createTransaction(data: {
 }): Promise<Transaction> {
   try {
     logger.info("Creating transaction", { type: data.type, amount: data.amount })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("transactions")
       .insert({
+        user_id: user.id,
         account_id: data.account_id,
         type: data.type,
         amount: data.amount,

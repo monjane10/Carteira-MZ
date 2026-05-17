@@ -48,9 +48,12 @@ export async function createCategory(data: {
 }): Promise<Category> {
   try {
     logger.info("Creating category", { name: data.name })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("categories")
       .insert({
+        user_id: user.id,
         name: data.name,
         type: data.type,
         icon: data.icon ?? null,

@@ -46,10 +46,13 @@ export async function createTransfer(data: {
 }): Promise<Transfer> {
   try {
     logger.info("Creating transfer", { amount: data.amount, from: data.from_account_id, to: data.to_account_id })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
 
     const { data: result, error } = await supabase
       .from("transfers")
       .insert({
+        user_id: user.id,
         from_account_id: data.from_account_id,
         to_account_id: data.to_account_id,
         amount: data.amount,

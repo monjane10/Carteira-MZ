@@ -72,9 +72,12 @@ export async function createBudget(data: {
 }): Promise<Budget> {
   try {
     logger.info("Creating budget", { category_id: data.category_id })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("budgets")
       .insert({
+        user_id: user.id,
         category_id: data.category_id,
         amount_limit: data.amount_limit,
         period: data.period,

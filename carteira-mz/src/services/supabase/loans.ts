@@ -48,9 +48,12 @@ export async function createLoan(data: {
 }): Promise<Loan> {
   try {
     logger.info("Creating loan", { person: data.person_name, amount: data.total_amount })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("loans")
       .insert({
+        user_id: user.id,
         person_name: data.person_name,
         type: data.type,
         total_amount: data.total_amount,

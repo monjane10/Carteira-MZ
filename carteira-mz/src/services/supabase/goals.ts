@@ -47,9 +47,12 @@ export async function createGoal(data: {
 }): Promise<Goal> {
   try {
     logger.info("Creating goal", { title: data.title })
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Nao autenticado")
     const { data: result, error } = await supabase
       .from("goals")
       .insert({
+        user_id: user.id,
         title: data.title,
         target_amount: data.target_amount,
         current_amount: 0,
