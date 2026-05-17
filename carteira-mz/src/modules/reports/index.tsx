@@ -1,16 +1,18 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { Download } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
-import { IncomeVsExpenseChart } from "./components/income-vs-expense-chart"
-import { CategoryReport } from "./components/category-report"
 import { dashboard as dashboardService } from "@/services"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending } from "@/types"
+
+const IncomeVsExpenseChart = dynamic(() => import("./components/income-vs-expense-chart").then((m) => ({ default: m.IncomeVsExpenseChart })), { ssr: false })
+const CategoryReport = dynamic(() => import("./components/category-report").then((m) => ({ default: m.CategoryReport })), { ssr: false })
 
 type DateRange = "3" | "6" | "12"
 

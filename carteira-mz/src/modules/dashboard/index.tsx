@@ -1,16 +1,18 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import dynamic from "next/dynamic"
 import { PageHeader } from "@/components/shared/page-header"
 import { LoadingState } from "@/components/shared/loading-state"
 import { MonthNavigator } from "./components/month-navigator"
 import { SummaryCards } from "./components/summary-cards"
-import { MonthlyChart } from "./components/monthly-chart"
-import { CategoryPieChart } from "./components/category-pie-chart"
 import { RecentTransactions } from "./components/recent-transactions"
 import { GoalsOverview } from "./components/goals-overview"
 import { dashboard as dashboardService, categories as categoryService, goals as goalService } from "@/services"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
+
+const MonthlyChart = dynamic(() => import("./components/monthly-chart").then((m) => ({ default: m.MonthlyChart })), { ssr: false })
+const CategoryPieChart = dynamic(() => import("./components/category-pie-chart").then((m) => ({ default: m.CategoryPieChart })), { ssr: false })
 
 function DashboardPage() {
   const [monthOffset, setMonthOffset] = useState(0)

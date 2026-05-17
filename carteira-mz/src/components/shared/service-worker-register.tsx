@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { toast } from "@/hooks/use-toast"
 
 export function ServiceWorkerRegister() {
   useEffect(() => {
@@ -16,6 +17,11 @@ export function ServiceWorkerRegister() {
             if (newWorker) {
               newWorker.addEventListener("statechange", () => {
                 if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  toast({
+                    title: "Nova versão disponível",
+                    description: "A actualizar...",
+                    variant: "info",
+                  })
                   newWorker.postMessage({ type: "SKIP_WAITING" })
                 }
               })

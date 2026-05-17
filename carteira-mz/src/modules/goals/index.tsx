@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
@@ -10,12 +11,13 @@ import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { GoalCard } from "./components/goal-card"
 import { GoalForm } from "./components/goal-form"
-import { GoalDetail } from "./components/goal-detail"
 import { useGoalStore } from "@/store"
 import type { Goal } from "@/types"
 import type { z } from "zod"
 import type { goalSchema } from "@/validators"
 import { Target } from "lucide-react"
+
+const GoalDetail = dynamic(() => import("./components/goal-detail").then((m) => ({ default: m.GoalDetail })), { ssr: false })
 
 type GoalFormValues = z.infer<typeof goalSchema>
 

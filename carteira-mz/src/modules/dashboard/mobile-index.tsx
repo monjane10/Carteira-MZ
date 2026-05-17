@@ -1,15 +1,17 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import dynamic from "next/dynamic"
 import { MonthNavigator } from "./components/month-navigator"
 import { LoadingState } from "@/components/shared/loading-state"
 import { MobileGreeting } from "./components/mobile-greeting"
 import { MobileBalanceCard } from "./components/mobile-balance-card"
 import { MobileAccounts } from "./components/mobile-accounts"
-import { MobileExpenseChart } from "./components/mobile-expense-chart"
 import { MobileExpenseList } from "./components/mobile-expense-list"
 import { dashboard as dashboardService, accounts as accountService, categories as categoryService } from "@/services"
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
+
+const MobileExpenseChart = dynamic(() => import("./components/mobile-expense-chart").then((m) => ({ default: m.MobileExpenseChart })), { ssr: false })
 
 export function MobileDashboard() {
   const [monthOffset, setMonthOffset] = useState(0)

@@ -6,7 +6,7 @@ Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4.
 
 - **Path alias** `@/*` → `./src/*`
 - **State**: Zustand stores in `src/store/slices/`. Stores import services from `@/services`.
-- **UI**: Radix UI primitives, Lucide icons, Recharts, Framer Motion. `cn()` utility (`clsx` + `tailwind-merge`) for class merging.
+- **UI**: Radix UI primitives, Lucide icons, Recharts (lazy loaded with `next/dynamic` + `ssr: false`), Framer Motion. `cn()` utility (`clsx` + `tailwind-merge`) for class merging.
 - **Forms**: `react-hook-form` + `zod` + `@hookform/resolvers`.
 - **Layout**: Route groups `(auth)` (login/register) and `(dashboard)` (main app with sidebar). Each page in `src/app/` delegates to a module in `src/modules/`.
 
@@ -48,7 +48,6 @@ Portuguese (Mozambique) — `pt-MZ`, currency MZN. Labels in Portuguese (e.g. `A
 ## Auth
 
 - Auth is handled by Supabase Auth (`supabase.auth.signInWithPassword`, `supabase.auth.signUp`) — client-side only.
-- `src/proxy.ts` is a pass-through middleware (Next.js 16 auto-detects it). No server-side redirects to avoid Safari Service Worker issues.
 
 ## Supabase Schema
 
