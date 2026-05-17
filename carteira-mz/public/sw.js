@@ -1,8 +1,8 @@
-const CACHE_NAME = "carteira-mz-v2"
+const STATIC_CACHE = "carteira-mz-static-v2"
 
-const STATIC_CACHE = "carteira-mz-static"
+const IMAGE_CACHE = "carteira-mz-images-v2"
 
-const IMAGE_CACHE = "carteira-mz-images"
+const NAV_CACHE = "carteira-mz-nav-v2"
 
 self.addEventListener("install", (event) => {
   self.skipWaiting()
@@ -27,7 +27,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys
-          .filter((k) => k !== STATIC_CACHE && k !== IMAGE_CACHE && k !== CACHE_NAME)
+          .filter((k) => k !== STATIC_CACHE && k !== IMAGE_CACHE && k !== NAV_CACHE)
           .map((k) => caches.delete(k))
       )
     })
@@ -76,9 +76,20 @@ self.addEventListener("fetch", (event) => {
 
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => {
-        return caches.match("/dashboard")
-      })
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone()
+            caches.open(NAV_CACHE).then((cache) => cache.put(request, clone))
+          }
+          return response
+        })
+        .catch(() => {
+          return caches.match(request).then((cached) => {
+            if (cached) return cached
+            return caches.match("/dashboard")
+          })
+        })
     )
     return
   }
