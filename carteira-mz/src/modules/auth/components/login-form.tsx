@@ -10,6 +10,7 @@ import Link from "next/link"
 import { loginSchema, type LoginFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
+import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
 
 export function LoginForm() {
@@ -46,6 +47,7 @@ export function LoginForm() {
   }
 
   return (
+    <>
     <div className="min-h-dvh flex items-center justify-center bg-white px-6 py-8">
       <div className="w-full max-w-[360px] mx-auto">
         <motion.div
@@ -154,8 +156,10 @@ export function LoginForm() {
               Lourenço Monjane
             </a>
           </p>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+      <UserGuide />
+    </>
   )
 }

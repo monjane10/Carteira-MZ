@@ -10,6 +10,7 @@ import Link from "next/link"
 import { registerSchema, type RegisterFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
+import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
 
 export function RegisterForm() {
@@ -52,6 +53,7 @@ export function RegisterForm() {
   }
 
   return (
+    <>
     <div className="min-h-dvh flex items-center justify-center bg-white px-6 py-8">
       <div className="w-full max-w-[360px] mx-auto max-h-full overflow-y-auto">
         <motion.div
@@ -199,6 +201,8 @@ export function RegisterForm() {
           </p>
         </motion.div>
       </div>
+      <UserGuide />
     </div>
+    </>
   )
 }
