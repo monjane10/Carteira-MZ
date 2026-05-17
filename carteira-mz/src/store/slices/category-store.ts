@@ -30,8 +30,8 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   addCategory: async (data) => {
     set({ error: null })
     try {
-      await categoryService.createCategory(data)
-      await get().fetchCategories()
+      const category = await categoryService.createCategory(data)
+      set((state) => ({ categories: [...state.categories, category] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -41,8 +41,8 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   updateCategory: async (id, data) => {
     set({ error: null })
     try {
-      await categoryService.updateCategory(id, data)
-      await get().fetchCategories()
+      const category = await categoryService.updateCategory(id, data)
+      set((state) => ({ categories: state.categories.map((c) => (c.id === id ? category : c)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -53,7 +53,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     set({ error: null })
     try {
       await categoryService.deleteCategory(id)
-      await get().fetchCategories()
+      set((state) => ({ categories: state.categories.filter((c) => c.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

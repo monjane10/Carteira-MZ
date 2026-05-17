@@ -30,8 +30,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   addTransaction: async (data) => {
     set({ error: null })
     try {
-      await transactionService.createTransaction(data)
-      await get().fetchTransactions()
+      const transaction = await transactionService.createTransaction(data)
+      set((state) => ({ transactions: [...state.transactions, transaction] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -41,8 +41,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   updateTransaction: async (id, data) => {
     set({ error: null })
     try {
-      await transactionService.updateTransaction(id, data)
-      await get().fetchTransactions()
+      const transaction = await transactionService.updateTransaction(id, data)
+      set((state) => ({ transactions: state.transactions.map((t) => (t.id === id ? transaction : t)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -53,7 +53,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     set({ error: null })
     try {
       await transactionService.deleteTransaction(id)
-      await get().fetchTransactions()
+      set((state) => ({ transactions: state.transactions.filter((t) => t.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

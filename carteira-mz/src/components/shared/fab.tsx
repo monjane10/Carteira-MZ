@@ -49,6 +49,7 @@ export function Fab() {
                 <Link
                   href={action.href}
                   onClick={() => setOpen(false)}
+                  aria-label={action.label}
                   className={cn(
                     "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
                     action.color
@@ -65,6 +66,7 @@ export function Fab() {
         <button
           type="button"
           onClick={() => setOpen(!open)}
+          aria-label={open ? "Fechar acções rápidas" : "Abrir acções rápidas"}
           className={cn(
             "flex h-10 w-10 items-center justify-center rounded-full transition-all",
             open

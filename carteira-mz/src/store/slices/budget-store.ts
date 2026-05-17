@@ -28,8 +28,8 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
   addBudget: async (data) => {
     set({ error: null })
     try {
-      await budgetService.createBudget(data)
-      await get().fetchBudgets()
+      const budget = await budgetService.createBudget(data)
+      set((state) => ({ budgets: [...state.budgets, budget] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -39,8 +39,8 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
   updateBudget: async (id, data) => {
     set({ error: null })
     try {
-      await budgetService.updateBudget(id, data)
-      await get().fetchBudgets()
+      const budget = await budgetService.updateBudget(id, data)
+      set((state) => ({ budgets: state.budgets.map((b) => (b.id === id ? budget : b)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -51,7 +51,7 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
     set({ error: null })
     try {
       await budgetService.deleteBudget(id)
-      await get().fetchBudgets()
+      set((state) => ({ budgets: state.budgets.filter((b) => b.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

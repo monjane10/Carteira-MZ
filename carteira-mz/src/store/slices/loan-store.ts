@@ -34,8 +34,8 @@ export const useLoanStore = create<LoanState>((set, get) => ({
   addLoan: async (data) => {
     set({ error: null })
     try {
-      await loanService.createLoan(data)
-      await get().fetchLoans()
+      const loan = await loanService.createLoan(data)
+      set((state) => ({ loans: [...state.loans, loan] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -45,8 +45,8 @@ export const useLoanStore = create<LoanState>((set, get) => ({
   updateLoan: async (id, data) => {
     set({ error: null })
     try {
-      await loanService.updateLoan(id, data)
-      await get().fetchLoans()
+      const loan = await loanService.updateLoan(id, data)
+      set((state) => ({ loans: state.loans.map((l) => (l.id === id ? loan : l)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -57,7 +57,7 @@ export const useLoanStore = create<LoanState>((set, get) => ({
     set({ error: null })
     try {
       await loanService.deleteLoan(id)
-      await get().fetchLoans()
+      set((state) => ({ loans: state.loans.filter((l) => l.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -76,9 +76,9 @@ export const useLoanStore = create<LoanState>((set, get) => ({
   addLoanPayment: async (loanId, data) => {
     set({ error: null })
     try {
-      await loanService.createLoanPayment(loanId, data)
-      await get().fetchLoanPayments(loanId)
-      await get().fetchLoans()
+      const payment = await loanService.createLoanPayment(loanId, data)
+      set((state) => ({ loanPayments: [...state.loanPayments, payment] }))
+      get().fetchLoans()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

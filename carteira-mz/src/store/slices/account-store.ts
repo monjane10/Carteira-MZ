@@ -30,8 +30,8 @@ export const useAccountStore = create<AccountState>((set, get) => ({
   addAccount: async (data) => {
     set({ error: null })
     try {
-      await accountService.createAccount(data)
-      await get().fetchAccounts()
+      const account = await accountService.createAccount(data)
+      set((state) => ({ accounts: [...state.accounts, account] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -41,8 +41,8 @@ export const useAccountStore = create<AccountState>((set, get) => ({
   updateAccount: async (id, data) => {
     set({ error: null })
     try {
-      await accountService.updateAccount(id, data)
-      await get().fetchAccounts()
+      const account = await accountService.updateAccount(id, data)
+      set((state) => ({ accounts: state.accounts.map((a) => (a.id === id ? account : a)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -53,7 +53,7 @@ export const useAccountStore = create<AccountState>((set, get) => ({
     set({ error: null })
     try {
       await accountService.deleteAccount(id)
-      await get().fetchAccounts()
+      set((state) => ({ accounts: state.accounts.filter((a) => a.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

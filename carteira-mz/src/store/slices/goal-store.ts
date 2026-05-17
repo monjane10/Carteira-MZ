@@ -34,8 +34,8 @@ export const useGoalStore = create<GoalState>((set, get) => ({
   addGoal: async (data) => {
     set({ error: null })
     try {
-      await goalService.createGoal(data)
-      await get().fetchGoals()
+      const goal = await goalService.createGoal(data)
+      set((state) => ({ goals: [...state.goals, goal] }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -45,8 +45,8 @@ export const useGoalStore = create<GoalState>((set, get) => ({
   updateGoal: async (id, data) => {
     set({ error: null })
     try {
-      await goalService.updateGoal(id, data)
-      await get().fetchGoals()
+      const goal = await goalService.updateGoal(id, data)
+      set((state) => ({ goals: state.goals.map((g) => (g.id === id ? goal : g)) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -57,7 +57,7 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     set({ error: null })
     try {
       await goalService.deleteGoal(id)
-      await get().fetchGoals()
+      set((state) => ({ goals: state.goals.filter((g) => g.id !== id) }))
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })
@@ -76,9 +76,9 @@ export const useGoalStore = create<GoalState>((set, get) => ({
   addGoalContribution: async (goalId, data) => {
     set({ error: null })
     try {
-      await goalService.createGoalContribution(goalId, data)
-      await get().fetchGoalContributions(goalId)
-      await get().fetchGoals()
+      const contribution = await goalService.createGoalContribution(goalId, data)
+      set((state) => ({ goalContributions: [...state.goalContributions, contribution] }))
+      get().fetchGoals()
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg, isLoading: false })

@@ -10,10 +10,24 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Carteira MZ",
-  description: "Aplicação moderna de gestão financeira pessoal",
+  title: {
+    default: "Carteira MZ",
+    template: "%s | Carteira MZ",
+  },
+  description: "Aplicação moderna de gestão financeira pessoal para Moçambique — controle suas contas, transacções, orçamentos e metas.",
   manifest: "/manifest.json",
-
+  openGraph: {
+    title: "Carteira MZ",
+    description: "Aplicação moderna de gestão financeira pessoal para Moçambique",
+    type: "website",
+    locale: "pt_MZ",
+    siteName: "Carteira MZ",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Carteira MZ",
+    description: "Aplicação moderna de gestão financeira pessoal para Moçambique",
+  },
 }
 
 export default function RootLayout({
