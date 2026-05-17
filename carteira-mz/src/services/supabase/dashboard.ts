@@ -47,13 +47,7 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
     const incomeChange = prevIncome > 0 ? Math.round(((monthlyIncome - prevIncome) / prevIncome) * 10000) / 100 : 0
     const expenseChange = prevExpenses > 0 ? Math.round(((monthlyExpenses - prevExpenses) / prevExpenses) * 10000) / 100 : 0
 
-    let totalBalance = currentBalance
-    if (targetDate) {
-      const afterTx = txList.filter((t) => t.transaction_date > endOfMonth)
-      const incomeAfter = afterTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
-      const expensesAfter = afterTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
-      totalBalance = Math.round((currentBalance - incomeAfter + expensesAfter) * 100) / 100
-    }
+    const totalBalance = currentBalance
 
     const { data: loansGiven } = await supabase
       .from("loans")
