@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import type { Notification } from "@/types"
-import { notifications as notificationService } from "@/services"
+import { notifications as notificationService, supabase } from "@/services"
+import { showBrowserNotification } from "@/lib/push-notifications"
 
 interface NotificationState {
   notifications: Notification[]
@@ -11,9 +12,10 @@ interface NotificationState {
   markAsRead: (id: string) => Promise<void>
   markAllAsRead: () => Promise<void>
   getUnreadCount: () => Promise<void>
+  subscribeToRealtime: () => () => void
 }
 
-export const useNotificationStore = create<NotificationState>((set) => ({
+export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
   unreadCount: 0,
   isLoading: false,
@@ -58,5 +60,22 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     } catch {
       set({ error: "Erro ao carregar contagem de não lidas" })
     }
+  },
+  subscribeToRealtime: () => {
+    const channel = supabase
+      .channel("notifications-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications" },
+        (payload) => {
+          get().fetchNotifications()
+          get().getUnreadCount()
+          const n = payload.new as Notification
+          if (n?.title) showBrowserNotification(n.title, n.message ?? "")
+        },
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   },
 }))

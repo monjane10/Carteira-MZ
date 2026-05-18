@@ -10,7 +10,8 @@ import { MobileGreeting } from "./components/mobile-greeting"
 import { MobileBalanceCard } from "./components/mobile-balance-card"
 import { MobileAccounts } from "./components/mobile-accounts"
 import { MobileExpenseList } from "./components/mobile-expense-list"
-import { dashboard as dashboardService, accounts as accountService, categories as categoryService } from "@/services"
+import { dashboard as dashboardService, accounts as accountService, categories as categoryService, budgets as budgetService } from "@/services"
+import { checkOverdueLoans } from "@/services/supabase/loans"
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
 
 const MobileExpenseChart = dynamic(() => import("./components/mobile-expense-chart").then((m) => ({ default: m.MobileExpenseChart })), { ssr: false })
@@ -63,6 +64,8 @@ export function MobileDashboard() {
           map[cat.id] = cat
         }
         setCategoryMap(map)
+        budgetService.checkBudgetLimits()
+        checkOverdueLoans()
       } catch (error) {
         if (cancelled) return
         console.error("Failed to fetch mobile dashboard data:", error)

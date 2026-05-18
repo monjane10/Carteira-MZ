@@ -56,8 +56,10 @@ CREATE TYPE goal_status AS ENUM ('ACTIVE', 'COMPLETED', 'CANCELLED');
 CREATE TYPE notification_type AS ENUM (
   'BUDGET_LIMIT',
   'GOAL_COMPLETED',
+  'GOAL_CONTRIBUTION',
   'LOW_BALANCE',
   'LOAN_DUE',
+  'LOAN_RECEIVED',
   'SYSTEM'
 );
 
@@ -515,6 +517,10 @@ CREATE POLICY "Users can update own notifications"
   ON notifications FOR UPDATE
   USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can create own notifications"
+  ON notifications FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
 -- Attachments
 CREATE POLICY "Users can view own attachments"
   ON attachments FOR SELECT
@@ -596,6 +602,12 @@ RETURNS NUMERIC AS $$
   FROM accounts
   WHERE user_id = p_user_id AND is_active = true;
 $$ LANGUAGE SQL;
+
+-- ============================================================
+-- 9. SUPABASE REALTIME — Publicar notificações
+-- ============================================================
+
+ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
 
 -- ============================================================
 -- FIM DO SCHEMA

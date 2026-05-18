@@ -1,9 +1,18 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
-import type { Goal, GoalContribution } from "@/types"
+import { createNotification } from "./notifications"
+import type { Goal, GoalContribution, NotificationType } from "@/types"
 
 const ENTITY = "meta"
+
+async function notify(
+  type: NotificationType,
+  title: string,
+  message: string,
+) {
+  try { await createNotification(type, title, message) } catch { /* silent */ }
+}
 
 export async function getGoals(): Promise<Goal[]> {
   try {
@@ -103,6 +112,11 @@ export async function updateGoal(
     if (error) throw error
 
     logger.info("Goal updated", { id })
+
+    if (result.status === "COMPLETED" && existing.status !== "COMPLETED") {
+      notify("GOAL_COMPLETED", `Meta "${result.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${result.target_amount} Mzn.`)
+    }
+
     return result as unknown as Goal
   } catch (e) {
     return handleError(ENTITY, "actualizar", e)
@@ -199,6 +213,14 @@ export async function createGoalContribution(
     }
 
     logger.info("Goal contribution created", { goalId, amount: data.amount })
+
+    const accName = data.account_id ? `da conta ${data.account_id.slice(0, 8)}` : "manual"
+    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${accName}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`)
+
+    if (newStatus === "COMPLETED") {
+      notify("GOAL_COMPLETED", `Meta "${existing.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${existing.target_amount} Mzn.`)
+    }
+
     return contribution
   } catch (e) {
     return handleError(ENTITY + " contribuicao", "criar", e)

@@ -8,7 +8,8 @@ import { MonthNavigator } from "./components/month-navigator"
 import { SummaryCards } from "./components/summary-cards"
 import { RecentTransactions } from "./components/recent-transactions"
 import { GoalsOverview } from "./components/goals-overview"
-import { dashboard as dashboardService, categories as categoryService, goals as goalService } from "@/services"
+import { dashboard as dashboardService, categories as categoryService, goals as goalService, budgets as budgetService } from "@/services"
+import { checkOverdueLoans } from "@/services/supabase/loans"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
 
 const MonthlyChart = dynamic(() => import("./components/monthly-chart").then((m) => ({ default: m.MonthlyChart })), { ssr: false })
@@ -62,6 +63,8 @@ function DashboardPage() {
           }, {})
         )
         setError(null)
+        budgetService.checkBudgetLimits()
+        checkOverdueLoans()
       } catch (e) {
         if (cancelled) return
         const msg = e instanceof Error ? e.message : String(e)

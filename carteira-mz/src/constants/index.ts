@@ -85,8 +85,10 @@ export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
 export const NOTIFICATION_TYPE_LABELS: Record<NotificationType, string> = {
   BUDGET_LIMIT: "Limite de Orçamento",
   GOAL_COMPLETED: "Meta Concluída",
+  GOAL_CONTRIBUTION: "Contribuição para Meta",
   LOW_BALANCE: "Saldo Baixo",
   LOAN_DUE: "Vencimento de Empréstimo",
+  LOAN_RECEIVED: "Recebimento de Empréstimo",
   SYSTEM: "Sistema",
 }
 
