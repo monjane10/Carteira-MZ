@@ -21,6 +21,8 @@ const GoalDetail = dynamic(() => import("./components/goal-detail").then((m) => 
 
 type GoalFormValues = z.infer<typeof goalSchema>
 
+const ITEMS_PER_PAGE = 10
+
 function GoalsPage() {
   const { goals, isLoading, error, fetchGoals, addGoal, updateGoal, removeGoal } = useGoalStore()
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
@@ -28,6 +30,7 @@ function GoalsPage() {
   const [editingGoal] = useState<Goal | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Goal | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
   useEffect(() => {
     fetchGoals()
@@ -137,18 +140,27 @@ function GoalsPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta criada.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {goals.map((goal) => (
-            <GoalCard
-              key={goal.id}
-              goal={goal}
-              onClick={() => {
-                setSelectedGoalId(goal.id)
-              }}
-              onDelete={() => setDeleteConfirm(goal)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {goals.slice(0, visibleCount).map((goal) => (
+              <GoalCard
+                key={goal.id}
+                goal={goal}
+                onClick={() => {
+                  setSelectedGoalId(goal.id)
+                }}
+                onDelete={() => setDeleteConfirm(goal)}
+              />
+            ))}
+          </div>
+          {visibleCount < goals.length && (
+            <div className="flex justify-center pt-3">
+              <Button variant="outline" size="sm" onClick={() => setVisibleCount((p) => p + ITEMS_PER_PAGE)}>
+                Mostrar mais ({goals.length - visibleCount} restantes)
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       <GoalForm

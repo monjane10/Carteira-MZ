@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useMemo, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import {
   Search,
@@ -15,6 +15,7 @@ import {
   X,
   Trash2,
   Download,
+  Calendar,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,7 +30,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shared/empty-state"
 import { TRANSACTION_TYPE_LABELS } from "@/constants"
 import { formatCurrency, formatDate, cn } from "@/lib/utils"
-import type { Transaction, TransactionType } from "@/types"
+import { accounts as accountService, categories as categoryService } from "@/services"
+import type { Transaction, TransactionType, Account, Category } from "@/types"
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -52,22 +54,46 @@ const ITEMS_PER_PAGE = 10
 
 export function TransactionList({ transactions, loading, onDelete }: TransactionListProps) {
   const router = useRouter()
-  const [search, setSearch] = useState("")
+  const searchParams = useSearchParams()
+  const initialSearch = searchParams.get("search") ?? ""
+  const [search, setSearch] = useState(initialSearch)
   const [typeFilter, setTypeFilter] = useState<string>("all")
+  const [accountFilter, setAccountFilter] = useState<string>("all")
+  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const [dateFrom, setDateFrom] = useState("")
+  const [dateTo, setDateTo] = useState("")
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
+  const [accounts, setAccounts] = useState<Account[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  useEffect(() => {
+    Promise.all([
+      accountService.getAccounts(),
+      categoryService.getCategories(),
+    ]).then(([a, c]) => {
+      setAccounts(a)
+      setCategories(c)
+    })
+  }, [])
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
       if (typeFilter !== "all" && t.type !== typeFilter) return false
+      if (accountFilter !== "all" && t.account_id !== accountFilter) return false
+      if (categoryFilter !== "all" && t.category_id !== categoryFilter) return false
+      if (dateFrom && t.transaction_date < dateFrom) return false
+      if (dateTo && t.transaction_date > dateTo) return false
       if (search) {
         const q = search.toLowerCase()
         const desc = (t.description ?? "").toLowerCase()
         const cat = (t.category?.name ?? "").toLowerCase()
-        if (!desc.includes(q) && !cat.includes(q)) return false
+        const acc = (t.account?.name ?? "").toLowerCase()
+        if (!desc.includes(q) && !cat.includes(q) && !acc.includes(q)) return false
       }
       return true
     })
-  }, [transactions, search, typeFilter])
+  }, [transactions, search, typeFilter, accountFilter, categoryFilter, dateFrom, dateTo])
 
   const visible = filtered.slice(0, visibleCount)
   const hasMore = visibleCount < filtered.length
@@ -126,48 +152,107 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            placeholder="Pesquisar por descrição ou categoria..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value)
-              setVisibleCount(ITEMS_PER_PAGE)
-            }}
-            className="pl-9"
-          />
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Input
+              placeholder="Pesquisar por descrição, categoria ou conta..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value)
+                setVisibleCount(ITEMS_PER_PAGE)
+              }}
+              className="pl-9"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Select
+              value={typeFilter}
+              onValueChange={(v) => {
+                setTypeFilter(v)
+                setVisibleCount(ITEMS_PER_PAGE)
+              }}
+            >
+              <SelectTrigger className="w-full sm:w-36">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {(Object.keys(TRANSACTION_TYPE_LABELS) as TransactionType[]).map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {TRANSACTION_TYPE_LABELS[type]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+              className={cn("shrink-0", filtersOpen && "bg-slate-100 dark:bg-slate-800")}
+              aria-label="Mais filtros"
+            >
+              <Filter className="mr-1.5 h-4 w-4" />
+              Filtros
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportTransactionsCSV}
+              className="shrink-0"
+              aria-label="Exportar CSV"
+            >
+              <Download className="mr-1.5 h-4 w-4" />
+              CSV
+            </Button>
+          </div>
         </div>
-        <Select
-          value={typeFilter}
-          onValueChange={(v) => {
-            setTypeFilter(v)
-            setVisibleCount(ITEMS_PER_PAGE)
-          }}
-        >
-          <SelectTrigger className="w-full sm:w-44">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os tipos</SelectItem>
-            {(Object.keys(TRANSACTION_TYPE_LABELS) as TransactionType[]).map((type) => (
-              <SelectItem key={type} value={type}>
-                {TRANSACTION_TYPE_LABELS[type]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={exportTransactionsCSV}
-          className="shrink-0"
-          aria-label="Exportar CSV"
-        >
-          <Download className="mr-1.5 h-4 w-4" />
-          CSV
-        </Button>
+
+        {filtersOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900"
+          >
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Conta</label>
+              <Select value={accountFilter} onValueChange={setAccountFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Conta" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  {accounts.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Categoria</label>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">De</label>
+              <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Até</label>
+              <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {filtered.length === 0 ? (
@@ -183,6 +268,10 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
             onClick={() => {
               setSearch("")
               setTypeFilter("all")
+              setAccountFilter("all")
+              setCategoryFilter("all")
+              setDateFrom("")
+              setDateTo("")
             }}
           >
             <X className="mr-1.5 h-3.5 w-3.5" />

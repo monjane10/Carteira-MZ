@@ -217,6 +217,10 @@ export interface DashboardSummary {
   balance_change: number
   income_change: number
   expense_change: number
+  biggest_expense: { amount: number; description: string | null; date: string } | null
+  savings_rate: number
+  avg_daily_spend: number
+  net_worth: number
 }
 
 export interface MonthlyEvolution {

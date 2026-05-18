@@ -3,55 +3,77 @@
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
-import { Download, TrendingUp, TrendingDown } from "lucide-react"
+import { Download, TrendingUp, TrendingDown, ChevronDown, Filter, Calendar } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
-import { dashboard as dashboardService } from "@/services"
-import { formatCurrency, formatDate } from "@/lib/utils"
-import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction } from "@/types"
+import { dashboard as dashboardService, accounts as accountService } from "@/services"
+import { formatCurrency, formatDate, cn } from "@/lib/utils"
+import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Account } from "@/types"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const IncomeVsExpenseChart = dynamic(() => import("./components/income-vs-expense-chart").then((m) => ({ default: m.IncomeVsExpenseChart })), { ssr: false })
 const CategoryReport = dynamic(() => import("./components/category-report").then((m) => ({ default: m.CategoryReport })), { ssr: false })
 
-type DateRange = "3" | "6" | "12"
+type DateRange = "3" | "6" | "12" | "custom"
 
 function ReportsPage() {
   const [dateRange, setDateRange] = useState<DateRange>("6")
+  const [customFrom, setCustomFrom] = useState("")
+  const [customTo, setCustomTo] = useState("")
+  const [accountFilter, setAccountFilter] = useState<string>("all")
+  const [accounts, setAccounts] = useState<Account[]>([])
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [evolution, setEvolution] = useState<MonthlyEvolution[]>([])
-  const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
+  const [expenseSpending, setExpenseSpending] = useState<CategorySpending[]>([])
+  const [incomeSpending, setIncomeSpending] = useState<CategorySpending[]>([])
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
+    accountService.getAccounts().then(setAccounts)
+  }, [])
+
+  useEffect(() => {
     let cancelled = false
-    async function load(range: DateRange) {
+    async function load() {
       setLoading(true)
       setError(null)
       try {
-        const months = parseInt(range)
         const now = new Date()
-        const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
-        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+        const months = dateRange === "custom" ? 12 : parseInt(dateRange)
+        const startRangeDate = dateRange === "custom"
+          ? new Date(customFrom || now.toISOString().slice(0, 10))
+          : new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
+        const endDate = dateRange === "custom"
+          ? new Date(customTo || now.toISOString().slice(0, 10) + "T23:59:59")
+          : new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+        const startDate = new Date(startRangeDate.getFullYear(), startRangeDate.getMonth(), 1)
 
-        const [summaryData, evolutionData, spendingData, txData] = await Promise.all([
-          dashboardService.getDashboardSummary(),
-          dashboardService.getMonthlyEvolution(months),
-          dashboardService.getCategorySpending(
-            startDate.toISOString(),
-            endDate.toISOString()
-          ),
-          dashboardService.getRecentTransactions(20, startDate.toISOString(), endDate.toISOString()),
+        const accountIds = accountFilter !== "all" ? [accountFilter] : undefined
+
+        const [summaryData, evolutionData, expenseData, incomeData, txData] = await Promise.all([
+          dashboardService.getDashboardSummary(startDate, accountIds),
+          dashboardService.getMonthlyEvolution(months, accountIds),
+          dashboardService.getCategorySpending(startDate.toISOString(), endDate.toISOString(), accountIds),
+          dashboardService.getCategoryIncome(startDate.toISOString(), endDate.toISOString(), accountIds),
+          dashboardService.getRecentTransactions(20, startDate.toISOString(), endDate.toISOString(), accountIds),
         ])
         if (!cancelled) {
           setSummary(summaryData)
           setEvolution(evolutionData)
-          setCategorySpending(spendingData)
+          setExpenseSpending(expenseData)
+          setIncomeSpending(incomeData)
           setRecentTransactions(txData)
         }
       } catch (e) {
@@ -63,12 +85,16 @@ function ReportsPage() {
         if (!cancelled) setLoading(false)
       }
     }
-    load(dateRange)
+    if (dateRange !== "custom" || (customFrom && customTo)) {
+      load()
+    } else {
+      setLoading(false)
+    }
     return () => { cancelled = true }
-  }, [dateRange, refreshKey])
+  }, [dateRange, customFrom, customTo, accountFilter, refreshKey])
 
   const handleExport = () => {
-    if (!evolution.length && !categorySpending.length) {
+    if (!evolution.length && !expenseSpending.length) {
       toast({ title: "Exportar", description: "Sem dados para exportar.", variant: "info" })
       return
     }
@@ -79,8 +105,14 @@ function ReportsPage() {
     }
 
     rows.push([])
-    rows.push(["Categoria", "Total", "Percentagem", "Transacções"])
-    for (const c of categorySpending) {
+    rows.push(["Categoria (Despesas)", "Total", "Percentagem", "Transacções"])
+    for (const c of expenseSpending) {
+      rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
+    }
+
+    rows.push([])
+    rows.push(["Categoria (Receitas)", "Total", "Percentagem", "Transacções"])
+    for (const c of incomeSpending) {
       rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
     }
 
@@ -89,7 +121,7 @@ function ReportsPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `relatorio-${dateRange}m-${new Date().toISOString().slice(0, 10)}.csv`
+    a.download = `relatorio-${dateRange}-${new Date().toISOString().slice(0, 10)}.csv`
     a.click()
     URL.revokeObjectURL(url)
     toast({ title: "Exportado", description: "Relatório exportado com sucesso.", variant: "success" })
@@ -113,9 +145,20 @@ function ReportsPage() {
       className="space-y-6"
     >
       <PageHeader title="Relatórios" description="Análise detalhada das suas finanças">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Select value={accountFilter} onValueChange={setAccountFilter}>
+            <SelectTrigger className="w-44">
+              <SelectValue placeholder="Conta" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as contas</SelectItem>
+              {accounts.map((a) => (
+                <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="flex rounded-lg border border-slate-200 p-0.5 dark:border-slate-800">
-            {(["3", "6", "12"] as DateRange[]).map((range) => (
+            {(["3", "6", "12", "custom"] as DateRange[]).map((range) => (
               <button
                 key={range}
                 onClick={() => setDateRange(range)}
@@ -125,7 +168,7 @@ function ReportsPage() {
                     : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
-                {range}m
+                {range === "custom" ? "Personalizado" : `${range}m`}
               </button>
             ))}
           </div>
@@ -136,12 +179,31 @@ function ReportsPage() {
         </div>
       </PageHeader>
 
+      {dateRange === "custom" && (
+        <div className="flex flex-wrap gap-3 items-end p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">De</label>
+            <Input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-40" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">Até</label>
+            <Input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-40" />
+          </div>
+        </div>
+      )}
+
       <SummaryCards summary={summary} loading={loading} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <IncomeVsExpenseChart data={evolution} loading={loading} />
-        <CategoryReport data={categorySpending} loading={loading} />
+        <CategoryReport data={expenseSpending} loading={loading} title="Despesas por Categoria" />
       </div>
+
+      {incomeSpending.length > 0 && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <CategoryReport data={incomeSpending} loading={loading} title="Receitas por Categoria" />
+        </div>
+      )}
 
       {recentTransactions.length > 0 && (
         <motion.div
@@ -154,7 +216,7 @@ function ReportsPage() {
             <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Transacções Recentes</h3>
           </div>
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
-            {recentTransactions.slice(0, 10).map((tx) => (
+            {recentTransactions.map((tx) => (
               <div key={tx.id} className="flex items-center gap-3 px-5 py-3">
                 <span className={`flex h-8 w-8 items-center justify-center rounded-full ${
                   tx.type === "INCOME" ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"

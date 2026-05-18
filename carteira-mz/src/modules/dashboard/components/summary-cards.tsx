@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { TrendingUp, TrendingDown, PiggyBank, Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react"
+import { TrendingUp, TrendingDown, PiggyBank, Eye, EyeOff, ArrowUp, ArrowDown, Target, Award, BarChart3, Wallet } from "lucide-react"
 import { StatCard } from "@/components/shared/stat-card"
 import { formatCurrency, formatPercentage } from "@/lib/utils"
-import type { DashboardSummary } from "@/types"
+import type { DashboardSummary, CategorySpending } from "@/types"
 
 interface SummaryCardsProps {
   summary: DashboardSummary
+  categorySpending?: CategorySpending[]
 }
 
 const container = {
@@ -24,9 +25,10 @@ const item = {
   show: { opacity: 1, y: 0 },
 }
 
-export function SummaryCards({ summary }: SummaryCardsProps) {
+export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
   const economy = summary.monthly_income - summary.monthly_expenses
   const [showBalance, setShowBalance] = useState(true)
+  const topCategory = categorySpending && categorySpending.length > 0 ? categorySpending[0] : null
 
   return (
     <motion.div
@@ -116,6 +118,56 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           icon={PiggyBank}
         />
       </motion.div>
+
+      <div className="col-span-full mt-2">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Métricas Avançadas</p>
+      </div>
+
+      <motion.div variants={item}>
+        <StatCard
+          label="Património Líquido"
+          value={formatCurrency(summary.net_worth)}
+          changeType={summary.net_worth >= 0 ? "positive" : "negative"}
+          icon={Wallet}
+        />
+      </motion.div>
+
+      <motion.div variants={item}>
+        <StatCard
+          label="Gasto Médio Diário"
+          value={formatCurrency(summary.avg_daily_spend)}
+          icon={BarChart3}
+        />
+      </motion.div>
+
+      <motion.div variants={item}>
+        <StatCard
+          label="Taxa de Poupança"
+          value={summary.savings_rate >= 0 ? `${summary.savings_rate}%` : "—"}
+          changeType={summary.savings_rate >= 10 ? "positive" : summary.savings_rate >= 0 ? "neutral" : "negative"}
+          icon={Target}
+        />
+      </motion.div>
+
+      <motion.div variants={item}>
+        <StatCard
+          label="Maior Despesa"
+          value={summary.biggest_expense ? formatCurrency(summary.biggest_expense.amount) : "—"}
+          description={summary.biggest_expense?.description ?? "Nenhuma despesa este mês"}
+          icon={Award}
+        />
+      </motion.div>
+
+      {topCategory && (
+        <motion.div variants={item}>
+          <StatCard
+            label="Categoria Mais Gasta"
+            value={topCategory.category_name}
+            description={`${formatCurrency(topCategory.total)} (${topCategory.percentage}%)`}
+            icon={TrendingDown}
+          />
+        </motion.div>
+      )}
     </motion.div>
   )
 }
