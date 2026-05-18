@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { ArrowLeft, Target, Calendar, Plus, TrendingUp, PiggyBank, BarChart3 } from "lucide-react"
+import { ChevronLeft, Target, Calendar, Plus, TrendingUp, PiggyBank, BarChart3 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -126,7 +126,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       className="space-y-6"
     >
       <Button variant="ghost" size="sm" onClick={onBack}>
-        <ArrowLeft className="mr-1.5 h-4 w-4" />
+        <ChevronLeft className="mr-1.5 h-4 w-4" />
         Voltar
       </Button>
 

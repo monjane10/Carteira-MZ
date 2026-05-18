@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { LogOut } from "lucide-react"
 import { BackButton } from "@/components/shared/back-button"
@@ -9,6 +9,7 @@ import { Logo } from "@/components/shared/logo"
 import { NotificationDropdown } from "@/components/shared/notification-dropdown"
 import { MobileNav } from "./mobile-nav"
 import { Fab } from "@/components/shared/fab"
+import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { supabase } from "@/services/supabase/client"
 import { requestNotificationPermission } from "@/lib/push-notifications"
 
@@ -21,6 +22,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const showBack = !mainTabs.includes(pathname)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   useEffect(() => {
     requestNotificationPermission()
@@ -41,7 +43,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex items-center gap-1">
           <NotificationDropdown />
           <button
-            onClick={handleLogout}
+            onClick={() => setShowLogoutConfirm(true)}
             className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-300"
             title="Sair"
           >
@@ -49,6 +51,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </button>
         </div>
       </header>
+
+      <ConfirmDialog
+        open={showLogoutConfirm}
+        onOpenChange={setShowLogoutConfirm}
+        title="Terminar Sessão"
+        description="Tem a certeza que deseja terminar a sessão?"
+        onConfirm={handleLogout}
+      />
       <div className="flex-1 overflow-y-auto hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
         <main className="px-4 pt-5 pb-24">
           {showBack && (

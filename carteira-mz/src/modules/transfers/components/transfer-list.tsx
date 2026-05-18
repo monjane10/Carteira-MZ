@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Repeat, ChevronRight } from "lucide-react"
+import { Repeat, ChevronRight } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shared/empty-state"
 import { formatCurrency, formatDate } from "@/lib/utils"
@@ -57,12 +57,12 @@ export function TransferList({ transfers, loading, onClick }: TransferListProps)
         >
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-              <ArrowRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-slate-900 dark:text-white">
                 {transfer.from_account?.name ?? "Conta origem"}
-                <ArrowRight className="mx-1.5 inline h-3.5 w-3.5 text-slate-400" />
+                <ChevronRight className="mx-1.5 inline h-3.5 w-3.5 text-slate-400" />
                 {transfer.to_account?.name ?? "Conta destino"}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { Mail, Lock, ArrowRight } from "lucide-react"
+import { Mail, Lock, ChevronRight } from "lucide-react"
 import { supabase } from "@/services"
 
 export default function AdminLoginPage() {
@@ -112,7 +112,7 @@ export default function AdminLoginPage() {
               ) : (
                 <>
                   Entrar
-                  <ArrowRight style={{ width: 16, height: 16 }} />
+                  <ChevronRight style={{ width: 16, height: 16 }} />
                 </>
               )}
             </button>

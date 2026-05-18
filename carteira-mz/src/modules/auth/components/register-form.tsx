@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, User, ChevronRight } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
@@ -175,7 +175,7 @@ export function RegisterForm() {
               ) : (
                 <>
                   Criar Conta
-                  <ArrowRight style={{ width: 20, height: 20 }} />
+                  <ChevronRight style={{ width: 20, height: 20 }} />
                 </>
               )}
             </button>
