@@ -11,6 +11,7 @@ import { TRANSACTION_TYPE_LABELS } from "@/constants"
 import { transactionSchema } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { accounts as accountService, categories as categoryService, transactions as transactionService } from "@/services"
+import { createNotification } from "@/services/supabase/notifications"
 import type { Account, Category, TransactionType } from "@/types"
 import type { z } from "zod"
 
@@ -59,6 +60,9 @@ export function TransactionCreateScreen() {
 
   async function onSubmit(data: z.infer<typeof transactionSchema>) {
     try {
+      const existing = await transactionService.getTransactions()
+      const isFirst = existing.length === 0
+
       await transactionService.createTransaction({
         account_id: data.account_id,
         category_id: data.category_id ?? null,
@@ -70,7 +74,13 @@ export function TransactionCreateScreen() {
         is_recurring: data.is_recurring,
         attachment_url: null,
       })
+
       toast({ title: "Sucesso", description: "Transacção criada com sucesso.", variant: "success" })
+
+      if (isFirst) {
+        createNotification("SYSTEM", "Primeira transacção", "Registou a sua primeira transacção no Carteira MZ.")
+      }
+
       router.push("/transacoes")
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)

@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { accounts as accountService } from "@/services"
 import { supabase } from "@/services/supabase/client"
+import { createNotification } from "@/services/supabase/notifications"
 
 const schema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
@@ -93,6 +94,9 @@ export function AccountCreateScreen() {
 
   async function onSubmit(data: FormData) {
     try {
+      const existing = await accountService.getAccounts()
+      const isFirst = existing.length === 0
+
       const institutionId = institutionMap.get(data.institution) ?? null
       await accountService.createAccount({
         name: data.name || data.institution,
@@ -105,7 +109,13 @@ export function AccountCreateScreen() {
         institution_id: institutionId,
         is_active: true,
       })
+
       toast({ title: "Sucesso", description: "Conta criada com sucesso.", variant: "success" })
+
+      if (isFirst) {
+        createNotification("SYSTEM", "Primeira conta criada", "Parabéns! Criou a sua primeira conta no Carteira MZ.")
+      }
+
       router.push("/contas")
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
