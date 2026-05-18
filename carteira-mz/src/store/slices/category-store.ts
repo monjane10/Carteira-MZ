@@ -22,7 +22,8 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     try {
       const categories = await categoryService.getCategories()
       set({ categories: categories.filter(Boolean) as Category[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch categories:", e)
       set({ error: "Erro ao carregar categorias", isLoading: false })
     }
   },

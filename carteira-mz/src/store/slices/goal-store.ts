@@ -26,7 +26,8 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     try {
       const goals = await goalService.getGoals()
       set({ goals: goals.filter(Boolean) as Goal[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch goals:", e)
       set({ error: "Erro ao carregar metas", isLoading: false })
     }
   },
@@ -69,7 +70,8 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     try {
       const goalContributions = await goalService.getGoalContributions(goalId)
       set({ goalContributions: goalContributions.filter(Boolean) as GoalContribution[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch goal contributions:", e)
       set({ error: "Erro ao carregar contribuições", isLoading: false })
     }
   },

@@ -12,7 +12,7 @@ async function notify(
   message: string,
   url?: string,
 ) {
-  try { await createNotification(type, title, message, url) } catch { /* silent */ }
+  try { await createNotification(type, title, message, url) } catch (e) { console.error("Goal notification error:", e) }
 }
 
 export async function getGoals(): Promise<Goal[]> {

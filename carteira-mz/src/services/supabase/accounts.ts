@@ -1,6 +1,7 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
+import { createNotification } from "./notifications"
 import type { Account } from "@/types"
 
 const ENTITY = "conta"
@@ -121,6 +122,24 @@ export async function deleteAccount(id: string): Promise<void> {
     logger.info("Deleted account", { id })
   } catch (e) {
     return handleError(ENTITY, "remover", e)
+  }
+}
+
+export async function checkLowBalances(threshold = 500): Promise<void> {
+  try {
+    const accounts = await getAccounts()
+    for (const account of accounts) {
+      if (account.is_active && account.balance < threshold) {
+        await createNotification(
+          "LOW_BALANCE",
+          `Saldo baixo em ${account.name}`,
+          `O saldo da sua conta ${account.name} está abaixo de ${threshold} MZN (${account.balance} MZN). Considere fazer um depósito.`,
+          `/contas/${account.id}`,
+        )
+      }
+    }
+  } catch (e) {
+    logger.warn("Failed to check low balances", { error: e })
   }
 }
 

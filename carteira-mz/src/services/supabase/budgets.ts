@@ -12,7 +12,7 @@ async function notify(
   message: string,
   url?: string,
 ) {
-  try { await createNotification(type, title, message, url) } catch { /* silent */ }
+  try { await createNotification(type, title, message, url) } catch (e) { console.error("Budget notification error:", e) }
 }
 
 export async function getBudgets(): Promise<Budget[]> {

@@ -26,7 +26,8 @@ export const useLoanStore = create<LoanState>((set, get) => ({
     try {
       const loans = await loanService.getLoans()
       set({ loans: loans.filter(Boolean) as Loan[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch loans:", e)
       set({ error: "Erro ao carregar empréstimos", isLoading: false })
     }
   },
@@ -69,7 +70,8 @@ export const useLoanStore = create<LoanState>((set, get) => ({
     try {
       const loanPayments = await loanService.getLoanPayments(loanId)
       set({ loanPayments: loanPayments.filter(Boolean) as LoanPayment[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch loan payments:", e)
       set({ error: "Erro ao carregar pagamentos", isLoading: false })
     }
   },

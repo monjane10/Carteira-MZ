@@ -12,7 +12,8 @@ export async function subscribeToPush(registration: ServiceWorkerRegistration): 
     })
 
     return subscription.toJSON()
-  } catch {
+  } catch (e) {
+    console.error("Push subscribe error:", e)
     return null
   }
 }
@@ -23,7 +24,8 @@ export async function unsubscribeFromPush(registration: ServiceWorkerRegistratio
     if (!subscription) return false
     await subscription.unsubscribe()
     return true
-  } catch {
+  } catch (e) {
+    console.error("Push unsubscribe error:", e)
     return false
   }
 }

@@ -22,7 +22,8 @@ export const useAccountStore = create<AccountState>((set, get) => ({
     try {
       const accounts = await accountService.getAccounts()
       set({ accounts: accounts.filter(Boolean) as Account[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch accounts:", e)
       set({ error: "Erro ao carregar contas", isLoading: false })
     }
   },

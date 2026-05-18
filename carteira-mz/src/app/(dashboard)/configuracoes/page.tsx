@@ -106,7 +106,8 @@ export default function SettingsPage() {
 
       await supabase.auth.signOut()
       router.push("/login")
-    } catch {
+    } catch (e) {
+      console.error("Delete account error:", e)
       toast({ title: "Erro", description: "Não foi possível eliminar a conta.", variant: "error" })
       setDeleting(false)
     }

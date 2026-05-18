@@ -22,7 +22,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     try {
       const transactions = await transactionService.getTransactions()
       set({ transactions: transactions.filter(Boolean) as Transaction[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch transactions:", e)
       set({ error: "Erro ao carregar transações", isLoading: false })
     }
   },

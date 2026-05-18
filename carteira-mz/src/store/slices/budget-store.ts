@@ -21,7 +21,8 @@ export const useBudgetStore = create<BudgetState>((set) => ({
     try {
       const budgets = await budgetService.getBudgets()
       set({ budgets: budgets.filter(Boolean) as Budget[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch budgets:", e)
       set({ error: "Erro ao carregar orçamentos", isLoading: false })
     }
   },

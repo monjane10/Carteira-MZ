@@ -26,7 +26,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (e) {
+    console.error("Delete account error:", e)
     return NextResponse.json({ error: "Erro interno" }, { status: 500 })
   }
 }

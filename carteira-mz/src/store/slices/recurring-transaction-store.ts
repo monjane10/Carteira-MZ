@@ -21,7 +21,8 @@ export const useRecurringTransactionStore = create<RecurringTransactionState>((s
     try {
       const transactions = await recurringService.getRecurringTransactions()
       set({ transactions, isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch recurring transactions:", e)
       set({ error: "Erro ao carregar transacções recorrentes", isLoading: false })
     }
   },
