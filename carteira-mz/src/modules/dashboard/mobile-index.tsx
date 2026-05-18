@@ -8,6 +8,7 @@ import { MonthNavigator } from "./components/month-navigator"
 import { LoadingState } from "@/components/shared/loading-state"
 import { MobileGreeting } from "./components/mobile-greeting"
 import { MobileBalanceCard } from "./components/mobile-balance-card"
+import { MobileMetrics } from "./components/mobile-metrics"
 import { MobileAccounts } from "./components/mobile-accounts"
 import { MobileExpenseList } from "./components/mobile-expense-list"
 import { dashboard as dashboardService, accounts as accountService, categories as categoryService, budgets as budgetService } from "@/services"
@@ -192,18 +193,20 @@ export function MobileDashboard() {
           }
           setMonthOffset(monthOffset - 1)
         }}
-          onNext={() => {
-            if (targetMonth === 11) {
-              setTargetYear(targetYear + 1)
-              setTargetMonth(0)
-            } else {
-              setTargetMonth(targetMonth + 1)
-            }
-            setMonthOffset(monthOffset + 1)
-          }}
-        />
+        onNext={() => {
+          if (targetMonth === 11) {
+            setTargetYear(targetYear + 1)
+            setTargetMonth(0)
+          } else {
+            setTargetMonth(targetMonth + 1)
+          }
+          setMonthOffset(monthOffset + 1)
+        }}
+      />
 
       {summary && <MobileBalanceCard summary={summary} />}
+
+      {summary && <MobileMetrics summary={summary} categorySpending={categorySpending} />}
 
       <MobileAccounts accounts={accounts} />
 
