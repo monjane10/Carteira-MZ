@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { LoadingState } from "@/components/shared/loading-state"
 import { toast } from "@/hooks/use-toast"
@@ -129,6 +132,12 @@ function AccountsPage() {
   return (
     <div>
       <PageHeader title="Contas" description="Gerencie as suas contas bancárias e carteiras">
+        <Link href="/contas/nova">
+          <Button size="sm">
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nova Conta
+          </Button>
+        </Link>
       </PageHeader>
 
       {error ? (

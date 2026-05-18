@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import Link from "next/link"
-import { Plus, Wallet, Search, Filter, X } from "lucide-react"
+import { Wallet, Search, Filter, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { LoadingState } from "@/components/shared/loading-state"
@@ -70,7 +69,7 @@ export function AccountsList({
 
   return (
     <div>
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
@@ -93,12 +92,6 @@ export function AccountsList({
             ))}
           </SelectContent>
         </Select>
-        <Link href="/contas/nova">
-          <Button size="sm">
-            <Plus className="mr-1.5 h-4 w-4" />
-            Nova Conta
-          </Button>
-        </Link>
       </div>
 
       {filtered.length === 0 ? (
