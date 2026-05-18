@@ -21,7 +21,7 @@ export async function getAdminAccounts(): Promise<Account[]> {
     if (!res.ok) throw new Error("Falha ao carregar contas")
     return await res.json()
   } catch (e) {
-    return handleError(ENTITY, "listar contas", e) as unknown as Account[]
+    return handleError(ENTITY, "listar contas", e)
   }
 }
 
@@ -42,7 +42,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     if (!res.ok) throw new Error("Falha ao carregar estatisticas")
     return await res.json()
   } catch (e) {
-    return handleError(ENTITY, "estatisticas", e) as unknown as AdminStats
+    return handleError(ENTITY, "estatisticas", e)
   }
 }
 
@@ -53,7 +53,7 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
     if (!res.ok) throw new Error("Falha ao carregar utilizadores")
     return await res.json()
   } catch (e) {
-    return handleError(ENTITY, "listar utilizadores", e) as unknown as AdminUser[]
+    return handleError(ENTITY, "listar utilizadores", e)
   }
 }
 
@@ -65,6 +65,6 @@ export async function getAdminUserById(id: string): Promise<AdminUser | null> {
     const users: AdminUser[] = await res.json()
     return users.find((u) => u.id === id) ?? null
   } catch (e) {
-    return handleError(ENTITY, "buscar utilizador", e) as unknown as AdminUser | null
+    return handleError(ENTITY, "buscar utilizador", e)
   }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { Loader2 } from "lucide-react"
@@ -31,44 +31,49 @@ export function MobileDashboard() {
   const touchStartY = useRef(0)
   const pulling = useRef(false)
 
-  const loadDashboard = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
-      const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
-      const targetDate = new Date(targetYear, targetMonth, 1)
-
-      const [summaryData, accountsData, spendingData, transactionsData, categories] =
-        await Promise.all([
-          dashboardService.getDashboardSummary(targetDate),
-          accountService.getAccounts(),
-          dashboardService.getCategorySpending(startOfMonth, endOfMonth),
-          dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
-          categoryService.getCategories(),
-        ])
-
-      setSummary(summaryData)
-      setAccounts(accountsData)
-      setCategorySpending(spendingData)
-      setRecentTransactions(transactionsData)
-
-      const map: Record<string, Category> = {}
-      for (const cat of categories) {
-        map[cat.id] = cat
-      }
-      setCategoryMap(map)
-    } catch (error) {
-      console.error("Failed to fetch mobile dashboard data:", error)
-      setError("Não foi possível carregar o dashboard.")
-    } finally {
-      setLoading(false)
-    }
-  }, [targetYear, targetMonth])
-
   useEffect(() => {
-    loadDashboard()
-  }, [loadDashboard])
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      setError(null)
+      try {
+        const startOfMonth = new Date(targetYear, targetMonth, 1).toISOString()
+        const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59).toISOString()
+        const targetDate = new Date(targetYear, targetMonth, 1)
+
+        const [summaryData, accountsData, spendingData, transactionsData, categories] =
+          await Promise.all([
+            dashboardService.getDashboardSummary(targetDate),
+            accountService.getAccounts(),
+            dashboardService.getCategorySpending(startOfMonth, endOfMonth),
+            dashboardService.getRecentTransactions(10, startOfMonth, endOfMonth),
+            categoryService.getCategories(),
+          ])
+
+        if (cancelled) return
+        setSummary(summaryData)
+        setAccounts(accountsData)
+        setCategorySpending(spendingData)
+        setRecentTransactions(transactionsData)
+
+        const map: Record<string, Category> = {}
+        for (const cat of categories) {
+          map[cat.id] = cat
+        }
+        setCategoryMap(map)
+      } catch (error) {
+        if (cancelled) return
+        console.error("Failed to fetch mobile dashboard data:", error)
+        setError("Não foi possível carregar o dashboard.")
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [targetYear, targetMonth])
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (window.scrollY === 0) {

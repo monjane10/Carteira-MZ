@@ -77,11 +77,6 @@ function BudgetsPage() {
     }
   }
 
-  const handleOpenCreate = () => {
-    setEditingBudget(null)
-    setFormOpen(true)
-  }
-
   const handleOpenEdit = (budget: Budget) => {
     setEditingBudget(budget)
     setFormOpen(true)

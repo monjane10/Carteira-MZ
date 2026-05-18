@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { Download } from "lucide-react"
@@ -24,11 +24,11 @@ function ReportsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const loadData = useCallback(async () => {
+  async function fetchData(range: DateRange) {
     setLoading(true)
     setError(null)
     try {
-      const months = parseInt(dateRange)
+      const months = parseInt(range)
       const now = new Date()
       const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
       const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
@@ -50,21 +50,45 @@ function ReportsPage() {
     } finally {
       setLoading(false)
     }
-  }, [dateRange])
+  }
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    fetchData(dateRange)
+  }, [dateRange])
 
   const handleExport = () => {
-    toast({ title: "Exportar", description: "Funcionalidade de exportação em desenvolvimento.", variant: "info" })
+    if (!evolution.length && !categorySpending.length) {
+      toast({ title: "Exportar", description: "Sem dados para exportar.", variant: "info" })
+      return
+    }
+
+    const rows: string[][] = [["Mês", "Receitas", "Despesas", "Saldo"]]
+    for (const e of evolution) {
+      rows.push([e.month, String(e.income), String(e.expense), String(e.balance)])
+    }
+
+    rows.push([])
+    rows.push(["Categoria", "Total", "Percentagem", "Transacções"])
+    for (const c of categorySpending) {
+      rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
+    }
+
+    const csv = rows.map((r) => r.join(",")).join("\n")
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `relatorio-${dateRange}m-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast({ title: "Exportado", description: "Relatório exportado com sucesso.", variant: "success" })
   }
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={loadData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+        <button onClick={() => fetchData(dateRange)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>

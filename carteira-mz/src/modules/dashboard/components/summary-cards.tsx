@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Wallet, TrendingUp, TrendingDown, PiggyBank, Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react"
+import { TrendingUp, TrendingDown, PiggyBank, Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react"
 import { StatCard } from "@/components/shared/stat-card"
 import { formatCurrency, formatPercentage } from "@/lib/utils"
 import type { DashboardSummary } from "@/types"

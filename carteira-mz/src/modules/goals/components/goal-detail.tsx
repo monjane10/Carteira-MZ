@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Target, Calendar, Plus, TrendingUp, PiggyBank, BarChart3 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -37,27 +37,33 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
   const [contributions, setContributions] = useState<GoalContribution[]>([])
   const [loading, setLoading] = useState(true)
   const [showContributionForm, setShowContributionForm] = useState(false)
-
-  const loadData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const [goalData, contributionsData] = await Promise.all([
-        goalService.getGoalById(goalId),
-        goalService.getGoalContributions(goalId),
-      ])
-      setGoal(goalData)
-      setContributions(contributionsData)
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [goalId])
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      try {
+        const [goalData, contributionsData] = await Promise.all([
+          goalService.getGoalById(goalId),
+          goalService.getGoalContributions(goalId),
+        ])
+        if (cancelled) return
+        setGoal(goalData)
+        setContributions(contributionsData)
+      } catch (e) {
+        if (cancelled) return
+        const msg = e instanceof Error ? e.message : String(e)
+        toast({ title: "Erro", description: msg, variant: "error" })
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [goalId, refreshKey])
 
   const handleAddContribution = async (data: GoalContributionFormValues) => {
     try {
@@ -69,7 +75,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       toast({ title: "Sucesso", description: "Contribuição registada com sucesso.", variant: "success" })
       setShowContributionForm(false)
       onGoalUpdated()
-      loadData()
+      setRefreshKey(k => k + 1)
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       toast({ title: "Erro", description: msg, variant: "error" })

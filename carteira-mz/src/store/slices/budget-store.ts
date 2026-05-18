@@ -12,7 +12,7 @@ interface BudgetState {
   removeBudget: (id: string) => Promise<void>
 }
 
-export const useBudgetStore = create<BudgetState>((set, get) => ({
+export const useBudgetStore = create<BudgetState>((set) => ({
   budgets: [],
   isLoading: false,
   error: null,

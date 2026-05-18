@@ -18,7 +18,6 @@ interface AccountsListProps {
 export function AccountsList({
   accounts,
   loading,
-  onAddAccount,
   onAccountClick,
 }: AccountsListProps) {
 

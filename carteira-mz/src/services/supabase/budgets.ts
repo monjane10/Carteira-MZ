@@ -15,21 +15,29 @@ export async function getBudgets(): Promise<Budget[]> {
     if (error) throw error
 
     const budgets = (data ?? []) as unknown as (Budget & { category?: unknown })[]
-    const enriched: Budget[] = []
+    if (budgets.length === 0) return []
 
-    for (const b of budgets) {
-      const { data: spentData } = await supabase
-        .from("transactions")
-        .select("amount")
-        .eq("category_id", b.category_id)
-        .eq("type", "EXPENSE")
-        .gte("transaction_date", b.start_date)
-        .lte("transaction_date", b.end_date)
-      const spent = (spentData ?? []).reduce((s: number, t: { amount: number }) => s + t.amount, 0)
-      enriched.push({ ...b, spent } as Budget)
-    }
+    const minDate = budgets.reduce((d, b) => (b as Record<string, string>).start_date < d ? (b as Record<string, string>).start_date : d, (budgets[0] as Record<string, string>).start_date)
+    const maxDate = budgets.reduce((d, b) => (b as Record<string, string>).end_date > d ? (b as Record<string, string>).end_date : d, (budgets[0] as Record<string, string>).end_date)
+    const categoryIds = [...new Set(budgets.map((b) => (b as Record<string, string>).category_id))]
 
-    return enriched
+    const { data: allSpent } = await supabase
+      .from("transactions")
+      .select("category_id, amount, transaction_date")
+      .eq("type", "EXPENSE")
+      .in("category_id", categoryIds)
+      .gte("transaction_date", minDate)
+      .lte("transaction_date", maxDate)
+
+    const txRows = (allSpent ?? []) as { category_id: string; amount: number; transaction_date: string }[]
+
+    return budgets.map((b) => {
+      const bCast = b as Record<string, string>
+      const spent = txRows
+        .filter((t) => t.category_id === bCast.category_id && t.transaction_date >= bCast.start_date && t.transaction_date <= bCast.end_date)
+        .reduce((s, t) => s + t.amount, 0)
+      return { ...b, spent } as Budget
+    })
   } catch (e) {
     return handleError(ENTITY, "listar", e)
   }
@@ -48,14 +56,16 @@ export async function getBudgetById(id: string): Promise<Budget | null> {
     }
 
     const b = data as unknown as Budget & { category?: unknown }
+    const bCast = b as Record<string, string>
     const { data: spentData } = await supabase
       .from("transactions")
-      .select("amount")
-      .eq("category_id", b.category_id)
+      .select("amount_sum:amount.sum()")
+      .eq("category_id", bCast.category_id)
       .eq("type", "EXPENSE")
-      .gte("transaction_date", b.start_date)
-      .lte("transaction_date", b.end_date)
-    const spent = (spentData ?? []).reduce((s: number, t: { amount: number }) => s + t.amount, 0)
+      .gte("transaction_date", bCast.start_date)
+      .lte("transaction_date", bCast.end_date)
+      .single()
+    const spent = (spentData as unknown as { amount_sum: number | null })?.amount_sum ?? 0
 
     return { ...b, spent } as Budget
   } catch (e) {

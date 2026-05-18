@@ -44,7 +44,7 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
                 boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
                 fontSize: 12,
               }}
-              formatter={(value: any) => formatCurrency(Number(value ?? 0))}
+              formatter={(value: number) => formatCurrency(value)}
             />
             <Legend
               wrapperStyle={{ fontSize: 11, paddingTop: 8 }}

@@ -66,7 +66,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
                 boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
                 fontSize: 12,
               }}
-              formatter={(value: any, name: any) => [
+              formatter={(value: number, name: string) => [
                 formatCurrency(Number(value ?? 0)),
                 name,
               ]}

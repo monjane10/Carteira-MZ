@@ -22,7 +22,7 @@ function LoansPage() {
   const { loans, isLoading, error, fetchLoans, addLoan, updateLoan, removeLoan } = useLoanStore()
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
-  const [editingLoan, setEditingLoan] = useState<Loan | null>(null)
+  const [editingLoan] = useState<Loan | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Loan | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -83,16 +83,6 @@ function LoansPage() {
     } finally {
       setDeleting(false)
     }
-  }
-
-  const handleOpenCreate = () => {
-    setEditingLoan(null)
-    setFormOpen(true)
-  }
-
-  const handleOpenEdit = (loan: Loan) => {
-    setEditingLoan(loan)
-    setFormOpen(true)
   }
 
   const handleFormSubmit = async (data: LoanFormValues) => {

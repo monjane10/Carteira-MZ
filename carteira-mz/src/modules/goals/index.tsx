@@ -25,7 +25,7 @@ function GoalsPage() {
   const { goals, isLoading, error, fetchGoals, addGoal, updateGoal, removeGoal } = useGoalStore()
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
-  const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
+  const [editingGoal] = useState<Goal | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Goal | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -85,16 +85,6 @@ function GoalsPage() {
     } finally {
       setDeleting(false)
     }
-  }
-
-  const handleOpenCreate = () => {
-    setEditingGoal(null)
-    setFormOpen(true)
-  }
-
-  const handleOpenEdit = (goal: Goal) => {
-    setEditingGoal(goal)
-    setFormOpen(true)
   }
 
   const handleFormSubmit = async (data: GoalFormValues) => {

@@ -43,7 +43,6 @@ export default function AdminLoginPage() {
       return
     }
 
-    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
     router.push("/admin/dashboard")
     setLoading(false)
   }

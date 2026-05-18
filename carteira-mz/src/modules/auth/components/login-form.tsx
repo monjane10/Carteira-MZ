@@ -37,7 +37,6 @@ export function LoginForm() {
       return
     }
 
-    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
     toast({
       title: "Autenticação",
       description: "Login efetuado com sucesso",
