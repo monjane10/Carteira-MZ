@@ -29,6 +29,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [])
 
   const handleLogout = async () => {
+    try {
+      const registration = await navigator.serviceWorker?.getRegistration("/")
+      if (registration) {
+        const sub = await registration.pushManager.getSubscription()
+        if (sub) {
+          await fetch("/api/push-subscriptions?endpoint=" + encodeURIComponent(sub.endpoint), { method: "DELETE" })
+          await sub.unsubscribe()
+        }
+      }
+    } catch { /* non-critical */ }
     await supabase.auth.signOut()
     window.location.href = "/login"
   }

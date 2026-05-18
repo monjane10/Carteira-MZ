@@ -13,6 +13,9 @@ const TYPE_ICONS: Record<string, typeof Info> = {
   LOW_BALANCE: AlertTriangle,
   LOAN_DUE: X,
   LOAN_RECEIVED: ArrowRightLeft,
+  TRANSFER_COMPLETED: ArrowRightLeft,
+  RECURRING_DUE: Info,
+  GOAL_EXPIRING: AlertTriangle,
   SYSTEM: Info,
 }
 
@@ -23,6 +26,9 @@ const TYPE_COLORS: Record<string, string> = {
   LOW_BALANCE: "text-red-600 bg-red-100",
   LOAN_DUE: "text-red-600 bg-red-100",
   LOAN_RECEIVED: "text-emerald-600 bg-emerald-100",
+  TRANSFER_COMPLETED: "text-blue-600 bg-blue-100",
+  RECURRING_DUE: "text-amber-600 bg-amber-100",
+  GOAL_EXPIRING: "text-orange-600 bg-orange-100",
   SYSTEM: "text-blue-600 bg-blue-100",
 }
 

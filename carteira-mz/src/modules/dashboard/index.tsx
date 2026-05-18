@@ -11,6 +11,8 @@ import { GoalsOverview } from "./components/goals-overview"
 import { dashboard as dashboardService, categories as categoryService, goals as goalService, budgets as budgetService } from "@/services"
 import { checkOverdueLoans } from "@/services/supabase/loans"
 import { checkLowBalances } from "@/services/supabase/accounts"
+import { checkExpiringGoals } from "@/services/supabase/goals"
+import { checkRecurringTransactions } from "@/services/supabase/recurring-transactions"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
 
 const MonthlyChart = dynamic(() => import("./components/monthly-chart").then((m) => ({ default: m.MonthlyChart })), { ssr: false })
@@ -67,6 +69,8 @@ function DashboardPage() {
         budgetService.checkBudgetLimits()
         checkOverdueLoans()
         checkLowBalances()
+        checkExpiringGoals()
+        checkRecurringTransactions()
       } catch (e) {
         if (cancelled) return
         const msg = e instanceof Error ? e.message : String(e)

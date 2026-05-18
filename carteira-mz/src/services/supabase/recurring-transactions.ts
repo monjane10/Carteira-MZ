@@ -1,6 +1,7 @@
 import { supabase } from "./client"
 import { logger } from "./logger"
 import { handleError } from "./errors"
+import { createNotification } from "./notifications"
 import type { RecurringTransaction } from "@/types"
 
 const ENTITY = "transacao-recorrente"
@@ -72,6 +73,27 @@ export async function updateRecurringTransaction(
     return result
   } catch (e) {
     return handleError(ENTITY, "actualizar", e)
+  }
+}
+
+export async function checkRecurringTransactions(): Promise<void> {
+  try {
+    const transactions = await getRecurringTransactions()
+    const today = new Date()
+    const threeDays = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+    for (const t of transactions) {
+      if (!t.is_active) continue
+      if (t.next_execution && t.next_execution <= threeDays && t.next_execution >= today.toISOString().slice(0, 10)) {
+        createNotification(
+          "RECURRING_DUE",
+          "Transacção Recorrente Próxima",
+          `A transacção "${t.description ?? t.type}" de ${t.amount} MZN está agendada para ${t.next_execution}.`,
+        )
+      }
+    }
+  } catch (e) {
+    logger.warn("Failed to check recurring transactions", { error: e })
   }
 }
 

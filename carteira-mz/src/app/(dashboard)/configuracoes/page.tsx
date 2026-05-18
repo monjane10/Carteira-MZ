@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { User, Mail, Globe, Edit3, Trash2, Sun, Moon } from "lucide-react"
+import { User, Mail, Globe, Edit3, Trash2, Sun, Moon, Bell, BellOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { supabase } from "@/services"
@@ -22,8 +22,30 @@ export default function SettingsPage() {
   const [editCurrency, setEditCurrency] = useState("MZN")
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [notifEnabled, setNotifEnabled] = useState(true)
+  const [pushEnabled, setPushEnabled] = useState(true)
   const theme = useUIStore((s) => s.theme)
   const toggleTheme = useUIStore((s) => s.toggleTheme)
+
+  useEffect(() => {
+    const stored = localStorage.getItem("notification_preferences")
+    if (stored) {
+      try {
+        const prefs = JSON.parse(stored)
+        setNotifEnabled(prefs.notifications ?? true)
+        setPushEnabled(prefs.push ?? true)
+      } catch { /* ignore */ }
+    }
+  }, [])
+
+  const updatePrefs = (key: string, value: boolean) => {
+    if (key === "notifications") setNotifEnabled(value)
+    if (key === "push") setPushEnabled(value)
+    const stored = localStorage.getItem("notification_preferences")
+    const prefs = stored ? JSON.parse(stored) : {}
+    prefs[key] = value
+    localStorage.setItem("notification_preferences", JSON.stringify(prefs))
+  }
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -177,6 +199,43 @@ export default function SettingsPage() {
                 <p className="text-sm font-bold text-[#0F172A] dark:text-white mt-0.5">{theme === "dark" ? "Escuro" : "Claro"}</p>
               </div>
             </button>
+          </div>
+
+          {/* Preferências de Notificação */}
+          <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
+                <Bell className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Notificações</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white mt-0.5">Preferências</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#0F172A] dark:text-white">Notificações na app</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Receber notificações dentro da aplicação</p>
+              </div>
+              <button
+                onClick={() => updatePrefs("notifications", !notifEnabled)}
+                className={`relative h-6 w-11 rounded-full transition-colors ${notifEnabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${notifEnabled ? "translate-x-5" : ""}`} />
+              </button>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3.5">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#0F172A] dark:text-white">Notificações push</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Receber notificações mesmo com a app fechada</p>
+              </div>
+              <button
+                onClick={() => updatePrefs("push", !pushEnabled)}
+                className={`relative h-6 w-11 rounded-full transition-colors ${pushEnabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${pushEnabled ? "translate-x-5" : ""}`} />
+              </button>
+            </div>
           </div>
 
           {/* Botão Editar */}

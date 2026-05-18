@@ -1,6 +1,7 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
+import { createNotification } from "./notifications"
 import type { Transfer } from "@/types"
 
 const ENTITY = "transferencia"
@@ -91,6 +92,14 @@ export async function createTransfer(data: {
     }
 
     logger.info("Transfer created", { id: result.id })
+
+    const { data: fromAccount } = await supabase.from("accounts").select("name").eq("id", data.from_account_id).single()
+    const { data: toAccount } = await supabase.from("accounts").select("name").eq("id", data.to_account_id).single()
+    const fromName = (fromAccount as { name?: string })?.name ?? "origem"
+    const toName = (toAccount as { name?: string })?.name ?? "destino"
+
+    createNotification("TRANSFER_COMPLETED", "Transferência Concluída", `Transferiu ${data.amount} MZN de ${fromName} para ${toName}.`)
+
     return result as unknown as Transfer
   } catch (e) {
     return handleError(ENTITY, "criar", e)

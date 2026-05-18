@@ -89,6 +89,9 @@ export const NOTIFICATION_TYPE_LABELS: Record<NotificationType, string> = {
   LOW_BALANCE: "Saldo Baixo",
   LOAN_DUE: "Vencimento de Empréstimo",
   LOAN_RECEIVED: "Recebimento de Empréstimo",
+  TRANSFER_COMPLETED: "Transferência Concluída",
+  RECURRING_DUE: "Transacção Recorrente",
+  GOAL_EXPIRING: "Meta a Expirar",
   SYSTEM: "Sistema",
 }
 

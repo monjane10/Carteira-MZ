@@ -15,6 +15,24 @@ interface NotificationState {
   subscribeToRealtime: () => () => void
 }
 
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+
+async function cleanupOldNotifications() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    const sevenDaysAgo = new Date(Date.now() - SEVEN_DAYS_MS).toISOString()
+    await fetch("/api/notifications/cleanup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ before: sevenDaysAgo }),
+    })
+  } catch { /* non-critical */ }
+}
+
 export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
   unreadCount: 0,
@@ -25,6 +43,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     try {
       const notifications = await notificationService.getNotifications()
       set({ notifications, unreadCount: notifications.filter(n => !n.is_read).length, isLoading: false })
+      cleanupOldNotifications()
     } catch (e) {
       console.error("Failed to fetch notifications:", e)
       set({ error: "Erro ao carregar notificações", isLoading: false })

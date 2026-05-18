@@ -124,6 +124,28 @@ export async function updateGoal(
   }
 }
 
+export async function checkExpiringGoals(): Promise<void> {
+  try {
+    const goals = await getGoals()
+    const today = new Date()
+    const sevenDays = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+    for (const g of goals) {
+      if (g.status === "COMPLETED") continue
+      if (g.target_date && g.target_date <= sevenDays && g.target_date >= today.toISOString().slice(0, 10)) {
+        notify(
+          "GOAL_EXPIRING",
+          `Meta "${g.title}" a expirar`,
+          `A meta "${g.title}" termina em ${g.target_date}. Progresso actual: ${g.current_amount}/${g.target_amount} Mzn.`,
+          "/metas",
+        )
+      }
+    }
+  } catch (e) {
+    logger.warn("Failed to check expiring goals", { error: e })
+  }
+}
+
 export async function deleteGoal(id: string): Promise<void> {
   try {
     const existing = await getGoalById(id)
