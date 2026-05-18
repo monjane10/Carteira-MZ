@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
+import { requireAdmin } from "@/lib/admin-auth"
 
-export async function GET() {
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  )
+export async function GET(request: Request) {
+  const supabaseAdmin = await requireAdmin(request)
+  if (supabaseAdmin instanceof NextResponse) return supabaseAdmin
 
   const { count: totalUsers } = await supabaseAdmin
     .from("profiles")

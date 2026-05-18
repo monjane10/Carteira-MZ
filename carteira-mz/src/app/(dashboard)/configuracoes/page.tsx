@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { User, Mail, Globe, Edit3, Trash2 } from "lucide-react"
+import { User, Mail, Globe, Edit3, Trash2, Sun, Moon, Bell, BellOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { supabase } from "@/services"
+import { useUIStore } from "@/store"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -21,6 +22,30 @@ export default function SettingsPage() {
   const [editCurrency, setEditCurrency] = useState("MZN")
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [notifEnabled, setNotifEnabled] = useState(true)
+  const [pushEnabled, setPushEnabled] = useState(true)
+  const theme = useUIStore((s) => s.theme)
+  const toggleTheme = useUIStore((s) => s.toggleTheme)
+
+  useEffect(() => {
+    const stored = localStorage.getItem("notification_preferences")
+    if (stored) {
+      try {
+        const prefs = JSON.parse(stored)
+        setNotifEnabled(prefs.notifications ?? true)
+        setPushEnabled(prefs.push ?? true)
+      } catch { /* ignore */ }
+    }
+  }, [])
+
+  const updatePrefs = (key: string, value: boolean) => {
+    if (key === "notifications") setNotifEnabled(value)
+    if (key === "push") setPushEnabled(value)
+    const stored = localStorage.getItem("notification_preferences")
+    const prefs = stored ? JSON.parse(stored) : {}
+    prefs[key] = value
+    localStorage.setItem("notification_preferences", JSON.stringify(prefs))
+  }
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -103,16 +128,17 @@ export default function SettingsPage() {
 
       await supabase.auth.signOut()
       router.push("/login")
-    } catch {
+    } catch (e) {
+      console.error("Delete account error:", e)
       toast({ title: "Erro", description: "Não foi possível eliminar a conta.", variant: "error" })
       setDeleting(false)
     }
   }
 
   return (
-    <div className="min-h-dvh bg-white flex flex-col">
+    <div className="min-h-dvh bg-white dark:bg-slate-950 flex flex-col">
       <div className="px-5 pt-6 pb-3">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Perfil</h1>
+        <h1 className="text-2xl font-bold text-[#0F172A] dark:text-white">Perfil</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto px-5 pb-28 hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
@@ -124,50 +150,91 @@ export default function SettingsPage() {
         >
           {/* Avatar */}
           <div className="flex flex-col items-center pt-2">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#0F172A] text-4xl font-bold text-white ring-4 ring-slate-100">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#0F172A] dark:bg-slate-700 text-4xl font-bold text-white ring-4 ring-slate-100 dark:ring-slate-800">
               {name.charAt(0).toUpperCase()}
             </div>
-            <p className="mt-4 text-lg font-bold text-[#0F172A]">{name}</p>
-            <p className="text-xs text-slate-400 mt-0.5">{email}</p>
+            <p className="mt-4 text-lg font-bold text-[#0F172A] dark:text-white">{name}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{email}</p>
           </div>
 
           {/* Container único */}
-          <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
-            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+          <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
                 <User className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Nome</p>
-                <p className="text-sm font-bold text-[#0F172A] truncate mt-0.5">{name}</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Nome</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white truncate mt-0.5">{name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
                 <Mail className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Email</p>
-                <p className="text-sm font-bold text-[#0F172A] truncate mt-0.5">{email}</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Email</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white truncate mt-0.5">{email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
                 <Globe className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Moeda</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{currency === "MZN" ? "MZN" : "USD"}</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Moeda</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white mt-0.5">{currency === "MZN" ? "MZN" : "USD"}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3.5 px-4 py-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
-                <div className="h-4 w-4 rounded-full border-2 border-slate-300" />
+            <button
+              type="button"
+              onClick={() => toggleTheme()}
+              className="flex items-center gap-3.5 px-4 py-4 w-full text-left"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
+                {theme === "dark" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Tema</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">Claro</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Tema</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white mt-0.5">{theme === "dark" ? "Escuro" : "Claro"}</p>
               </div>
+            </button>
+          </div>
+
+          {/* Preferências de Notificação */}
+          <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 shrink-0">
+                <Bell className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Notificações</p>
+                <p className="text-sm font-bold text-[#0F172A] dark:text-white mt-0.5">Preferências</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#0F172A] dark:text-white">Notificações na app</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Receber notificações dentro da aplicação</p>
+              </div>
+              <button
+                onClick={() => updatePrefs("notifications", !notifEnabled)}
+                className={`relative h-6 w-11 rounded-full transition-colors ${notifEnabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${notifEnabled ? "translate-x-5" : ""}`} />
+              </button>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3.5">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#0F172A] dark:text-white">Notificações push</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Receber notificações mesmo com a app fechada</p>
+              </div>
+              <button
+                onClick={() => updatePrefs("push", !pushEnabled)}
+                className={`relative h-6 w-11 rounded-full transition-colors ${pushEnabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${pushEnabled ? "translate-x-5" : ""}`} />
+              </button>
             </div>
           </div>
 
@@ -175,7 +242,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="w-full h-13 flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-sm font-bold text-white transition-all hover:bg-[#1E293B]"
+            className="w-full h-13 flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] dark:bg-white text-white dark:text-[#0F172A] text-sm font-bold transition-all hover:bg-[#1E293B] dark:hover:bg-slate-200"
           >
             <Edit3 className="h-4 w-4" />
             Editar Perfil
@@ -185,7 +252,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setShowDelete(true)}
-            className="w-full h-13 flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm font-bold transition-all hover:bg-red-100"
+            className="w-full h-13 flex items-center justify-center gap-2 rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-sm font-bold transition-all hover:bg-red-100 dark:hover:bg-red-950/50"
           >
             <Trash2 className="h-4 w-4" />
             Excluir Conta
@@ -210,44 +277,44 @@ export default function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+            className="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-950 p-6 shadow-xl"
           >
-            <h3 className="text-lg font-bold text-[#0F172A] text-center mb-1">Editar Perfil</h3>
-            <p className="text-xs text-slate-400 text-center mb-6">Actualize a sua informação pessoal</p>
+            <h3 className="text-lg font-bold text-[#0F172A] dark:text-white text-center mb-1">Editar Perfil</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 text-center mb-6">Actualize a sua informação pessoal</p>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Nome Completo</label>
+                <label className="text-sm font-semibold text-[#0F172A] dark:text-white block mb-1.5">Nome Completo</label>
                 <input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  className="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 text-[15px] text-[#0F172A] dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Email</label>
+                <label className="text-sm font-semibold text-[#0F172A] dark:text-white block mb-1.5">Email</label>
                 <input
                   type="email"
                   value={editEmail}
                   onChange={(e) => setEditEmail(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  className="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 text-[15px] text-[#0F172A] dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Telefone</label>
+                <label className="text-sm font-semibold text-[#0F172A] dark:text-white block mb-1.5">Telefone</label>
                 <input
                   type="text"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+                  className="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 text-[15px] text-[#0F172A] dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Moeda</label>
+                <label className="text-sm font-semibold text-[#0F172A] dark:text-white block mb-1.5">Moeda</label>
                 <select
                   value={editCurrency}
                   onChange={(e) => setEditCurrency(e.target.value)}
-                  className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[15px] text-[#0F172A] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors appearance-none"
+                  className="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 text-[15px] text-[#0F172A] dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors appearance-none"
                 >
                   <option value="MZN">MZN</option>
                   <option value="USD">USD</option>
@@ -258,14 +325,14 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex-1 h-12 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                className="flex-1 h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 Cancelar
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="flex-1 h-12 rounded-xl bg-[#0F172A] text-sm font-semibold text-white transition-colors hover:bg-[#1E293B]"
+                className="flex-1 h-12 rounded-xl bg-[#0F172A] dark:bg-white text-sm font-semibold text-white dark:text-[#0F172A] transition-colors hover:bg-[#1E293B] dark:hover:bg-slate-200"
               >
                 Salvar
               </button>

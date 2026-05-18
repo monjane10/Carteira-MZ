@@ -48,10 +48,9 @@ const TYPE_ICONS: Record<string, typeof ArrowUpCircle> = {
   LOAN_PAYMENT: Banknote,
 }
 
-const EXPENSE_LIKE_TYPES = new Set(["EXPENSE", "ADJUSTMENT", "LOAN_GIVEN", "LOAN_TAKEN", "LOAN_PAYMENT"])
 const ITEMS_PER_PAGE = 10
 
-export function TransactionList({ transactions, loading, onEdit, onDelete }: TransactionListProps) {
+export function TransactionList({ transactions, loading, onDelete }: TransactionListProps) {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [typeFilter, setTypeFilter] = useState<string>("all")
@@ -196,8 +195,6 @@ export function TransactionList({ transactions, loading, onEdit, onDelete }: Tra
             {visible.map((transaction, index) => {
               const Icon = TYPE_ICONS[transaction.type] ?? ArrowDownCircle
               const isIncome = transaction.type === "INCOME"
-              const isExpense = EXPENSE_LIKE_TYPES.has(transaction.type)
-
               return (
                 <motion.div
                   key={transaction.id}

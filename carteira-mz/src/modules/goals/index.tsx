@@ -25,7 +25,7 @@ function GoalsPage() {
   const { goals, isLoading, error, fetchGoals, addGoal, updateGoal, removeGoal } = useGoalStore()
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
-  const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
+  const [editingGoal] = useState<Goal | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Goal | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -87,16 +87,6 @@ function GoalsPage() {
     }
   }
 
-  const handleOpenCreate = () => {
-    setEditingGoal(null)
-    setFormOpen(true)
-  }
-
-  const handleOpenEdit = (goal: Goal) => {
-    setEditingGoal(goal)
-    setFormOpen(true)
-  }
-
   const handleFormSubmit = async (data: GoalFormValues) => {
     if (editingGoal) {
       await handleUpdate(data)
@@ -144,13 +134,7 @@ function GoalsPage() {
       ) : goals.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <Target className="h-12 w-12 text-slate-400 mb-4" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta</p>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Crie a sua primeira meta financeira para começar a poupar.</p>
-          <Link href="/metas/nova">
-            <Button size="sm" className="mt-4">
-              Criar Meta
-            </Button>
-          </Link>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta criada.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">

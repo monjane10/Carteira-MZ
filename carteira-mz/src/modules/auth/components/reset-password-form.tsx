@@ -10,6 +10,7 @@ import { resetPasswordSchema, type ResetPasswordFormData } from "@/validators"
 import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
 import { supabase } from "@/services"
+import { createNotification } from "@/services/supabase/notifications"
 
 export function ResetPasswordForm() {
   const router = useRouter()
@@ -56,6 +57,9 @@ export function ResetPasswordForm() {
       description: "Palavra-passe actualizada com sucesso.",
       variant: "success",
     })
+
+    createNotification("SYSTEM", "Palavra-passe alterada", "A sua palavra-passe foi actualizada com sucesso.")
+
     router.push("/login")
   }
 

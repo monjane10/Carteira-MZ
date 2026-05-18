@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { User, Phone, Calendar, Plus, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -36,27 +36,33 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
   const [payments, setPayments] = useState<LoanPayment[]>([])
   const [loading, setLoading] = useState(true)
   const [showPaymentForm, setShowPaymentForm] = useState(false)
-
-  const loadData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const [loanData, paymentsData] = await Promise.all([
-        loanService.getLoanById(loanId),
-        loanService.getLoanPayments(loanId),
-      ])
-      setLoan(loanData)
-      setPayments(paymentsData)
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [loanId])
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      try {
+        const [loanData, paymentsData] = await Promise.all([
+          loanService.getLoanById(loanId),
+          loanService.getLoanPayments(loanId),
+        ])
+        if (cancelled) return
+        setLoan(loanData)
+        setPayments(paymentsData)
+      } catch (e) {
+        if (cancelled) return
+        const msg = e instanceof Error ? e.message : String(e)
+        toast({ title: "Erro", description: msg, variant: "error" })
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [loanId, refreshKey])
 
   const handleAddPayment = async (data: LoanPaymentFormValues) => {
     try {
@@ -68,7 +74,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       toast({ title: "Sucesso", description: "Pagamento registado com sucesso.", variant: "success" })
       setShowPaymentForm(false)
       onLoanUpdated()
-      loadData()
+      setRefreshKey(k => k + 1)
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       toast({ title: "Erro", description: msg, variant: "error" })

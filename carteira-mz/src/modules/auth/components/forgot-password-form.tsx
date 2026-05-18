@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, ArrowLeft, Send } from "lucide-react"
+import { Mail, ChevronLeft, Send } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
@@ -61,7 +61,7 @@ export function ForgotPasswordForm() {
               href="/login"
               className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold text-sm transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
               Voltar ao login
             </Link>
           </motion.div>
@@ -122,7 +122,7 @@ export function ForgotPasswordForm() {
                 href="/login"
                 className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors text-sm"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4" />
                 Voltar ao login
               </Link>
             </div>

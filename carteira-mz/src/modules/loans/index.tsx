@@ -22,7 +22,7 @@ function LoansPage() {
   const { loans, isLoading, error, fetchLoans, addLoan, updateLoan, removeLoan } = useLoanStore()
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
-  const [editingLoan, setEditingLoan] = useState<Loan | null>(null)
+  const [editingLoan] = useState<Loan | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Loan | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -85,16 +85,6 @@ function LoansPage() {
     }
   }
 
-  const handleOpenCreate = () => {
-    setEditingLoan(null)
-    setFormOpen(true)
-  }
-
-  const handleOpenEdit = (loan: Loan) => {
-    setEditingLoan(loan)
-    setFormOpen(true)
-  }
-
   const handleFormSubmit = async (data: LoanFormValues) => {
     if (editingLoan) {
       await handleUpdate(data)
@@ -141,11 +131,6 @@ function LoansPage() {
       ) : loans.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum empréstimo registado.</p>
-          <Link href="/emprestimos/nova">
-            <Button variant="outline" size="sm" className="mt-4">
-              Registar primeiro empréstimo
-            </Button>
-          </Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

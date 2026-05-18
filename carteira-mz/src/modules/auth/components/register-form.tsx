@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, User, ChevronRight } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
 import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
+import { createNotification } from "@/services/supabase/notifications"
 
 export function RegisterForm() {
   const router = useRouter()
@@ -49,6 +50,12 @@ export function RegisterForm() {
       description: "Registo efetuado com sucesso! Verifique o seu email para confirmar.",
       variant: "success",
     })
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) {
+      createNotification("SYSTEM", "Bem-vindo ao Carteira MZ", "A sua conta foi criada com sucesso. Comece a organizar as suas finanças!")
+    }
+
     router.push("/login")
   }
 
@@ -175,7 +182,7 @@ export function RegisterForm() {
               ) : (
                 <>
                   Criar Conta
-                  <ArrowRight style={{ width: 20, height: 20 }} />
+                  <ChevronRight style={{ width: 20, height: 20 }} />
                 </>
               )}
             </button>

@@ -1,7 +1,7 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { handleError } from "./errors"
-import type { Notification } from "@/types"
+import type { Notification, NotificationType } from "@/types"
 
 const ENTITY = "notificacao"
 
@@ -56,4 +56,54 @@ export async function getUnreadCount(): Promise<number> {
   } catch (e) {
     return handleError(ENTITY, "contar nao lidas", e)
   }
+}
+
+export async function createNotification(
+  type: NotificationType,
+  title: string,
+  message: string,
+  url?: string,
+): Promise<Notification | null> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+
+    const res = await fetch("/api/notifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ type, title, message, url }),
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error ?? "Erro ao criar notificação")
+    }
+
+    return await res.json()
+  } catch (e) {
+    return handleError(ENTITY, "criar", e)
+  }
+}
+
+export async function createNotificationsBatch(
+  list: { type: NotificationType; title: string; message: string; url?: string }[],
+): Promise<void> {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.access_token) throw new Error("Sem sessão")
+
+  const promises = list.map((n) =>
+    fetch("/api/notifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify(n),
+    }),
+  )
+
+  await Promise.allSettled(promises)
 }

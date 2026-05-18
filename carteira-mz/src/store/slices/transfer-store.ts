@@ -21,7 +21,8 @@ export const useTransferStore = create<TransferState>((set) => ({
     try {
       const transfers = await transferService.getTransfers()
       set({ transfers: transfers.filter(Boolean) as Transfer[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch transfers:", e)
       set({ error: "Erro ao carregar transferências", isLoading: false })
     }
   },

@@ -77,11 +77,6 @@ function BudgetsPage() {
     }
   }
 
-  const handleOpenCreate = () => {
-    setEditingBudget(null)
-    setFormOpen(true)
-  }
-
   const handleOpenEdit = (budget: Budget) => {
     setEditingBudget(budget)
     setFormOpen(true)
@@ -122,13 +117,7 @@ function BudgetsPage() {
       ) : budgets.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <Wallet className="h-12 w-12 text-slate-400 mb-4" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum orçamento</p>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Crie o seu primeiro orçamento para controlar os gastos.</p>
-          <Link href="/orcamentos/nova">
-            <Button size="sm" className="mt-4">
-              Criar Orçamento
-            </Button>
-          </Link>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum orçamento criado.</p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

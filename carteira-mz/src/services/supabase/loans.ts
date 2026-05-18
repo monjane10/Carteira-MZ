@@ -1,9 +1,19 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
-import type { Loan, LoanPayment } from "@/types"
+import { createNotification } from "./notifications"
+import type { Loan, LoanPayment, NotificationType } from "@/types"
 
 const ENTITY = "emprestimo"
+
+async function notify(
+  type: NotificationType,
+  title: string,
+  message: string,
+  url?: string,
+) {
+  try { await createNotification(type, title, message, url) } catch (e) { console.error("Loan notification error:", e) }
+}
 
 export async function getLoans(): Promise<Loan[]> {
   try {
@@ -69,6 +79,13 @@ export async function createLoan(data: {
       .single()
     if (error) throw error
     logger.info("Loan created", { id: result.id })
+
+    if (data.type === "TAKEN") {
+      notify("LOAN_DUE", "Empréstimo a Pagar", `Empréstimo de ${data.total_amount} Mzn com ${result.person_name} — vence em ${data.due_date ?? "data a definir"}.`, "/emprestimos")
+    } else {
+      notify("LOAN_RECEIVED", "Empréstimo Concedido", `Emprestou ${data.total_amount} Mzn a ${result.person_name}.`, "/emprestimos")
+    }
+
     return result as unknown as Loan
   } catch (e) {
     return handleError(ENTITY, "criar", e)
@@ -180,8 +197,42 @@ export async function createLoanPayment(
       .eq("id", loanId)
 
     logger.info("Loan payment created", { loanId, amount: data.amount })
+
+    if (existing.type === "GIVEN") {
+      notify("LOAN_RECEIVED", "Pagamento Recebido", `${existing.person_name} pagou ${data.amount} Mzn. Restam ${newRemaining} Mzn.`, "/emprestimos")
+    } else {
+      notify("LOAN_DUE", "Pagamento Efectuado", `Pagou ${data.amount} Mzn a ${existing.person_name}. Restam ${newRemaining} Mzn.`, "/emprestimos")
+    }
+
     return payment
   } catch (e) {
     return handleError(ENTITY + " pagamento", "criar", e)
+  }
+}
+
+export async function checkOverdueLoans(): Promise<void> {
+  try {
+    const { data, error } = await supabase
+      .from("loans")
+      .select("id, person_name, type, remaining_amount, due_date, status")
+      .in("status", ["PENDING", "PARTIALLY_PAID"])
+      .not("due_date", "is", null)
+
+    if (error) throw error
+
+    const loans = (data ?? []) as { id: string; person_name: string; type: string; remaining_amount: number; due_date: string; status: string }[]
+    const today = new Date().toISOString().slice(0, 10)
+
+    for (const loan of loans) {
+      if (loan.due_date && loan.due_date < today) {
+        if (loan.type === "TAKEN") {
+          notify("LOAN_DUE", "Empréstimo Vencido", `O empréstimo com ${loan.person_name} de ${loan.remaining_amount} Mzn venceu em ${loan.due_date}.`, "/emprestimos")
+        } else {
+          notify("LOAN_DUE", "Pagamento em Atraso", `${loan.person_name} ainda deve ${loan.remaining_amount} Mzn (venceu em ${loan.due_date}).`, "/emprestimos")
+        }
+      }
+    }
+  } catch (e) {
+    logger.warn("Failed to check overdue loans", { error: e })
   }
 }

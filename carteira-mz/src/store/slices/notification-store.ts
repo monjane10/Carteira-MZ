@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import type { Notification } from "@/types"
-import { notifications as notificationService } from "@/services"
+import { notifications as notificationService, supabase } from "@/services"
+import { showBrowserNotification } from "@/lib/push-notifications"
 
 interface NotificationState {
   notifications: Notification[]
@@ -11,9 +12,28 @@ interface NotificationState {
   markAsRead: (id: string) => Promise<void>
   markAllAsRead: () => Promise<void>
   getUnreadCount: () => Promise<void>
+  subscribeToRealtime: () => () => void
 }
 
-export const useNotificationStore = create<NotificationState>((set) => ({
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+
+async function cleanupOldNotifications() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    const sevenDaysAgo = new Date(Date.now() - SEVEN_DAYS_MS).toISOString()
+    await fetch("/api/notifications/cleanup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ before: sevenDaysAgo }),
+    })
+  } catch { /* non-critical */ }
+}
+
+export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
   unreadCount: 0,
   isLoading: false,
@@ -22,8 +42,10 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     set({ isLoading: true, error: null })
     try {
       const notifications = await notificationService.getNotifications()
-      set({ notifications, isLoading: false })
-    } catch {
+      set({ notifications, unreadCount: notifications.filter(n => !n.is_read).length, isLoading: false })
+      cleanupOldNotifications()
+    } catch (e) {
+      console.error("Failed to fetch notifications:", e)
       set({ error: "Erro ao carregar notificações", isLoading: false })
     }
   },
@@ -36,7 +58,8 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         ),
         unreadCount: Math.max(0, state.unreadCount - 1),
       }))
-    } catch {
+    } catch (e) {
+      console.error("Failed to mark notification as read:", e)
       set({ error: "Erro ao marcar notificação como lida" })
     }
   },
@@ -47,7 +70,8 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         notifications: state.notifications.map(n => ({ ...n, is_read: true })),
         unreadCount: 0,
       }))
-    } catch {
+    } catch (e) {
+      console.error("Failed to mark all as read:", e)
       set({ error: "Erro ao marcar todas como lidas" })
     }
   },
@@ -55,8 +79,26 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     try {
       const unreadCount = await notificationService.getUnreadCount()
       set({ unreadCount })
-    } catch {
+    } catch (e) {
+      console.error("Failed to get unread count:", e)
       set({ error: "Erro ao carregar contagem de não lidas" })
     }
+  },
+  subscribeToRealtime: () => {
+    const channel = supabase
+      .channel("notifications-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications" },
+        (payload) => {
+          get().fetchNotifications()
+          get().getUnreadCount()
+          const n = payload.new as Notification
+          if (n?.title) showBrowserNotification(n.title, n.message ?? "")
+        },
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   },
 }))

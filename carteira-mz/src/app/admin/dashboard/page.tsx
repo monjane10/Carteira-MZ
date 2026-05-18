@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Users, Building2, ArrowUpDown, Banknote } from "lucide-react"
+import { Users, Building2, ArrowUpDown, Banknote, Send } from "lucide-react"
 import { admin, type AdminStats, type AdminUser } from "@/services"
 import { formatCurrency } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 
 function StatCard({ title, value, icon: Icon, subtitle, color }: { title: string; value: string; icon: React.ElementType; subtitle?: string; color: string }) {
   return (
@@ -24,6 +25,9 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [users, setUsers] = useState<AdminUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [broadcastTitle, setBroadcastTitle] = useState("")
+  const [broadcastMessage, setBroadcastMessage] = useState("")
+  const [sending, setSending] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -34,6 +38,25 @@ export default function AdminDashboardPage() {
     }
     load()
   }, [])
+
+  async function handleBroadcast() {
+    if (!broadcastTitle.trim() || !broadcastMessage.trim()) return
+    setSending(true)
+    try {
+      const result = await admin.broadcastNotification(broadcastTitle.trim(), broadcastMessage.trim())
+      toast({
+        title: "Broadcast enviado",
+        description: `Notificação enviada para ${result.total_users} utilizadores.`,
+        variant: "success",
+      })
+      setBroadcastTitle("")
+      setBroadcastMessage("")
+    } catch {
+      toast({ title: "Erro", description: "Falha ao enviar broadcast.", variant: "error" })
+    } finally {
+      setSending(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -74,6 +97,43 @@ export default function AdminDashboardPage() {
           subtitle={`+${stats?.monthly_growth ?? 0}% este mês`}
           color="bg-emerald-600"
         />
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Send className="h-5 w-5 text-emerald-600" />
+          <h2 className="font-semibold text-slate-900">Notificação Broadcast</h2>
+        </div>
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="Título da notificação"
+            value={broadcastTitle}
+            onChange={(e) => setBroadcastTitle(e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+          />
+          <textarea
+            placeholder="Mensagem"
+            value={broadcastMessage}
+            onChange={(e) => setBroadcastMessage(e.target.value)}
+            rows={3}
+            className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+          />
+          <button
+            onClick={handleBroadcast}
+            disabled={sending || !broadcastTitle.trim() || !broadcastMessage.trim()}
+            className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white rounded-lg px-4 py-2.5 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+          >
+            {sending ? (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Enviar para Todos
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200">

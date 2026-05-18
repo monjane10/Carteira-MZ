@@ -1,5 +1,12 @@
-import { MobileDashboard } from "@/modules/dashboard/mobile-index"
+"use client"
+
+import dynamic from "next/dynamic"
+
+const DashboardSwitcher = dynamic(
+  () => import("./dashboard-switcher"),
+  { ssr: false },
+)
 
 export default function DashboardPage() {
-  return <MobileDashboard />
+  return <DashboardSwitcher />
 }

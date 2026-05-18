@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, ChevronRight } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
 import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
+import { createNotification } from "@/services/supabase/notifications"
 
 export function LoginForm() {
   const router = useRouter()
@@ -37,12 +38,14 @@ export function LoginForm() {
       return
     }
 
-    document.cookie = "carteira_session=authenticated; path=/; max-age=86400"
     toast({
       title: "Autenticação",
       description: "Login efetuado com sucesso",
       variant: "success",
     })
+
+    createNotification("SYSTEM", "Bem-vindo de volta", "O seu login foi efectuado com sucesso.")
+
     router.push("/dashboard")
   }
 
@@ -126,7 +129,7 @@ export function LoginForm() {
               ) : (
                 <>
                   Entrar
-                  <ArrowRight style={{ width: 20, height: 20 }} />
+                  <ChevronRight style={{ width: 20, height: 20 }} />
                 </>
               )}
             </button>

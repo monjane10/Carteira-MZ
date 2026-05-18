@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -21,13 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Building2 } from "lucide-react"
 import { transferSchema } from "@/validators"
 import { formatCurrency } from "@/lib/utils"
 import { accounts as accountService } from "@/services"
-import type { Account } from "@/types"
+import type { Account, Transfer } from "@/types"
 import type { z } from "zod"
-
-import type { Transfer } from "@/types"
 
 interface TransferFormProps {
   open: boolean
@@ -37,6 +37,7 @@ interface TransferFormProps {
 }
 
 export function TransferForm({ open, onOpenChange, onSubmit, editingTransfer }: TransferFormProps) {
+  const router = useRouter()
   const [accounts, setAccounts] = useState<Account[]>([])
   const [loadingData, setLoadingData] = useState(false)
 
@@ -98,7 +99,25 @@ export function TransferForm({ open, onOpenChange, onSubmit, editingTransfer }: 
           <DialogTitle>{editingTransfer ? "Editar Transferência" : "Nova Transferência"}</DialogTitle>
           <DialogDescription>Transfira valores entre as suas contas.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        {!loadingData && accounts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 mb-4">
+              <Building2 className="h-7 w-7 text-slate-400" />
+            </div>
+            <p className="text-sm font-semibold text-[#0F172A] mb-1">Nenhuma conta criada</p>
+            <p className="text-xs text-slate-500 mb-5 max-w-[220px]">
+              Precisa de pelo menos duas contas para realizar transferências.
+            </p>
+            <Button
+              type="button"
+              onClick={() => { router.push("/contas/nova"); onOpenChange(false) }}
+              className="h-11 rounded-xl bg-[#0F172A] text-sm font-semibold"
+            >
+              Criar Conta
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="space-y-5 py-2">
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta de Origem</Label>
@@ -213,6 +232,7 @@ export function TransferForm({ open, onOpenChange, onSubmit, editingTransfer }: 
             </Button>
           </DialogFooter>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   )

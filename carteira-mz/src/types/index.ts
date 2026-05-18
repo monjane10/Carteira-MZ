@@ -5,7 +5,7 @@ export type LoanStatus = "PENDING" | "PARTIALLY_PAID" | "PAID" | "OVERDUE"
 export type BudgetPeriod = "WEEKLY" | "MONTHLY" | "YEARLY"
 export type RecurringFrequency = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY"
 export type GoalStatus = "ACTIVE" | "COMPLETED" | "CANCELLED"
-export type NotificationType = "BUDGET_LIMIT" | "GOAL_COMPLETED" | "LOW_BALANCE" | "LOAN_DUE" | "SYSTEM"
+export type NotificationType = "BUDGET_LIMIT" | "GOAL_COMPLETED" | "GOAL_CONTRIBUTION" | "LOW_BALANCE" | "LOAN_DUE" | "LOAN_RECEIVED" | "TRANSFER_COMPLETED" | "RECURRING_DUE" | "GOAL_EXPIRING" | "SYSTEM"
 
 export interface Profile {
   id: string
@@ -183,6 +183,17 @@ export interface Notification {
   title: string
   message: string
   is_read: boolean
+  url?: string
+  created_at: string
+}
+
+export interface PushSubscription {
+  id: string
+  user_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  user_agent: string | null
   created_at: string
 }
 

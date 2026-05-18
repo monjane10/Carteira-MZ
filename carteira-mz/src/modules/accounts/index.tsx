@@ -23,22 +23,26 @@ function AccountsPage() {
   const [loadingInstitutions, setLoadingInstitutions] = useState(true)
 
   useEffect(() => {
-    fetchAccounts()
-    loadInstitutions()
-  }, [fetchAccounts])
+    let cancelled = false
 
-  async function loadInstitutions() {
-    setLoadingInstitutions(true)
-    const { data: existing, error } = await supabase
-      .from("financial_institutions")
-      .select("id, name")
-    if (error) {
-      console.error("Erro ao carregar instituições:", error)
-    } else if (existing && existing.length > 0) {
-      setInstitutionMap(new Map(existing.map(i => [i.name, i.id])))
+    async function load() {
+      fetchAccounts()
+      setLoadingInstitutions(true)
+      const { data: existing, error } = await supabase
+        .from("financial_institutions")
+        .select("id, name")
+      if (cancelled) return
+      if (error) {
+        console.error("Erro ao carregar instituições:", error)
+      } else if (existing && existing.length > 0) {
+        setInstitutionMap(new Map(existing.map(i => [i.name, i.id])))
+      }
+      setLoadingInstitutions(false)
     }
-    setLoadingInstitutions(false)
-  }
+
+    load()
+    return () => { cancelled = true }
+  }, [fetchAccounts])
 
   const handleCreate = async (data: {
     name: string

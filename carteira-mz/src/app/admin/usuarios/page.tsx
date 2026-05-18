@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Search, Plus, Eye } from "lucide-react"
+import { Search, Plus, Eye, X, Mail, Calendar, Wallet, AlertTriangle } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { admin, type AdminUser } from "@/services"
 import { formatCurrency, formatDate } from "@/lib/utils"
@@ -14,6 +14,7 @@ export default function AdminUsuariosPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -117,7 +118,7 @@ export default function AdminUsuariosPage() {
                   <td className="px-5 py-3.5 text-slate-500">{formatDate(user.created_at)}</td>
                   <td className="px-5 py-3.5 text-center">
                     <button
-                      onClick={() => toast({ title: "Ver Utilizador", description: `Detalhes de ${user.full_name}` })}
+                      onClick={() => setSelectedUser(user)}
                       className="inline-flex items-center gap-1.5 h-8 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600 hover:bg-gray-50 transition-colors"
                     >
                       <Eye className="h-3.5 w-3.5" />
@@ -138,6 +139,65 @@ export default function AdminUsuariosPage() {
           onPageSizeChange={(size) => { setPageSize(size); setPage(1) }}
         />
       </div>
+
+      {selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setSelectedUser(null)}>
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold text-slate-900">Detalhes do Utilizador</h2>
+              <button onClick={() => setSelectedUser(null)} className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors">
+                <X className="h-4 w-4 text-slate-500" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+                <div className="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg">
+                  {selectedUser.full_name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">{selectedUser.full_name}</p>
+                  <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                    selectedUser.status === "active"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-slate-100 text-slate-500"
+                  }`}>
+                    {selectedUser.status === "active" ? "Activo" : "Inactivo"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Mail className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-600">{selectedUser.email}</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Calendar className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-600">Registado em {formatDate(selectedUser.created_at, "long")}</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Wallet className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-600">{selectedUser.accounts_count} conta(s) — saldo total {formatCurrency(selectedUser.total_balance)}</span>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100">
+                <button
+                  onClick={() => {
+                    toast({ title: "Utilizador removido", description: "Conta do utilizador removida com sucesso." })
+                    setSelectedUser(null)
+                  }}
+                  className="flex items-center gap-2 h-10 w-full rounded-xl border border-red-200 text-red-600 text-sm font-medium justify-center hover:bg-red-50 transition-colors"
+                >
+                  <AlertTriangle className="h-4 w-4" />
+                  Remover Conta
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -82,11 +82,6 @@ function TransactionsPage() {
     }
   }
 
-  const handleOpenCreate = () => {
-    setEditingTransaction(null)
-    setFormOpen(true)
-  }
-
   const handleOpenEdit = (transaction: Transaction) => {
     setEditingTransaction(transaction)
     setFormOpen(true)

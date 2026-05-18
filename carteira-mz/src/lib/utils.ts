@@ -5,13 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(value: number, currency = "MZN"): string {
-  return new Intl.NumberFormat("pt-MZ", {
-    style: "currency",
-    currency,
+export function formatCurrency(value: number): string {
+  const amount = new Intl.NumberFormat("pt-MZ", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value).replace("MTn", "Mzn")
+  }).format(value)
+  return `${amount} Mzn`
 }
 
 export function formatDate(date: string | Date, format: "short" | "long" | "relative" = "short"): string {

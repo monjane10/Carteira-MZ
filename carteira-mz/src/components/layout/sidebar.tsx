@@ -12,6 +12,7 @@ import {
   Target,
   PieChart,
   BarChart3,
+  Repeat,
   Settings,
   X,
 } from "lucide-react"
@@ -27,6 +28,7 @@ const navItems = [
   { id: "metas", label: "Metas", icon: Target, href: "/metas" },
   { id: "orcamentos", label: "Orçamentos", icon: PieChart, href: "/orcamentos" },
   { id: "relatorios", label: "Relatórios", icon: BarChart3, href: "/relatorios" },
+  { id: "recorrentes", label: "Recorrentes", icon: Repeat, href: "/recorrentes" },
   { id: "configuracoes", label: "Configurações", icon: Settings, href: "/configuracoes" },
 ]
 

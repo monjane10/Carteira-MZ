@@ -12,7 +12,7 @@ interface BudgetState {
   removeBudget: (id: string) => Promise<void>
 }
 
-export const useBudgetStore = create<BudgetState>((set, get) => ({
+export const useBudgetStore = create<BudgetState>((set) => ({
   budgets: [],
   isLoading: false,
   error: null,
@@ -21,7 +21,8 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
     try {
       const budgets = await budgetService.getBudgets()
       set({ budgets: budgets.filter(Boolean) as Budget[], isLoading: false })
-    } catch {
+    } catch (e) {
+      console.error("Failed to fetch budgets:", e)
       set({ error: "Erro ao carregar orçamentos", isLoading: false })
     }
   },

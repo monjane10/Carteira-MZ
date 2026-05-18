@@ -1,9 +1,19 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
-import type { Goal, GoalContribution } from "@/types"
+import { createNotification } from "./notifications"
+import type { Goal, GoalContribution, NotificationType } from "@/types"
 
 const ENTITY = "meta"
+
+async function notify(
+  type: NotificationType,
+  title: string,
+  message: string,
+  url?: string,
+) {
+  try { await createNotification(type, title, message, url) } catch (e) { console.error("Goal notification error:", e) }
+}
 
 export async function getGoals(): Promise<Goal[]> {
   try {
@@ -103,9 +113,36 @@ export async function updateGoal(
     if (error) throw error
 
     logger.info("Goal updated", { id })
+
+    if (result.status === "COMPLETED" && existing.status !== "COMPLETED") {
+      notify("GOAL_COMPLETED", `Meta "${result.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${result.target_amount} Mzn.`, "/metas")
+    }
+
     return result as unknown as Goal
   } catch (e) {
     return handleError(ENTITY, "actualizar", e)
+  }
+}
+
+export async function checkExpiringGoals(): Promise<void> {
+  try {
+    const goals = await getGoals()
+    const today = new Date()
+    const sevenDays = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+    for (const g of goals) {
+      if (g.status === "COMPLETED") continue
+      if (g.target_date && g.target_date <= sevenDays && g.target_date >= today.toISOString().slice(0, 10)) {
+        notify(
+          "GOAL_EXPIRING",
+          `Meta "${g.title}" a expirar`,
+          `A meta "${g.title}" termina em ${g.target_date}. Progresso actual: ${g.current_amount}/${g.target_amount} Mzn.`,
+          "/metas",
+        )
+      }
+    }
+  } catch (e) {
+    logger.warn("Failed to check expiring goals", { error: e })
   }
 }
 
@@ -199,6 +236,14 @@ export async function createGoalContribution(
     }
 
     logger.info("Goal contribution created", { goalId, amount: data.amount })
+
+    const accName = data.account_id ? `da conta ${data.account_id.slice(0, 8)}` : "manual"
+    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${accName}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`, "/metas")
+
+    if (newStatus === "COMPLETED") {
+      notify("GOAL_COMPLETED", `Meta "${existing.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${existing.target_amount} Mzn.`, "/metas")
+    }
+
     return contribution
   } catch (e) {
     return handleError(ENTITY + " contribuicao", "criar", e)

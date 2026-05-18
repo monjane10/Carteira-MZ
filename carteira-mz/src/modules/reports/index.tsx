@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
-import { Download } from "lucide-react"
+import { Download, TrendingUp, TrendingDown } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
 import { dashboard as dashboardService } from "@/services"
-import type { DashboardSummary, MonthlyEvolution, CategorySpending } from "@/types"
+import { formatCurrency, formatDate } from "@/lib/utils"
+import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction } from "@/types"
 
 const IncomeVsExpenseChart = dynamic(() => import("./components/income-vs-expense-chart").then((m) => ({ default: m.IncomeVsExpenseChart })), { ssr: false })
 const CategoryReport = dynamic(() => import("./components/category-report").then((m) => ({ default: m.CategoryReport })), { ssr: false })
@@ -21,50 +22,84 @@ function ReportsPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [evolution, setEvolution] = useState<MonthlyEvolution[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
+  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const loadData = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const months = parseInt(dateRange)
-      const now = new Date()
-      const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
-      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
-
-      const [summaryData, evolutionData, spendingData] = await Promise.all([
-        dashboardService.getDashboardSummary(),
-        dashboardService.getMonthlyEvolution(months),
-        dashboardService.getCategorySpending(
-          startDate.toISOString(),
-          endDate.toISOString()
-        ),
-      ])
-      setSummary(summaryData)
-      setEvolution(evolutionData)
-      setCategorySpending(spendingData)
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }, [dateRange])
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    let cancelled = false
+    async function load(range: DateRange) {
+      setLoading(true)
+      setError(null)
+      try {
+        const months = parseInt(range)
+        const now = new Date()
+        const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+
+        const [summaryData, evolutionData, spendingData, txData] = await Promise.all([
+          dashboardService.getDashboardSummary(),
+          dashboardService.getMonthlyEvolution(months),
+          dashboardService.getCategorySpending(
+            startDate.toISOString(),
+            endDate.toISOString()
+          ),
+          dashboardService.getRecentTransactions(20, startDate.toISOString(), endDate.toISOString()),
+        ])
+        if (!cancelled) {
+          setSummary(summaryData)
+          setEvolution(evolutionData)
+          setCategorySpending(spendingData)
+          setRecentTransactions(txData)
+        }
+      } catch (e) {
+        if (!cancelled) {
+          const msg = e instanceof Error ? e.message : String(e)
+          toast({ title: "Erro", description: msg, variant: "error" })
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+    load(dateRange)
+    return () => { cancelled = true }
+  }, [dateRange, refreshKey])
 
   const handleExport = () => {
-    toast({ title: "Exportar", description: "Funcionalidade de exportação em desenvolvimento.", variant: "info" })
+    if (!evolution.length && !categorySpending.length) {
+      toast({ title: "Exportar", description: "Sem dados para exportar.", variant: "info" })
+      return
+    }
+
+    const rows: string[][] = [["Mês", "Receitas", "Despesas", "Saldo"]]
+    for (const e of evolution) {
+      rows.push([e.month, String(e.income), String(e.expense), String(e.balance)])
+    }
+
+    rows.push([])
+    rows.push(["Categoria", "Total", "Percentagem", "Transacções"])
+    for (const c of categorySpending) {
+      rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
+    }
+
+    const csv = rows.map((r) => r.join(",")).join("\n")
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `relatorio-${dateRange}m-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast({ title: "Exportado", description: "Relatório exportado com sucesso.", variant: "success" })
   }
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={loadData} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+        <button onClick={() => setRefreshKey((k) => k + 1)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>
@@ -107,6 +142,37 @@ function ReportsPage() {
         <IncomeVsExpenseChart data={evolution} loading={loading} />
         <CategoryReport data={categorySpending} loading={loading} />
       </div>
+
+      {recentTransactions.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 overflow-hidden"
+        >
+          <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Transacções Recentes</h3>
+          </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            {recentTransactions.slice(0, 10).map((tx) => (
+              <div key={tx.id} className="flex items-center gap-3 px-5 py-3">
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                  tx.type === "INCOME" ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"
+                }`}>
+                  {tx.type === "INCOME" ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{tx.description || tx.category?.name || "Sem descrição"}</p>
+                  <p className="text-xs text-slate-400">{formatDate(tx.transaction_date)}</p>
+                </div>
+                <span className={`text-sm font-bold ${tx.type === "INCOME" ? "text-emerald-600" : "text-red-600"}`}>
+                  {tx.type === "INCOME" ? "+" : "-"}{formatCurrency(tx.amount)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 }

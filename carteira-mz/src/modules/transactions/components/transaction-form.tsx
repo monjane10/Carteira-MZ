@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -21,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Building2 } from "lucide-react"
 import { TRANSACTION_TYPE_LABELS } from "@/constants"
 import { transactionSchema } from "@/validators"
 import { accounts as accountService, categories as categoryService } from "@/services"
@@ -40,6 +42,7 @@ export function TransactionForm({
   onSubmit,
   editingTransaction,
 }: TransactionFormProps) {
+  const router = useRouter()
   const [accounts, setAccounts] = useState<Account[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loadingData, setLoadingData] = useState(false)
@@ -112,7 +115,25 @@ export function TransactionForm({
             {editingTransaction ? "Altere os dados da transacção." : "Registe uma nova transacção financeira."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        {!loadingData && accounts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 mb-4">
+              <Building2 className="h-7 w-7 text-slate-400" />
+            </div>
+            <p className="text-sm font-semibold text-[#0F172A] mb-1">Nenhuma conta criada</p>
+            <p className="text-xs text-slate-500 mb-5 max-w-[220px]">
+              Precisa de pelo menos uma conta para registar transacções.
+            </p>
+            <Button
+              type="button"
+              onClick={() => { router.push("/contas/nova"); onOpenChange(false) }}
+              className="h-11 rounded-xl bg-[#0F172A] text-sm font-semibold"
+            >
+              Criar Conta
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="space-y-5 py-2">
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</Label>
@@ -234,6 +255,7 @@ export function TransactionForm({
             </Button>
           </DialogFooter>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   )
