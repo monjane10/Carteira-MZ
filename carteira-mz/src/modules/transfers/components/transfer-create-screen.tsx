@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Building2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
@@ -65,6 +65,33 @@ export function TransferCreateScreen() {
   const inputClass = "w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
   const inputErrorClass = "border-red-500 focus:border-red-500 focus:ring-red-500/20"
   const selectClass = "w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] appearance-none cursor-pointer focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+
+  if (!loadingData && accounts.length === 0) {
+    return (
+      <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
+        <div className="px-4 pt-5 pb-3">
+          <h1 className="text-xl font-bold text-[#0F172A]">Nova Transferência</h1>
+          <p className="text-sm text-slate-500 mt-1">Transfira valores entre as suas contas</p>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-8 pb-20 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 mb-4">
+            <Building2 className="h-8 w-8 text-slate-400" />
+          </div>
+          <h2 className="text-lg font-bold text-[#0F172A] mb-2">Nenhuma conta criada</h2>
+          <p className="text-sm text-slate-500 mb-6 max-w-xs">
+            Precisa de pelo menos duas contas para realizar transferências.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push("/contas/nova")}
+            className="w-full max-w-[240px] h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B]"
+          >
+            Criar Conta
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
