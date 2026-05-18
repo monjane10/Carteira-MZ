@@ -10,8 +10,9 @@ async function notify(
   type: NotificationType,
   title: string,
   message: string,
+  url?: string,
 ) {
-  try { await createNotification(type, title, message) } catch { /* silent */ }
+  try { await createNotification(type, title, message, url) } catch { /* silent */ }
 }
 
 export async function getLoans(): Promise<Loan[]> {
@@ -80,9 +81,9 @@ export async function createLoan(data: {
     logger.info("Loan created", { id: result.id })
 
     if (data.type === "TAKEN") {
-      notify("LOAN_DUE", "Empréstimo a Pagar", `Empréstimo de ${data.total_amount} Mzn com ${result.person_name} — vence em ${data.due_date ?? "data a definir"}.`)
+      notify("LOAN_DUE", "Empréstimo a Pagar", `Empréstimo de ${data.total_amount} Mzn com ${result.person_name} — vence em ${data.due_date ?? "data a definir"}.`, "/emprestimos")
     } else {
-      notify("LOAN_RECEIVED", "Empréstimo Concedido", `Emprestou ${data.total_amount} Mzn a ${result.person_name}.`)
+      notify("LOAN_RECEIVED", "Empréstimo Concedido", `Emprestou ${data.total_amount} Mzn a ${result.person_name}.`, "/emprestimos")
     }
 
     return result as unknown as Loan
@@ -198,9 +199,9 @@ export async function createLoanPayment(
     logger.info("Loan payment created", { loanId, amount: data.amount })
 
     if (existing.type === "GIVEN") {
-      notify("LOAN_RECEIVED", "Pagamento Recebido", `${existing.person_name} pagou ${data.amount} Mzn. Restam ${newRemaining} Mzn.`)
+      notify("LOAN_RECEIVED", "Pagamento Recebido", `${existing.person_name} pagou ${data.amount} Mzn. Restam ${newRemaining} Mzn.`, "/emprestimos")
     } else {
-      notify("LOAN_DUE", "Pagamento Efectuado", `Pagou ${data.amount} Mzn a ${existing.person_name}. Restam ${newRemaining} Mzn.`)
+      notify("LOAN_DUE", "Pagamento Efectuado", `Pagou ${data.amount} Mzn a ${existing.person_name}. Restam ${newRemaining} Mzn.`, "/emprestimos")
     }
 
     return payment
@@ -225,9 +226,9 @@ export async function checkOverdueLoans(): Promise<void> {
     for (const loan of loans) {
       if (loan.due_date && loan.due_date < today) {
         if (loan.type === "TAKEN") {
-          notify("LOAN_DUE", "Empréstimo Vencido", `O empréstimo com ${loan.person_name} de ${loan.remaining_amount} Mzn venceu em ${loan.due_date}.`)
+          notify("LOAN_DUE", "Empréstimo Vencido", `O empréstimo com ${loan.person_name} de ${loan.remaining_amount} Mzn venceu em ${loan.due_date}.`, "/emprestimos")
         } else {
-          notify("LOAN_DUE", "Pagamento em Atraso", `${loan.person_name} ainda deve ${loan.remaining_amount} Mzn (venceu em ${loan.due_date}).`)
+          notify("LOAN_DUE", "Pagamento em Atraso", `${loan.person_name} ainda deve ${loan.remaining_amount} Mzn (venceu em ${loan.due_date}).`, "/emprestimos")
         }
       }
     }

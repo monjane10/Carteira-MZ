@@ -1,5 +1,13 @@
 -- ============================================================
--- PUSH SUBSCRIPTIONS — Notificações Push no Dispositivo
+-- PUSH SUBSCRIPTIONS + URL nas Notificações
+-- Notificações Push no Dispositivo + ligação a detalhes
+-- ============================================================
+-- Executa no SQL Editor do Supabase
+-- ============================================================
+
+-- 0. ADICIONAR COLUNA url ÀS NOTIFICAÇÕES (para abrir página específica ao clicar)
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS url TEXT;
+
 -- ============================================================
 -- Executa no SQL Editor do Supabase (após o schema principal)
 -- ============================================================

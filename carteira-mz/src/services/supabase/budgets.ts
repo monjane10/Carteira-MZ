@@ -10,8 +10,9 @@ async function notify(
   type: NotificationType,
   title: string,
   message: string,
+  url?: string,
 ) {
-  try { await createNotification(type, title, message) } catch { /* silent */ }
+  try { await createNotification(type, title, message, url) } catch { /* silent */ }
 }
 
 export async function getBudgets(): Promise<Budget[]> {
@@ -160,9 +161,9 @@ export async function checkBudgetLimits(): Promise<void> {
       const pct = bCast.amount_limit > 0 ? Math.round((bCast.spent / bCast.amount_limit) * 100) : 0
 
       if (pct >= 100) {
-        notify("BUDGET_LIMIT", "Orçamento Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} atingiu ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`)
+        notify("BUDGET_LIMIT", "Orçamento Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} atingiu ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`, "/orcamentos")
       } else if (pct >= 80) {
-        notify("BUDGET_LIMIT", "Orçamento Quase Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} está em ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`)
+        notify("BUDGET_LIMIT", "Orçamento Quase Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} está em ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`, "/orcamentos")
       }
     }
   } catch (e) {

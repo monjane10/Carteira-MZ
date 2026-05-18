@@ -183,6 +183,7 @@ export interface Notification {
   title: string
   message: string
   is_read: boolean
+  url?: string
   created_at: string
 }
 

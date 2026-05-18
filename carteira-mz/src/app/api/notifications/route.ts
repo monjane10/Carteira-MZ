@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { type, title, message } = body
+    const { type, title, message, url } = body
 
     if (!type || !title || !message) {
       return NextResponse.json({ error: "Campos obrigatórios: type, title, message" }, { status: 400 })
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabaseAdmin
       .from("notifications")
-      .insert({ user_id: user.id, type, title, message })
+      .insert({ user_id: user.id, type, title, message, url: url ?? null })
       .select()
       .single()
 
@@ -46,12 +46,13 @@ export async function POST(request: Request) {
       .eq("user_id", user.id)
 
     if (subscriptions && subscriptions.length > 0) {
+      const targetUrl = url || "/dashboard"
       const expiredIds = await sendPushToUser(
         subscriptions as PushSubscriptionRow[],
         {
           title,
           body: message,
-          url: "/dashboard",
+          url: targetUrl,
         },
       )
 

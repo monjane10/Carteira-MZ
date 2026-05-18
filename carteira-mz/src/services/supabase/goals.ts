@@ -10,8 +10,9 @@ async function notify(
   type: NotificationType,
   title: string,
   message: string,
+  url?: string,
 ) {
-  try { await createNotification(type, title, message) } catch { /* silent */ }
+  try { await createNotification(type, title, message, url) } catch { /* silent */ }
 }
 
 export async function getGoals(): Promise<Goal[]> {
@@ -114,7 +115,7 @@ export async function updateGoal(
     logger.info("Goal updated", { id })
 
     if (result.status === "COMPLETED" && existing.status !== "COMPLETED") {
-      notify("GOAL_COMPLETED", `Meta "${result.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${result.target_amount} Mzn.`)
+      notify("GOAL_COMPLETED", `Meta "${result.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${result.target_amount} Mzn.`, "/metas")
     }
 
     return result as unknown as Goal
@@ -215,10 +216,10 @@ export async function createGoalContribution(
     logger.info("Goal contribution created", { goalId, amount: data.amount })
 
     const accName = data.account_id ? `da conta ${data.account_id.slice(0, 8)}` : "manual"
-    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${accName}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`)
+    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${accName}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`, "/metas")
 
     if (newStatus === "COMPLETED") {
-      notify("GOAL_COMPLETED", `Meta "${existing.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${existing.target_amount} Mzn.`)
+      notify("GOAL_COMPLETED", `Meta "${existing.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${existing.target_amount} Mzn.`, "/metas")
     }
 
     return contribution

@@ -62,6 +62,7 @@ export async function createNotification(
   type: NotificationType,
   title: string,
   message: string,
+  url?: string,
 ): Promise<Notification | null> {
   try {
     const { data: { session } } = await supabase.auth.getSession()
@@ -73,7 +74,7 @@ export async function createNotification(
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ type, title, message }),
+      body: JSON.stringify({ type, title, message, url }),
     })
 
     if (!res.ok) {
@@ -88,7 +89,7 @@ export async function createNotification(
 }
 
 export async function createNotificationsBatch(
-  list: { type: NotificationType; title: string; message: string }[],
+  list: { type: NotificationType; title: string; message: string; url?: string }[],
 ): Promise<void> {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session?.access_token) throw new Error("Sem sessão")
