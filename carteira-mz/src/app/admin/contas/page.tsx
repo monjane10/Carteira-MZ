@@ -7,8 +7,8 @@ import { toast } from "@/hooks/use-toast"
 import { admin } from "@/services"
 import { type Account, type AccountType } from "@/types"
 import { ACCOUNT_TYPE_LABELS } from "@/constants"
-import { formatCurrency } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
+import { Pagination } from "@/components/shared/pagination"
 
 const ACCOUNT_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "all", label: "Todos" },
@@ -23,6 +23,8 @@ export default function AdminContasPage() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [typeFilter, setTypeFilter] = useState<string>("all")
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   useEffect(() => {
     async function load() {
@@ -43,6 +45,10 @@ export default function AdminContasPage() {
       return matchesSearch && matchesType
     })
   }, [accounts, searchQuery, typeFilter])
+
+  const totalPages = Math.ceil(filteredAccounts.length / pageSize)
+  const safePage = Math.min(page, totalPages || 1)
+  const paginatedAccounts = filteredAccounts.slice((safePage - 1) * pageSize, safePage * pageSize)
 
   if (loading) {
     return (
@@ -71,13 +77,13 @@ export default function AdminContasPage() {
           <input
             placeholder="Pesquisar por nome da conta..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => { setSearchQuery(e.target.value); setPage(1) }}
             className="h-10 rounded-xl border border-slate-200 pl-9 pr-4 text-sm w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
           />
         </div>
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e) => { setTypeFilter(e.target.value); setPage(1) }}
           className="h-10 rounded-xl border border-slate-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
         >
           {ACCOUNT_TYPE_OPTIONS.map((opt) => (
@@ -102,7 +108,7 @@ export default function AdminContasPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredAccounts.map((account) => (
+              {paginatedAccounts.map((account) => (
                 <tr key={account.id} className="border-b border-slate-100 hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
@@ -151,6 +157,14 @@ export default function AdminContasPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          totalItems={filteredAccounts.length}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          onPageSizeChange={(size) => { setPageSize(size); setPage(1) }}
+        />
       </div>
     </div>
   )

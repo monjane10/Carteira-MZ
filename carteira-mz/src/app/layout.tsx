@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: "Carteira MZ",
     template: "%s | Carteira MZ",
   },
-  description: "Aplicação moderna de gestão financeira pessoal para Moçambique — controle suas contas, transacções, orçamentos e metas.",
+  description: "Aplicação moderna de gestão financeira pessoal para Moçambique - controle suas contas, transacções, orçamentos e metas.",
   manifest: "/manifest.json",
   openGraph: {
     title: "Carteira MZ",

@@ -5,12 +5,15 @@ import { Search, Plus, Eye } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { admin, type AdminUser } from "@/services"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { Pagination } from "@/components/shared/pagination"
 
 export default function AdminUsuariosPage() {
   const [users, setUsers] = useState<AdminUser[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   useEffect(() => {
     async function load() {
@@ -34,6 +37,10 @@ export default function AdminUsuariosPage() {
       return matchesSearch && matchesStatus
     })
   }, [users, searchQuery, statusFilter])
+
+  const totalPages = Math.ceil(filteredUsers.length / pageSize)
+  const safePage = Math.min(page, totalPages || 1)
+  const paginatedUsers = filteredUsers.slice((safePage - 1) * pageSize, safePage * pageSize)
 
   if (loading) {
     return (
@@ -62,13 +69,13 @@ export default function AdminUsuariosPage() {
           <input
             placeholder="Pesquisar por nome ou email..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => { setSearchQuery(e.target.value); setPage(1) }}
             className="h-10 rounded-xl border border-slate-200 pl-9 pr-4 text-sm w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
           />
         </div>
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
           className="h-10 rounded-xl border border-slate-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
         >
           <option value="all">Todos</option>
@@ -92,7 +99,7 @@ export default function AdminUsuariosPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {paginatedUsers.map((user) => (
                 <tr key={user.id} className="border-b border-slate-100 hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5 font-medium text-slate-900">{user.full_name}</td>
                   <td className="px-5 py-3.5 text-slate-500">{user.email}</td>
@@ -122,6 +129,14 @@ export default function AdminUsuariosPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          totalItems={filteredUsers.length}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          onPageSizeChange={(size) => { setPageSize(size); setPage(1) }}
+        />
       </div>
     </div>
   )
