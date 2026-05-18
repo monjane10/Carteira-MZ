@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { sendPushToUser } from "@/lib/web-push"
+import type { PushSubscriptionRow } from "@/lib/web-push"
 
 export async function POST(request: Request) {
   try {
@@ -35,6 +37,31 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Error creating notification:", error)
       return NextResponse.json({ error: "Erro ao criar notificação" }, { status: 500 })
+    }
+
+    // Enviar push notifications para todos os dispositivos do utilizador
+    const { data: subscriptions } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
+
+    if (subscriptions && subscriptions.length > 0) {
+      const expiredIds = await sendPushToUser(
+        subscriptions as PushSubscriptionRow[],
+        {
+          title,
+          body: message,
+          url: "/dashboard",
+        },
+      )
+
+      // Remover subscrições expiradas (dispositivos que desinstalaram ou revogaram permissão)
+      if (expiredIds.length > 0) {
+        await supabaseAdmin
+          .from("push_subscriptions")
+          .delete()
+          .in("id", expiredIds)
+      }
     }
 
     return NextResponse.json(data, { status: 201 })
