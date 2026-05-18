@@ -8,6 +8,7 @@ import { supabase } from "@/services/supabase/client"
 export function ServiceWorkerRegister() {
   const subscribedRef = useRef(false)
   const regRef = useRef<ServiceWorkerRegistration | null>(null)
+  const registeringRef = useRef(false)
 
   const trySubscribe = async (registration: ServiceWorkerRegistration) => {
     if (subscribedRef.current) return
@@ -52,7 +53,18 @@ export function ServiceWorkerRegister() {
     if (!("serviceWorker" in navigator)) return
 
     const register = async () => {
+      if (registeringRef.current) return
+      registeringRef.current = true
+
       try {
+        const existing = await navigator.serviceWorker.getRegistration("/")
+        if (existing) {
+          regRef.current = existing
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session) await trySubscribe(existing)
+          return
+        }
+
         const registration = await navigator.serviceWorker.register("/sw.js", {
           scope: "/",
         })
@@ -87,7 +99,9 @@ export function ServiceWorkerRegister() {
           await trySubscribe(registration)
         }
       } catch (e) {
-        console.error("SW registration error:", e)
+        console.warn("SW registration error (non-critical):", e)
+      } finally {
+        registeringRef.current = false
       }
     }
 

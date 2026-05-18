@@ -57,6 +57,24 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
   }
 }
 
+export async function broadcastNotification(title: string, message: string): Promise<{ success: boolean; total_users?: number }> {
+  try {
+    logger.info("Broadcasting notification", { title })
+    const res = await fetch("/api/admin/broadcast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, message }),
+    })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error ?? "Falha ao enviar broadcast")
+    }
+    return await res.json()
+  } catch (e) {
+    return handleError(ENTITY, "broadcast", e)
+  }
+}
+
 export async function getAdminUserById(id: string): Promise<AdminUser | null> {
   try {
     logger.info("Fetching admin user", { id })
