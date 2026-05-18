@@ -26,9 +26,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   if (active.length === 0) {
     return (
       <div className="w-full">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-          Minhas Contas
-        </h2>
+        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
         <p className="mt-2 text-sm text-slate-500">Nenhuma conta activa</p>
       </div>
     )
@@ -37,18 +35,16 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-          Minhas Contas
-        </h2>
+        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
         <Link
           href="/contas"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 shrink-0"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
         >
           Ver todas
         </Link>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-2 hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
+      <div className="overflow-x-auto overflow-y-hidden pb-1 hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
         <div className="flex gap-3" style={{ width: "max-content", minWidth: "100%" }}>
           {active.map((account) => {
             const logoPath = getAccountLogo(account.institution?.name ?? account.name)
@@ -58,31 +54,31 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <Link
                 key={account.id}
                 href={`/contas/${account.id}`}
-                className="w-[180px] shrink-0 rounded-2xl border border-slate-100 bg-white p-3 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800"
+                className="w-[150px] shrink-0 rounded-xl border border-slate-100 bg-white px-2.5 py-2 transition-colors hover:bg-slate-50"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden bg-slate-50">
                     {logoPath ? (
                       <Image
                         src={logoPath}
                         alt={account.name}
-                        width={32}
-                        height={32}
+                        width={24}
+                        height={24}
                         className="object-contain"
                       />
                     ) : (
                       <FallbackIcon
-                        className="h-4 w-4"
+                        className="h-3.5 w-3.5"
                         style={{ color: account.color || "#0F172A" }}
                       />
                     )}
                   </div>
-                  <ChevronRight className="h-3 w-3 text-slate-300 dark:text-slate-600 shrink-0" />
+                  <ChevronRight className="h-2.5 w-2.5 text-slate-300 shrink-0" />
                 </div>
-                <p className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="mt-1.5 text-[10px] font-medium text-slate-500 truncate">
                   {account.name}
                 </p>
-                <p className="mt-0.5 text-xs font-bold text-[#0F172A] dark:text-white truncate">
+                <p className="text-[11px] font-bold text-[#0F172A] truncate">
                   {formatCurrency(account.balance)}
                 </p>
               </Link>

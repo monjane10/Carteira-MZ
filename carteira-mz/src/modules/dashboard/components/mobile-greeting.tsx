@@ -38,18 +38,14 @@ export function MobileGreeting() {
   const dateStr = format(time, "EEEE, dd 'de' MMMM", { locale: pt })
 
   return (
-    <div className="flex items-start justify-between">
-      <div>
-        <p className="text-base font-medium text-slate-500 dark:text-slate-400">
-          {greeting}
-        </p>
-        <h1 className="text-xl font-bold text-[#0F172A] dark:text-white">
-          {userName || "Utilizador"}
-        </h1>
-        <p className="mt-0.5 text-xs text-slate-400 capitalize">
-          {dateStr}
-        </p>
-      </div>
+    <div>
+      <p className="text-sm font-medium text-slate-500">{greeting},</p>
+      <h1 className="text-xl font-bold text-[#0F172A] mt-0.5">
+        {userName || "Utilizador"}
+      </h1>
+      <p className="text-xs text-slate-400 mt-0.5 capitalize first-letter:uppercase">
+        {dateStr}
+      </p>
     </div>
   )
 }

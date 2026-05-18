@@ -6,11 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(value: number): string {
-  const amount = new Intl.NumberFormat("pt-MZ", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value)
-  return `${amount} Mzn`
+  const parts: string[] = []
+  const abs = Math.abs(Math.round(value))
+  const str = abs.toString()
+  for (let i = str.length; i > 0; i -= 3) {
+    parts.unshift(str.slice(Math.max(0, i - 3), i))
+  }
+  return `${value < 0 ? "-" : ""}${parts.join(" ")} Mzn`
 }
 
 export function formatDate(date: string | Date, format: "short" | "long" | "relative" = "short"): string {
