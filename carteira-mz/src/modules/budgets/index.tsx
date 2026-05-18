@@ -18,12 +18,15 @@ import { Wallet } from "lucide-react"
 
 type BudgetFormValues = z.infer<typeof budgetSchema>
 
+const ITEMS_PER_PAGE = 10
+
 function BudgetsPage() {
   const { budgets, isLoading, error, fetchBudgets, addBudget, updateBudget, removeBudget } = useBudgetStore()
   const [formOpen, setFormOpen] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Budget | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
   useEffect(() => {
     fetchBudgets()
@@ -120,16 +123,25 @@ function BudgetsPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum orçamento criado.</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {budgets.map((budget) => (
-            <BudgetCard
-              key={budget.id}
-              budget={budget}
-              onClick={() => handleOpenEdit(budget)}
-              onDelete={() => setDeleteConfirm(budget)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {budgets.slice(0, visibleCount).map((budget) => (
+              <BudgetCard
+                key={budget.id}
+                budget={budget}
+                onClick={() => handleOpenEdit(budget)}
+                onDelete={() => setDeleteConfirm(budget)}
+              />
+            ))}
+          </div>
+          {visibleCount < budgets.length && (
+            <div className="flex justify-center pt-3">
+              <Button variant="outline" size="sm" onClick={() => setVisibleCount((p) => p + ITEMS_PER_PAGE)}>
+                Mostrar mais ({budgets.length - visibleCount} restantes)
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       <BudgetForm

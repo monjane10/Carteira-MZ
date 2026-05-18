@@ -18,6 +18,8 @@ import type { loanSchema } from "@/validators"
 
 type LoanFormValues = z.infer<typeof loanSchema>
 
+const ITEMS_PER_PAGE = 10
+
 function LoansPage() {
   const { loans, isLoading, error, fetchLoans, addLoan, updateLoan, removeLoan } = useLoanStore()
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null)
@@ -25,6 +27,7 @@ function LoansPage() {
   const [editingLoan] = useState<Loan | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<Loan | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
   useEffect(() => {
     fetchLoans()
@@ -133,18 +136,27 @@ function LoansPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum empréstimo registado.</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {loans.map((loan) => (
-            <LoanCard
-              key={loan.id}
-              loan={loan}
-              onClick={() => {
-                setSelectedLoanId(loan.id)
-              }}
-              onDelete={() => setDeleteConfirm(loan)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {loans.slice(0, visibleCount).map((loan) => (
+              <LoanCard
+                key={loan.id}
+                loan={loan}
+                onClick={() => {
+                  setSelectedLoanId(loan.id)
+                }}
+                onDelete={() => setDeleteConfirm(loan)}
+              />
+            ))}
+          </div>
+          {visibleCount < loans.length && (
+            <div className="flex justify-center pt-3">
+              <Button variant="outline" size="sm" onClick={() => setVisibleCount((p) => p + ITEMS_PER_PAGE)}>
+                Mostrar mais ({loans.length - visibleCount} restantes)
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       <LoanForm

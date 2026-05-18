@@ -188,6 +188,7 @@ export async function getRecentTransactions(
   limit = 5,
   startDate?: string,
   endDate?: string,
+  accountIds?: string[],
 ): Promise<Transaction[]> {
   try {
     let query = supabase
@@ -198,6 +199,9 @@ export async function getRecentTransactions(
     }
     if (endDate) {
       query = query.lte("transaction_date", endDate)
+    }
+    if (accountIds && accountIds.length > 0) {
+      query = query.in("account_id", accountIds)
     }
     const { data, error } = await query
       .order("transaction_date", { ascending: false })

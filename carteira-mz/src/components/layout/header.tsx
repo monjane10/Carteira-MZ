@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useUIStore } from "@/store"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -23,8 +24,18 @@ const pageTitles: Record<string, string> = {
 }
 
 export function Header() {
+  const router = useRouter()
   const { toggleSidebar, activePage } = useUIStore()
   const [searchOpen, setSearchOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState("")
+
+  const handleSearch = (value: string) => {
+    if (value.trim()) {
+      router.push(`/transacoes?search=${encodeURIComponent(value.trim())}`)
+      setSearchValue("")
+      setSearchOpen(false)
+    }
+  }
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-950 lg:px-6">
@@ -50,7 +61,10 @@ export function Header() {
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <Input
-              placeholder="Pesquisar..."
+              placeholder="Pesquisar transacções..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSearch(searchValue) }}
               className="h-9 w-48 rounded-lg border-slate-200 pl-8 text-sm dark:border-slate-800 lg:w-64"
             />
           </div>

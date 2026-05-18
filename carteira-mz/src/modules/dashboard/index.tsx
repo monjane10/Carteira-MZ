@@ -146,7 +146,7 @@ function DashboardPage() {
         />
       </div>
 
-      {summary && <SummaryCards summary={summary} />}
+      {summary && <SummaryCards summary={summary} categorySpending={categorySpending} />}
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <MonthlyChart data={monthlyEvolution} />

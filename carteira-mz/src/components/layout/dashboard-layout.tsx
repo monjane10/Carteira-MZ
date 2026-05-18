@@ -10,6 +10,7 @@ import { NotificationDropdown } from "@/components/shared/notification-dropdown"
 import { MobileNav } from "./mobile-nav"
 import { Fab } from "@/components/shared/fab"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
+import { OnboardingTour } from "@/components/shared/onboarding-tour"
 import { supabase } from "@/services/supabase/client"
 import { requestNotificationPermission } from "@/lib/push-notifications"
 
@@ -81,6 +82,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
       <MobileNav />
       <Fab />
+      <OnboardingTour />
     </div>
   )
 }

@@ -8,9 +8,10 @@ interface StatCardProps {
   change?: string
   changeType?: "positive" | "negative" | "neutral"
   icon?: LucideIcon
+  description?: string
 }
 
-export function StatCard({ label, value, change, changeType = "neutral", icon: Icon }: StatCardProps) {
+export function StatCard({ label, value, change, changeType = "neutral", icon: Icon, description }: StatCardProps) {
   const ChangeIcon = changeType === "positive" ? TrendingUp : changeType === "negative" ? TrendingDown : Minus
 
   return (
@@ -28,6 +29,11 @@ export function StatCard({ label, value, change, changeType = "neutral", icon: I
       <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-white">
         {value}
       </p>
+      {description && (
+        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500 truncate">
+          {description}
+        </p>
+      )}
       {change && (
         <div className="mt-1 flex items-center gap-1">
           <ChangeIcon

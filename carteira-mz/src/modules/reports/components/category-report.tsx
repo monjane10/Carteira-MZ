@@ -17,15 +17,16 @@ import type { CategorySpending } from "@/types"
 interface CategoryReportProps {
   data: CategorySpending[]
   loading?: boolean
+  title?: string
 }
 
-export function CategoryReport({ data, loading }: CategoryReportProps) {
+export function CategoryReport({ data, loading, title = "Gastos por Categoria" }: CategoryReportProps) {
   if (loading) {
     return (
       <Card>
         <CardContent className="p-6">
           <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
-            Gastos por Categoria
+            {title}
           </h3>
           <LoadingState type="chart" />
         </CardContent>
@@ -38,7 +39,7 @@ export function CategoryReport({ data, loading }: CategoryReportProps) {
       <Card>
         <CardContent className="p-6">
           <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
-            Gastos por Categoria
+            {title}
           </h3>
           <p className="text-sm text-slate-500">Sem dados disponíveis.</p>
         </CardContent>
@@ -56,7 +57,7 @@ export function CategoryReport({ data, loading }: CategoryReportProps) {
     <Card>
       <CardContent className="p-6">
         <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
-          Gastos por Categoria
+          {title}
         </h3>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
