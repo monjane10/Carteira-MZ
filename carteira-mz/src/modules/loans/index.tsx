@@ -131,11 +131,6 @@ function LoansPage() {
       ) : loans.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum empréstimo registado.</p>
-          <Link href="/emprestimos/nova">
-            <Button variant="outline" size="sm" className="mt-4">
-              Registar primeiro empréstimo
-            </Button>
-          </Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

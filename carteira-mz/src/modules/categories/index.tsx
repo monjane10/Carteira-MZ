@@ -102,14 +102,7 @@ function CategoriesPage() {
 
   return (
     <div>
-      <PageHeader title="Categorias" description="Gerencie as suas categorias de transacções">
-        <Link href="/categorias/nova">
-          <Button size="sm">
-            <Plus className="mr-1.5 h-4 w-4" />
-            Nova Categoria
-          </Button>
-        </Link>
-      </PageHeader>
+      <PageHeader title="Categorias" description="Gerencie as suas categorias de transacções" />
 
       {error ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">

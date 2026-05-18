@@ -134,13 +134,7 @@ function GoalsPage() {
       ) : goals.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
           <Target className="h-12 w-12 text-slate-400 mb-4" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta</p>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Crie a sua primeira meta financeira para começar a poupar.</p>
-          <Link href="/metas/nova">
-            <Button size="sm" className="mt-4">
-              Criar Meta
-            </Button>
-          </Link>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta criada.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
