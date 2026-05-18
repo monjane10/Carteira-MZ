@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
-import { Search, Plus, Eye, X, Building2, CircleDollarSign } from "lucide-react"
+import { Search, Plus, Eye } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { admin } from "@/services"
 import { type Account, type AccountType } from "@/types"

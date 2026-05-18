@@ -24,6 +24,7 @@ function DashboardPage() {
   const [categoryMap, setCategoryMap] = useState<Record<string, Category>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
   const [targetYear, setTargetYear] = useState(new Date().getFullYear())
   const [targetMonth, setTargetMonth] = useState(new Date().getMonth())
 
@@ -72,7 +73,7 @@ function DashboardPage() {
 
     load()
     return () => { cancelled = true }
-  }, [targetYear, targetMonth])
+  }, [targetYear, targetMonth, refreshKey])
 
   if (loading) {
     return (
@@ -97,7 +98,7 @@ function DashboardPage() {
         <PageHeader title="Dashboard" description="Visão geral das suas finanças" />
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="text-sm text-red-500 mb-3">{error}</p>
-          <button onClick={loadDashboard} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+          <button onClick={() => setRefreshKey((k) => k + 1)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
             Tentar novamente
           </button>
         </div>

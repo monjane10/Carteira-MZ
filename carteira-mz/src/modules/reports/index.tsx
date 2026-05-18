@@ -24,37 +24,44 @@ function ReportsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  async function fetchData(range: DateRange) {
-    setLoading(true)
-    setError(null)
-    try {
-      const months = parseInt(range)
-      const now = new Date()
-      const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
-      const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
-
-      const [summaryData, evolutionData, spendingData] = await Promise.all([
-        dashboardService.getDashboardSummary(),
-        dashboardService.getMonthlyEvolution(months),
-        dashboardService.getCategorySpending(
-          startDate.toISOString(),
-          endDate.toISOString()
-        ),
-      ])
-      setSummary(summaryData)
-      setEvolution(evolutionData)
-      setCategorySpending(spendingData)
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
-      toast({ title: "Erro", description: msg, variant: "error" })
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
-    fetchData(dateRange)
-  }, [dateRange])
+    let cancelled = false
+    async function load(range: DateRange) {
+      setLoading(true)
+      setError(null)
+      try {
+        const months = parseInt(range)
+        const now = new Date()
+        const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+
+        const [summaryData, evolutionData, spendingData] = await Promise.all([
+          dashboardService.getDashboardSummary(),
+          dashboardService.getMonthlyEvolution(months),
+          dashboardService.getCategorySpending(
+            startDate.toISOString(),
+            endDate.toISOString()
+          ),
+        ])
+        if (!cancelled) {
+          setSummary(summaryData)
+          setEvolution(evolutionData)
+          setCategorySpending(spendingData)
+        }
+      } catch (e) {
+        if (!cancelled) {
+          const msg = e instanceof Error ? e.message : String(e)
+          toast({ title: "Erro", description: msg, variant: "error" })
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+    load(dateRange)
+    return () => { cancelled = true }
+  }, [dateRange, refreshKey])
 
   const handleExport = () => {
     if (!evolution.length && !categorySpending.length) {
@@ -88,7 +95,7 @@ function ReportsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={() => fetchData(dateRange)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+        <button onClick={() => setRefreshKey((k) => k + 1)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>

@@ -8,6 +8,7 @@ import * as _budgets from "./supabase/budgets"
 import * as _notifications from "./supabase/notifications"
 import * as _dashboard from "./supabase/dashboard"
 import * as _admin from "./supabase/admin"
+import * as _recurringTransactions from "./supabase/recurring-transactions"
 
 export const accounts = _accounts
 export const categories = _categories
@@ -19,6 +20,7 @@ export const budgets = _budgets
 export const notifications = _notifications
 export const dashboard = _dashboard
 export const admin = _admin
+export const recurringTransactions = _recurringTransactions
 
 export { supabase } from "./supabase/client"
 export { logger } from "./supabase/logger"

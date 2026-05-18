@@ -15,62 +15,38 @@ export async function getDashboardSummary(targetDate?: Date): Promise<DashboardS
     const m = now.getMonth()
     const startOfMonth = new Date(y, m, 1).toISOString()
     const startOfPrevMonth = new Date(y, m - 1, 1).toISOString()
-    const endOfMonth = new Date(y, m + 1, 0, 23, 59, 59, 999).toISOString()
+    const endOfMonth = new Date(y, m + 1, 0, 23, 59, 59).toISOString()
 
-    const { data: balanceData } = await supabase
-      .from("accounts")
-      .select("amount_sum:balance.sum()")
-      .eq("is_active", true)
-      .single()
-    const totalBalance = (balanceData as unknown as { amount_sum: number | null })?.amount_sum ?? 0
-
-    const { data: totalsData } = await supabase
-      .from("transactions")
-      .select("type, amount_sum:amount.sum()")
-      .in("type", ["INCOME", "EXPENSE"])
-    const totals = (totalsData ?? []) as { type: string; amount_sum: number | null }[]
-    const totalIncome = totals.find((t) => t.type === "INCOME")?.amount_sum ?? 0
-    const totalExpenses = totals.find((t) => t.type === "EXPENSE")?.amount_sum ?? 0
-
-    const [monthlyData, prevData] = await Promise.all([
-      supabase
-        .from("transactions")
-        .select("type, amount_sum:amount.sum()")
-        .in("type", ["INCOME", "EXPENSE"])
-        .gte("transaction_date", startOfMonth)
-        .lte("transaction_date", endOfMonth),
-      supabase
-        .from("transactions")
-        .select("type, amount_sum:amount.sum()")
-        .in("type", ["INCOME", "EXPENSE"])
-        .gte("transaction_date", startOfPrevMonth)
-        .lt("transaction_date", startOfMonth),
+    const [accountsRes, txRes, monthlyRes, prevRes, loansRes] = await Promise.all([
+      supabase.from("accounts").select("balance").eq("is_active", true),
+      supabase.from("transactions").select("type, amount"),
+      supabase.from("transactions").select("type, amount")
+        .gte("transaction_date", startOfMonth).lte("transaction_date", endOfMonth),
+      supabase.from("transactions").select("type, amount")
+        .gte("transaction_date", startOfPrevMonth).lt("transaction_date", startOfMonth),
+      supabase.from("loans").select("type, total_amount"),
     ])
 
-    const monthlyTotals = (monthlyData.data ?? []) as { type: string; amount_sum: number | null }[]
-    const prevTotals = (prevData.data ?? []) as { type: string; amount_sum: number | null }[]
+    const accountRows = (accountsRes.data ?? []) as { balance: number }[]
+    const totalBalance = accountRows.reduce((s, a) => s + a.balance, 0)
 
-    const monthlyIncome = monthlyTotals.find((t) => t.type === "INCOME")?.amount_sum ?? 0
-    const monthlyExpenses = monthlyTotals.find((t) => t.type === "EXPENSE")?.amount_sum ?? 0
-    const prevIncome = prevTotals.find((t) => t.type === "INCOME")?.amount_sum ?? 0
-    const prevExpenses = prevTotals.find((t) => t.type === "EXPENSE")?.amount_sum ?? 0
+    const txRows = (txRes.data ?? []) as { type: string; amount: number }[]
+    const totalIncome = txRows.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
+    const totalExpenses = txRows.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
+
+    const monthlyTx = (monthlyRes.data ?? []) as { type: string; amount: number }[]
+    const prevTx = (prevRes.data ?? []) as { type: string; amount: number }[]
+    const monthlyIncome = monthlyTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
+    const monthlyExpenses = monthlyTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
+    const prevIncome = prevTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
+    const prevExpenses = prevTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
 
     const incomeChange = prevIncome > 0 ? Math.round(((monthlyIncome - prevIncome) / prevIncome) * 10000) / 100 : 0
     const expenseChange = prevExpenses > 0 ? Math.round(((monthlyExpenses - prevExpenses) / prevExpenses) * 10000) / 100 : 0
 
-    const { data: loansGivenData } = await supabase
-      .from("loans")
-      .select("amount_sum:total_amount.sum()")
-      .eq("type", "GIVEN")
-      .single()
-    const totalLoansGiven = (loansGivenData as unknown as { amount_sum: number | null })?.amount_sum ?? 0
-
-    const { data: loansTakenData } = await supabase
-      .from("loans")
-      .select("amount_sum:total_amount.sum()")
-      .eq("type", "TAKEN")
-      .single()
-    const totalLoansTaken = (loansTakenData as unknown as { amount_sum: number | null })?.amount_sum ?? 0
+    const loanRows = (loansRes.data ?? []) as { type: string; total_amount: number }[]
+    const totalLoansGiven = loanRows.filter((l) => l.type === "GIVEN").reduce((s, l) => s + l.total_amount, 0)
+    const totalLoansTaken = loanRows.filter((l) => l.type === "TAKEN").reduce((s, l) => s + l.total_amount, 0)
 
     return {
       total_balance: totalBalance,
@@ -97,25 +73,30 @@ export async function getMonthlyEvolution(months = 6): Promise<MonthlyEvolution[
     ]
 
     const now = new Date()
+    const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
+
+    const { data: txData } = await supabase
+      .from("transactions")
+      .select("type, amount, transaction_date")
+      .gte("transaction_date", startDate.toISOString())
+
+    const txList = (txData ?? []) as { type: string; amount: number; transaction_date: string }[]
     const result: MonthlyEvolution[] = []
 
     for (let i = months - 1; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
       const month = d.getMonth()
       const year = d.getFullYear()
-      const start = new Date(year, month, 1).toISOString()
-      const end = new Date(year, month + 1, 0, 23, 59, 59).toISOString()
+      const start = new Date(year, month, 1)
+      const end = new Date(year, month + 1, 0, 23, 59, 59)
 
-      const { data: monthData } = await supabase
-        .from("transactions")
-        .select("type, amount_sum:amount.sum()")
-        .in("type", ["INCOME", "EXPENSE"])
-        .gte("transaction_date", start)
-        .lte("transaction_date", end)
+      const monthTx = txList.filter((t) => {
+        const txDate = new Date(t.transaction_date)
+        return txDate >= start && txDate <= end
+      })
 
-      const totals = (monthData ?? []) as { type: string; amount_sum: number | null }[]
-      const income = totals.find((t) => t.type === "INCOME")?.amount_sum ?? 0
-      const expense = totals.find((t) => t.type === "EXPENSE")?.amount_sum ?? 0
+      const income = monthTx.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0)
+      const expense = monthTx.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0)
 
       result.push({
         month: monthNames[month] + "/" + year.toString().slice(2),

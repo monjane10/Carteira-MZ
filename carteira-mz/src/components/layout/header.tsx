@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { useUIStore, useNotificationStore } from "@/store"
+import { useUIStore } from "@/store"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Bell, Menu, Search } from "lucide-react"
+import { Menu, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { NotificationDropdown } from "@/components/shared/notification-dropdown"
 
 const pageTitles: Record<string, string> = {
   dashboard: "Dashboard",
@@ -17,12 +18,12 @@ const pageTitles: Record<string, string> = {
   metas: "Metas",
   orcamentos: "Orçamentos",
   relatorios: "Relatórios",
+  recorrentes: "Recorrentes",
   configuracoes: "Configurações",
 }
 
 export function Header() {
   const { toggleSidebar, activePage } = useUIStore()
-  const unreadCount = useNotificationStore((s) => s.unreadCount)
   const [searchOpen, setSearchOpen] = useState(false)
 
   return (
@@ -62,14 +63,7 @@ export function Header() {
           <Search className="h-4 w-4" />
         </button>
 
-        <button className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-300">
-          <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
-            <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-500 px-1 text-[10px] font-bold text-white">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
-        </button>
+        <NotificationDropdown />
 
         <Avatar className="h-8 w-8 cursor-pointer">
           <AvatarFallback className="bg-slate-200 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
