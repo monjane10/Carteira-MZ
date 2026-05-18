@@ -2,7 +2,8 @@ import { supabase } from "./client"
 import { logger } from "./logger"
 import { handleError } from "./errors"
 import { createNotification } from "./notifications"
-import type { RecurringTransaction } from "@/types"
+import { createTransaction } from "./transactions"
+import type { RecurringTransaction, RecurringFrequency } from "@/types"
 
 const ENTITY = "transacao-recorrente"
 
@@ -73,6 +74,57 @@ export async function updateRecurringTransaction(
     return result
   } catch (e) {
     return handleError(ENTITY, "actualizar", e)
+  }
+}
+
+function calcNextExecution(date: string, frequency: RecurringFrequency): string {
+  const d = new Date(date)
+  switch (frequency) {
+    case "DAILY": d.setDate(d.getDate() + 1); break
+    case "WEEKLY": d.setDate(d.getDate() + 7); break
+    case "MONTHLY": d.setMonth(d.getMonth() + 1); break
+    case "YEARLY": d.setFullYear(d.getFullYear() + 1); break
+  }
+  return d.toISOString().slice(0, 10)
+}
+
+export async function executeRecurringTransactions(): Promise<void> {
+  try {
+    const transactions = await getRecurringTransactions()
+    const today = new Date().toISOString().slice(0, 10)
+
+    for (const t of transactions) {
+      if (!t.is_active) continue
+      if (t.next_execution > today) continue
+
+      await createTransaction({
+        account_id: t.account_id,
+        category_id: t.category_id,
+        type: t.type,
+        amount: t.amount,
+        description: t.description ? `[Recorrente] ${t.description}` : `[Recorrente] ${t.type}`,
+        transaction_date: today,
+        is_recurring: true,
+      })
+
+      const nextDate = calcNextExecution(today, t.frequency)
+
+      await supabase
+        .from("recurring_transactions")
+        .update({
+          next_execution: nextDate,
+          last_execution: today,
+        })
+        .eq("id", t.id)
+
+      createNotification(
+        "RECURRING_DUE",
+        "Transacção Recorrente Executada",
+        `A transacção "${t.description ?? t.type}" de ${t.amount} MZN foi executada automaticamente.`,
+      )
+    }
+  } catch (e) {
+    logger.warn("Failed to execute recurring transactions", { error: e })
   }
 }
 

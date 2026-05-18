@@ -1,0 +1,269 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
+import { ChevronDown, Building2 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { cn } from "@/lib/utils"
+import { RECURRING_FREQUENCY_LABELS, TRANSACTION_TYPE_LABELS } from "@/constants"
+import { toast } from "@/hooks/use-toast"
+import { accounts as accountService, categories as categoryService } from "@/services"
+import { useRecurringTransactionStore } from "@/store"
+import type { Account, Category, RecurringFrequency } from "@/types"
+
+const schema = z.object({
+  account_id: z.string().min(1, "Seleccione uma conta"),
+  category_id: z.string().nullable().optional(),
+  type: z.enum(["INCOME", "EXPENSE"]),
+  amount: z.number().positive("O valor deve ser positivo"),
+  description: z.string().optional(),
+  frequency: z.enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]),
+  start_date: z.string().min(1, "Seleccione a data de início"),
+})
+
+type FormData = z.infer<typeof schema>
+
+export function RecurringCreateScreen() {
+  const router = useRouter()
+  const { addTransaction } = useRecurringTransactionStore()
+  const [accounts, setAccounts] = useState<Account[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loadingData, setLoadingData] = useState(true)
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      account_id: "",
+      category_id: null,
+      type: "EXPENSE",
+      amount: 0,
+      description: "",
+      frequency: "MONTHLY",
+      start_date: new Date().toISOString().split("T")[0],
+    },
+  })
+
+  const selectedType = watch("type")
+  const selectedCategoryId = watch("category_id")
+  const filteredCategories = categories.filter((c) => c.type === selectedType)
+
+  useEffect(() => {
+    Promise.all([
+      accountService.getAccounts(),
+      categoryService.getCategories(),
+    ])
+      .then(([accountsData, categoriesData]) => {
+        setAccounts(accountsData)
+        setCategories(categoriesData)
+      })
+      .finally(() => setLoadingData(false))
+  }, [])
+
+  async function onSubmit(data: FormData) {
+    try {
+      await addTransaction({
+        account_id: data.account_id,
+        category_id: data.category_id ?? null,
+        type: data.type,
+        amount: data.amount,
+        description: data.description ?? null,
+        frequency: data.frequency,
+        start_date: data.start_date,
+      })
+      toast({ title: "Sucesso", description: "Transacção recorrente criada.", variant: "success" })
+      router.push("/recorrentes")
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      toast({ title: "Erro", description: msg, variant: "error" })
+    }
+  }
+
+  const inputClass = "w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+  const inputErrorClass = "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+  const selectClass = "w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-[14px] text-[#0F172A] appearance-none cursor-pointer focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+
+  if (!loadingData && accounts.length === 0) {
+    return (
+      <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
+        <div className="px-4 pt-5 pb-3">
+          <h1 className="text-xl font-bold text-[#0F172A]">Nova Transacção Recorrente</h1>
+          <p className="text-sm text-slate-500 mt-1">Configure uma transacção automática</p>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-8 pb-20 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 mb-4">
+            <Building2 className="h-8 w-8 text-slate-400" />
+          </div>
+          <h2 className="text-lg font-bold text-[#0F172A] mb-2">Nenhuma conta criada</h2>
+          <p className="text-sm text-slate-500 mb-6 max-w-xs">
+            Precisa de pelo menos uma conta para criar transacções recorrentes.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push("/contas/nova")}
+            className="w-full max-w-[240px] h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B]"
+          >
+            Criar Conta
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-dvh w-full max-w-full bg-white flex flex-col">
+      <div className="px-4 pt-5 pb-3">
+        <h1 className="text-xl font-bold text-[#0F172A]">Nova Recorrente</h1>
+        <p className="text-sm text-slate-500 mt-1">Configure uma transacção automática</p>
+      </div>
+
+      <div className="flex-1 w-full max-w-full overflow-y-auto px-4 pb-28">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-5">
+              <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</label>
+              <div className="relative">
+                <select
+                  value={selectedType}
+                  onChange={(e) => {
+                    setValue("type", e.target.value as "INCOME" | "EXPENSE")
+                    setValue("category_id", null)
+                  }}
+                  disabled={loadingData}
+                  className={cn(selectClass, errors.type && inputErrorClass)}
+                >
+                  <option value="" disabled>Seleccione o tipo</option>
+                  {(Object.keys(TRANSACTION_TYPE_LABELS) as ("INCOME" | "EXPENSE")[]).map((type) => (
+                    <option key={type} value={type}>{TRANSACTION_TYPE_LABELS[type]}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              </div>
+              {errors.type && <p className="text-xs text-red-500 mt-1">{errors.type.message}</p>}
+            </div>
+
+            <div className="mb-5">
+              <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta</label>
+              <div className="relative">
+                <select
+                  value={watch("account_id")}
+                  onChange={(e) => setValue("account_id", e.target.value)}
+                  disabled={loadingData}
+                  className={cn(selectClass, errors.account_id && inputErrorClass)}
+                >
+                  <option value="" disabled>Seleccione a conta</option>
+                  {accounts.map((account) => (
+                    <option key={account.id} value={account.id}>{account.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              </div>
+              {errors.account_id && <p className="text-xs text-red-500 mt-1">{errors.account_id.message}</p>}
+            </div>
+
+            <div className="mb-5">
+              <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Categoria</label>
+              <div className="relative">
+                <select
+                  value={selectedCategoryId ?? ""}
+                  onChange={(e) => setValue("category_id", e.target.value || null)}
+                  disabled={loadingData || filteredCategories.length === 0}
+                  className={cn(selectClass)}
+                >
+                  <option value="" disabled>
+                    {filteredCategories.length === 0 ? "Sem categorias" : "Seleccione categoria"}
+                  </option>
+                  {filteredCategories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              </div>
+            </div>
+
+            <div className="mb-5">
+              <label htmlFor="amount" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Valor</label>
+              <input
+                id="amount"
+                type="number"
+                step="0.01"
+                placeholder="0.00"
+                className={cn(inputClass, errors.amount && inputErrorClass)}
+                {...register("amount", { valueAsNumber: true })}
+              />
+              {errors.amount && <p className="text-xs text-red-500 mt-1">{errors.amount.message}</p>}
+            </div>
+
+            <div className="mb-5">
+              <label htmlFor="description" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Descrição</label>
+              <input
+                id="description"
+                type="text"
+                placeholder="Descrição da transacção"
+                className={inputClass}
+                {...register("description")}
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Frequência</label>
+              <div className="relative">
+                <select
+                  value={watch("frequency")}
+                  onChange={(e) => setValue("frequency", e.target.value as RecurringFrequency)}
+                  className={cn(selectClass, errors.frequency && inputErrorClass)}
+                >
+                  <option value="" disabled>Seleccione a frequência</option>
+                  {(Object.keys(RECURRING_FREQUENCY_LABELS) as RecurringFrequency[]).map((freq) => (
+                    <option key={freq} value={freq}>{RECURRING_FREQUENCY_LABELS[freq]}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              </div>
+              {errors.frequency && <p className="text-xs text-red-500 mt-1">{errors.frequency.message}</p>}
+            </div>
+
+            <div className="mb-5">
+              <label htmlFor="start_date" className="text-sm font-semibold text-[#0F172A] block mb-1.5">Data de Início</label>
+              <input
+                id="start_date"
+                type="date"
+                className={cn(inputClass, errors.start_date && inputErrorClass)}
+                {...register("start_date")}
+              />
+              {errors.start_date && <p className="text-xs text-red-500 mt-1">{errors.start_date.message}</p>}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting || loadingData}
+              className="w-full h-[52px] flex items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-white font-bold text-[14px] transition-all hover:bg-[#1E293B] disabled:opacity-60"
+            >
+              {isSubmitting ? "A guardar..." : "Guardar"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="w-full text-center text-sm text-slate-500 mt-4 py-2 hover:text-slate-700 transition-colors"
+            >
+              Cancelar
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    </div>
+  )
+}

@@ -9,6 +9,7 @@ interface RecurringTransactionState {
   fetchTransactions: () => Promise<void>
   addTransaction: (data: Parameters<typeof recurringService.createRecurringTransaction>[0]) => Promise<void>
   updateTransaction: (id: string, data: Parameters<typeof recurringService.updateRecurringTransaction>[1]) => Promise<void>
+  toggleActive: (id: string, current: boolean) => Promise<void>
   removeTransaction: (id: string) => Promise<void>
 }
 
@@ -48,6 +49,20 @@ export const useRecurringTransactionStore = create<RecurringTransactionState>((s
       const msg = e instanceof Error ? e.message : String(e)
       set({ error: msg })
       throw e
+    }
+  },
+  toggleActive: async (id, current) => {
+    set({ error: null })
+    try {
+      await recurringService.updateRecurringTransaction(id, { is_active: !current })
+      set((state) => ({
+        transactions: state.transactions.map((t) =>
+          t.id === id ? { ...t, is_active: !current } : t
+        ),
+      }))
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      set({ error: msg })
     }
   },
   removeTransaction: async (id) => {

@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
-import { Download } from "lucide-react"
+import { Download, TrendingUp, TrendingDown } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
 import { dashboard as dashboardService } from "@/services"
-import type { DashboardSummary, MonthlyEvolution, CategorySpending } from "@/types"
+import { formatCurrency, formatDate } from "@/lib/utils"
+import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction } from "@/types"
 
 const IncomeVsExpenseChart = dynamic(() => import("./components/income-vs-expense-chart").then((m) => ({ default: m.IncomeVsExpenseChart })), { ssr: false })
 const CategoryReport = dynamic(() => import("./components/category-report").then((m) => ({ default: m.CategoryReport })), { ssr: false })
@@ -21,6 +22,7 @@ function ReportsPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [evolution, setEvolution] = useState<MonthlyEvolution[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
+  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -37,18 +39,20 @@ function ReportsPage() {
         const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
         const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
 
-        const [summaryData, evolutionData, spendingData] = await Promise.all([
+        const [summaryData, evolutionData, spendingData, txData] = await Promise.all([
           dashboardService.getDashboardSummary(),
           dashboardService.getMonthlyEvolution(months),
           dashboardService.getCategorySpending(
             startDate.toISOString(),
             endDate.toISOString()
           ),
+          dashboardService.getRecentTransactions(20, startDate.toISOString(), endDate.toISOString()),
         ])
         if (!cancelled) {
           setSummary(summaryData)
           setEvolution(evolutionData)
           setCategorySpending(spendingData)
+          setRecentTransactions(txData)
         }
       } catch (e) {
         if (!cancelled) {
@@ -138,6 +142,37 @@ function ReportsPage() {
         <IncomeVsExpenseChart data={evolution} loading={loading} />
         <CategoryReport data={categorySpending} loading={loading} />
       </div>
+
+      {recentTransactions.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 overflow-hidden"
+        >
+          <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Transacções Recentes</h3>
+          </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            {recentTransactions.slice(0, 10).map((tx) => (
+              <div key={tx.id} className="flex items-center gap-3 px-5 py-3">
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                  tx.type === "INCOME" ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"
+                }`}>
+                  {tx.type === "INCOME" ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{tx.description || tx.category?.name || "Sem descrição"}</p>
+                  <p className="text-xs text-slate-400">{formatDate(tx.transaction_date)}</p>
+                </div>
+                <span className={`text-sm font-bold ${tx.type === "INCOME" ? "text-emerald-600" : "text-red-600"}`}>
+                  {tx.type === "INCOME" ? "+" : "-"}{formatCurrency(tx.amount)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 }

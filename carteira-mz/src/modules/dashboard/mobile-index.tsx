@@ -14,7 +14,7 @@ import { dashboard as dashboardService, accounts as accountService, categories a
 import { checkOverdueLoans } from "@/services/supabase/loans"
 import { checkLowBalances } from "@/services/supabase/accounts"
 import { checkExpiringGoals } from "@/services/supabase/goals"
-import { checkRecurringTransactions } from "@/services/supabase/recurring-transactions"
+import { checkRecurringTransactions, executeRecurringTransactions } from "@/services/supabase/recurring-transactions"
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
 
 const MobileExpenseChart = dynamic(() => import("./components/mobile-expense-chart").then((m) => ({ default: m.MobileExpenseChart })), { ssr: false })
@@ -72,6 +72,7 @@ export function MobileDashboard() {
         checkLowBalances()
         checkExpiringGoals()
         checkRecurringTransactions()
+        executeRecurringTransactions()
       } catch (error) {
         if (cancelled) return
         console.error("Failed to fetch mobile dashboard data:", error)

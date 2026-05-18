@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Plus, Repeat, Trash2, Pause, Play } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
@@ -11,6 +12,7 @@ import { LoadingState } from "@/components/shared/loading-state"
 import { EmptyState } from "@/components/shared/empty-state"
 import { useRecurringTransactionStore } from "@/store"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 import type { RecurringFrequency } from "@/types"
 
 const FREQUENCY_LABELS: Record<RecurringFrequency, string> = {
@@ -21,7 +23,8 @@ const FREQUENCY_LABELS: Record<RecurringFrequency, string> = {
 }
 
 function RecurringTransactionsPage() {
-  const { transactions, isLoading, fetchTransactions, removeTransaction } = useRecurringTransactionStore()
+  const router = useRouter()
+  const { transactions, isLoading, fetchTransactions, toggleActive, removeTransaction } = useRecurringTransactionStore()
   const [deleting, setDeleting] = useState<string | null>(null)
 
   useEffect(() => {
@@ -32,9 +35,17 @@ function RecurringTransactionsPage() {
     setDeleting(id)
     try {
       await removeTransaction(id)
+      toast({ title: "Removida", description: "Transacção recorrente removida.", variant: "success" })
+    } catch {
+      toast({ title: "Erro", description: "Não foi possível remover.", variant: "error" })
     } finally {
       setDeleting(null)
     }
+  }
+
+  const handleToggle = async (id: string, current: boolean) => {
+    await toggleActive(id, current)
+    toast({ title: current ? "Pausada" : "Activada", description: "Transacção recorrente actualizada.", variant: "success" })
   }
 
   return (
@@ -44,7 +55,7 @@ function RecurringTransactionsPage() {
       className="space-y-6"
     >
       <PageHeader title="Transacções Recorrentes" description="Gerencie transacções automatizadas">
-        <Button variant="default" size="sm">
+        <Button variant="default" size="sm" onClick={() => router.push("/recorrentes/nova")}>
           <Plus className="mr-1.5 h-4 w-4" />
           Nova Recorrente
         </Button>
@@ -108,6 +119,7 @@ function RecurringTransactionsPage() {
                     variant="outline"
                     size="sm"
                     className="flex-1"
+                    onClick={() => handleToggle(t.id, t.is_active)}
                   >
                     {t.is_active ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
                     {t.is_active ? "Pausar" : "Activar"}
