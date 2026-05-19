@@ -1,4 +1,5 @@
-﻿import { logger } from "./logger"
+﻿import { supabase } from "./client"
+import { logger } from "./logger"
 import { handleError } from "./errors"
 import type { Account } from "@/types"
 
@@ -17,7 +18,11 @@ export interface AdminUser {
 export async function getAdminAccounts(): Promise<Account[]> {
   try {
     logger.info("Fetching admin accounts")
-    const res = await fetch("/api/admin/accounts")
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+    const res = await fetch("/api/admin/accounts", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
     if (!res.ok) throw new Error("Falha ao carregar contas")
     return await res.json()
   } catch (e) {
@@ -38,7 +43,11 @@ export interface AdminStats {
 export async function getAdminStats(): Promise<AdminStats> {
   try {
     logger.info("Fetching admin stats")
-    const res = await fetch("/api/admin/stats")
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+    const res = await fetch("/api/admin/stats", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
     if (!res.ok) throw new Error("Falha ao carregar estatisticas")
     return await res.json()
   } catch (e) {
@@ -49,7 +58,11 @@ export async function getAdminStats(): Promise<AdminStats> {
 export async function getAdminUsers(): Promise<AdminUser[]> {
   try {
     logger.info("Fetching admin users")
-    const res = await fetch("/api/admin/users")
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+    const res = await fetch("/api/admin/users", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
     if (!res.ok) throw new Error("Falha ao carregar utilizadores")
     return await res.json()
   } catch (e) {
@@ -60,9 +73,14 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
 export async function broadcastNotification(title: string, message: string): Promise<{ success: boolean; total_users?: number }> {
   try {
     logger.info("Broadcasting notification", { title })
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
     const res = await fetch("/api/admin/broadcast", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
       body: JSON.stringify({ title, message }),
     })
     if (!res.ok) {
@@ -78,7 +96,11 @@ export async function broadcastNotification(title: string, message: string): Pro
 export async function getAdminUserById(id: string): Promise<AdminUser | null> {
   try {
     logger.info("Fetching admin user", { id })
-    const res = await fetch(`/api/admin/users?id=${id}`)
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+    const res = await fetch(`/api/admin/users?id=${id}`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
     if (!res.ok) throw new Error("Falha ao carregar utilizador")
     const users: AdminUser[] = await res.json()
     return users.find((u) => u.id === id) ?? null

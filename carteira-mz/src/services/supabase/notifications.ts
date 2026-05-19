@@ -5,12 +5,20 @@ import type { Notification, NotificationType } from "@/types"
 
 const ENTITY = "notificacao"
 
+async function getUserIdOrThrow(): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Sem sessão")
+  return user.id
+}
+
 export async function getNotifications(): Promise<Notification[]> {
   try {
     logger.info("Fetching notifications")
+    const userId = await getUserIdOrThrow()
     const { data, error } = await supabase
       .from("notifications")
       .select("*")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
     if (error) throw error
     return data ?? []
@@ -21,11 +29,15 @@ export async function getNotifications(): Promise<Notification[]> {
 
 export async function markAsRead(id: string): Promise<void> {
   try {
-    const { error } = await supabase
+    const userId = await getUserIdOrThrow()
+    const { data, error } = await supabase
       .from("notifications")
       .update({ is_read: true })
       .eq("id", id)
+      .eq("user_id", userId)
+      .select("id")
     if (error) throw error
+    if (!data || data.length === 0) throw new Error("Notificação não encontrada")
     logger.info("Notification marked as read", { id })
   } catch (e) {
     return handleError(ENTITY, "marcar lida", e)
@@ -34,10 +46,12 @@ export async function markAsRead(id: string): Promise<void> {
 
 export async function markAllAsRead(): Promise<void> {
   try {
+    const userId = await getUserIdOrThrow()
     const { error } = await supabase
       .from("notifications")
       .update({ is_read: true })
       .eq("is_read", false)
+      .eq("user_id", userId)
     if (error) throw error
     logger.info("All notifications marked as read")
   } catch (e) {
@@ -47,10 +61,12 @@ export async function markAllAsRead(): Promise<void> {
 
 export async function getUnreadCount(): Promise<number> {
   try {
+    const userId = await getUserIdOrThrow()
     const { count, error } = await supabase
       .from("notifications")
       .select("*", { count: "exact", head: true })
       .eq("is_read", false)
+      .eq("user_id", userId)
     if (error) throw error
     return count ?? 0
   } catch (e) {

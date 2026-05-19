@@ -45,18 +45,19 @@ export function RegisterForm() {
       return
     }
 
-    toast({
-      title: "Conta criada",
-      description: "Registo efetuado com sucesso! Verifique o seu email para confirmar.",
-      variant: "success",
-    })
-
     const { data: { session } } = await supabase.auth.getSession()
+
     if (session) {
       createNotification("SYSTEM", "Bem-vindo ao Carteira MZ", "A sua conta foi criada com sucesso. Comece a organizar as suas finanças!")
+      router.push("/dashboard")
+    } else {
+      toast({
+        title: "Conta criada",
+        description: "Registo efetuado com sucesso! Verifique o seu email para confirmar.",
+        variant: "success",
+      })
+      router.push("/login")
     }
-
-    router.push("/login")
   }
 
   return (

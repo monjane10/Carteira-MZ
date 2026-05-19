@@ -131,7 +131,9 @@ carteira-mz/
 | Rota | Página |
 |------|--------|
 | `/login` | Login |
-| `/register` | Registo |
+| `/register` | Registo (auto-login se email confirmação desligado) |
+| `/forgot-password` | Recuperar senha |
+| `/reset-password` | Definir nova senha |
 
 ### Grupo `(dashboard)` — com sidebar e navegação móvel
 
@@ -157,6 +159,7 @@ carteira-mz/
 | `/orcamentos/novo` | Novo orçamento |
 | `/relatorios` | Relatórios financeiros |
 | `/configuracoes` | Definições do utilizador |
+| `/notificacoes` | Central de notificações |
 
 ### Admin
 
@@ -171,9 +174,12 @@ carteira-mz/
 
 | Rota | Função |
 |------|--------|
-| `POST /api/admin/stats` | Estatísticas agregadas (todos os users) |
-| `POST /api/admin/users` | Lista de users com contagem de contas |
-| `POST /api/admin/accounts` | Lista todas as contas (admin) |
+| `GET /api/admin/stats` | Estatísticas agregadas (todos os users) |
+| `GET /api/admin/users` | Lista de users com contagem de contas |
+| `GET /api/admin/accounts` | Lista todas as contas (admin) |
+| `POST /api/admin/broadcast` | Enviar notificação para todos os users |
+| `POST /api/notifications` | Criar notificação |
+| `POST /api/notifications/cleanup` | Limpar notificações SYSTEM antigas |
 | `POST /api/delete-account` | Elimina `auth.users` via `admin.deleteUser()` |
 
 ---
@@ -183,16 +189,25 @@ carteira-mz/
 ### Fluxo
 
 1. **Registo:** `supabase.auth.signUp()` — cria auth.user + trigger `handle_new_user()` cria `profiles`
-2. **Login:** `supabase.auth.signInWithPassword()` — sessão gerida pelo Supabase Auth
+   - Se confirmação de email estiver desligada: sessão é criada automaticamente e redirecciona para `/dashboard`
+   - Se confirmação de email estiver ligada: redirecciona para `/login` com instruções de verificação
+2. **Login:** `supabase.auth.signInWithPassword()` — sessão gerida pelo Supabase Auth, redirecciona para `/dashboard`
 3. **Logout:** `supabase.auth.signOut()`
 4. **Sessão:** `supabase.auth.getSession()` / `supabase.auth.onAuthStateChange()`
+
+### Onboarding
+
+- Utilizadores novos vêem um tour de 5 passos ao entrar no dashboard pela primeira vez
+- O progresso é salvo em `localStorage` e na BD (`profiles.onboarding_completed`)
+- Passos: Boas-vindas → Contas → Transacções → Funcionalidades (empréstimos, metas, orçamentos) → Relatórios e notificações
+- Pode ser acedido novamente nas Configurações
 
 ### Segurança
 
 - RLS (Row Level Security) activo em todas as tabelas
 - Cada utilizador vê apenas os seus próprios dados
 - API routes usam `SUPABASE_SERVICE_ROLE_KEY` para bypass de RLS (apenas operações admin)
-- Chamadas ao cliente enviam token `Authorization: Bearer`
+- Chamadas ao cliente enviam token `Authorization: Bearer` em todas as rotas protegidas
 
 ---
 
@@ -320,8 +335,9 @@ Todos os serviços estão em `src/services/supabase/`:
 | `goals.ts` | CRUD + `getGoalContributions()` + progresso |
 | `budgets.ts` | CRUD + cálculo de `spent` automático |
 | `dashboard.ts` | `getDashboardSummary(targetDate?)`, `getMonthlyEvolution()`, `getCategorySpending()` |
-| `notifications.ts` | CRUD + marcação como lida |
-| `admin.ts` | Funções administrativas (stats, users) |
+| `notifications.ts` | CRUD + marcação como lida (filtro por `user_id`) |
+| `recurring-transactions.ts` | CRUD + execução automática |
+| `admin.ts` | Funções administrativas (stats, users, broadcast) |
 | `balance.ts` | Cálculo de saldo histórico |
 
 ### Zustand Stores
@@ -332,7 +348,7 @@ Todos os serviços estão em `src/services/supabase/`:
 - `useLoanStore` — empréstimos + fetch + CRUD
 - `useGoalStore` — metas + fetch + CRUD
 - `useBudgetStore` — orçamentos + fetch + CRUD
-- `useNotificationStore` — notificações + fetch
+- `useNotificationStore` — notificações + fetch + realtime + marcação lida
 - `useUIStore` — estado de UI (sidebar, modais, tema)
 
 Todas as stores refazem fetch do servidor após cada mutação CRUD.
@@ -422,12 +438,15 @@ Todas as stores refazem fetch do servidor após cada mutação CRUD.
 7. **Gestão de empréstimos** — com cálculo automático de juros e status
 8. **Metas com contribuições** — contribuições descontam da conta automaticamente
 9. **Painel administrativo** — visão geral de todos os utilizadores (protegido)
-10. **Manual do utilizador integrado** — botão `?` flutuante nas páginas de auth
-11. **PWA com suporte offline parcial** — Service Worker com network-first para HTML e cache de assets estáticos; app instalável no telemóvel
-12. **Telas de detalhe** — todas as entidades (contas, transacções, transferências, empréstimos, metas) com páginas dedicadas de visualização, edição e remoção
-13. **Optimistic updates** — CRUD nas stores actualiza o estado local instantaneamente sem esperar pelo servidor
-14. **Lazy loading de gráficos** — Recharts carregado sob demanda com `next/dynamic` + `ssr: false`
-15. **Meta tags Open Graph** — preview ao partilhar no WhatsApp, Facebook e Twitter
+10. **Manual do utilizador integrado** — botão `?` flutuante com 11 secções de ajuda
+11. **Tour de onboarding** — 5 passos para novos utilizadores (persistido na BD)
+12. **PWA com suporte offline parcial** — Service Worker com network-first para HTML e cache de assets estáticos; app instalável no telemóvel
+13. **Telas de detalhe** — todas as entidades (contas, transacções, transferências, empréstimos, metas) com páginas dedicadas de visualização, edição e remoção
+14. **Optimistic updates** — CRUD nas stores actualiza o estado local instantaneamente sem esperar pelo servidor
+15. **Lazy loading de gráficos** — Recharts carregado sob demanda com `next/dynamic` + `ssr: false`
+16. **Meta tags Open Graph** — preview ao partilhar no WhatsApp, Facebook e Twitter
+17. **Notificações com BD persistente** — estado de leitura mantém-se após refresh
+18. **Auto-login após registo** — se confirmação de email desligada, vai directo para o dashboard
 
 ---
 
