@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronRight, ChevronLeft, LayoutDashboard, Wallet, ArrowUpDown, Target, PieChart } from "lucide-react"
+import { supabase } from "@/services"
 
 const STORAGE_KEY = "carteira-mz-onboarding-done"
 
@@ -40,14 +41,35 @@ export function OnboardingTour() {
 
   useEffect(() => {
     const done = localStorage.getItem(STORAGE_KEY)
-    if (!done) {
-      const timer = setTimeout(() => setOpen(true), 600)
-      return () => clearTimeout(timer)
-    }
+    if (done) return
+
+    const timer = setTimeout(() => {
+      supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .single()
+        .then(({ data }) => {
+          if (!data?.onboarding_completed) {
+            setOpen(true)
+          } else {
+            localStorage.setItem(STORAGE_KEY, "true")
+          }
+        })
+        .catch(() => setOpen(true))
+    }, 600)
+
+    return () => clearTimeout(timer)
   }, [])
 
-  const handleClose = () => {
+  const handleClose = async () => {
     localStorage.setItem(STORAGE_KEY, "true")
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase
+        .from("profiles")
+        .update({ onboarding_completed: true })
+        .eq("id", user.id)
+    }
     setOpen(false)
   }
 

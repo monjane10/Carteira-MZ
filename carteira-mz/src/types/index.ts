@@ -15,6 +15,7 @@ export interface Profile {
   timezone: string
   avatar_url: string | null
   dark_mode: boolean
+  onboarding_completed: boolean
   created_at: string
   updated_at: string
 }
