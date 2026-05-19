@@ -12,7 +12,6 @@ import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
 import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
-import { createNotification } from "@/services/supabase/notifications"
 
 export function LoginForm() {
   const router = useRouter()
@@ -43,8 +42,6 @@ export function LoginForm() {
       description: "Login efetuado com sucesso",
       variant: "success",
     })
-
-    createNotification("SYSTEM", "Bem-vindo de volta", "O seu login foi efectuado com sucesso.")
 
     router.push("/dashboard")
   }
