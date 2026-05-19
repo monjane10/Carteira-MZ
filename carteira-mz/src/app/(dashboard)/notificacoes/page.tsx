@@ -1,12 +1,14 @@
 "use client"
 
-import { useEffect } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Info, AlertTriangle, CheckCircle, PiggyBank, X, ArrowRightLeft, BellOff, CheckCheck } from "lucide-react"
 import { useNotificationStore } from "@/store"
 import { PageHeader } from "@/components/shared/page-header"
+import { NotificationDetail } from "@/components/shared/notification-detail"
 import { Loader2 } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import type { Notification } from "@/types"
 
 const TYPE_ICONS: Record<string, typeof Info> = {
   BUDGET_LIMIT: AlertTriangle,
@@ -35,6 +37,7 @@ const TYPE_COLORS: Record<string, string> = {
 }
 
 export default function NotificationsPage() {
+  const [selected, setSelected] = useState<Notification | null>(null)
   const { notifications, unreadCount, isLoading, fetchNotifications, markAsRead, markAllAsRead, getUnreadCount, subscribeToRealtime } = useNotificationStore()
 
   useEffect(() => {
@@ -92,7 +95,7 @@ export default function NotificationsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.03 }}
-                  onClick={() => { if (!n.is_read) markAsRead(n.id) }}
+                  onClick={() => { setSelected(n); if (!n.is_read) markAsRead(n.id) }}
                   className={`w-full text-left rounded-xl px-4 py-3.5 flex gap-3 transition-colors ${
                     !n.is_read
                       ? "bg-blue-50/80 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50"
@@ -122,6 +125,19 @@ export default function NotificationsPage() {
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-950"
+          >
+            <NotificationDetail notification={selected} onBack={() => setSelected(null)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

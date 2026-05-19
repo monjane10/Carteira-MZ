@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Bell, CheckCheck, X, Info, AlertTriangle, CheckCircle, PiggyBank, ArrowRightLeft, BellOff } from "lucide-react"
 import { useNotificationStore } from "@/store"
 import { formatDate } from "@/lib/utils"
+import { NotificationDetail } from "./notification-detail"
+import type { Notification } from "@/types"
 
 const TYPE_ICONS: Record<string, typeof Info> = {
   BUDGET_LIMIT: AlertTriangle,
@@ -34,6 +36,7 @@ const TYPE_COLORS: Record<string, string> = {
 
 export function NotificationDropdown() {
   const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<Notification | null>(null)
   const { notifications, unreadCount, fetchNotifications, markAsRead, markAllAsRead, getUnreadCount, subscribeToRealtime } = useNotificationStore()
 
   useEffect(() => {
@@ -75,6 +78,10 @@ export function NotificationDropdown() {
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
               className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-slate-950"
             >
+              {selected ? (
+                <NotificationDetail notification={selected} onBack={() => setSelected(null)} />
+              ) : (
+                <>
               <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800">
                 <button
                   onClick={() => setOpen(false)}
@@ -117,7 +124,7 @@ export function NotificationDropdown() {
                     return (
                       <button
                         key={n.id}
-                        onClick={() => { if (!n.is_read) markAsRead(n.id) }}
+                        onClick={() => { setSelected(n); if (!n.is_read) markAsRead(n.id) }}
                         className={`w-full text-left px-4 py-3 flex gap-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors ${
                           !n.is_read ? "bg-blue-50/50 dark:bg-blue-950/20" : ""
                         }`}
@@ -136,6 +143,8 @@ export function NotificationDropdown() {
                   })
                 )}
               </div>
+            </>
+            )}
             </motion.div>
           </>
         )}
