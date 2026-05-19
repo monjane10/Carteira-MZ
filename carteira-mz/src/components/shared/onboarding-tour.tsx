@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ChevronRight, ChevronLeft, LayoutDashboard, Wallet, ArrowUpDown, Target, PieChart } from "lucide-react"
+import { X, ChevronRight, ChevronLeft, LayoutDashboard, Wallet, ArrowUpDown, Handshake, PieChart } from "lucide-react"
 import { supabase } from "@/services"
 
 const STORAGE_KEY = "carteira-mz-onboarding-done"
@@ -11,27 +11,27 @@ const steps = [
   {
     icon: LayoutDashboard,
     title: "Bem-vindo ao Carteira MZ",
-    description: "O seu gestor financeiro pessoal. Acompanhe receitas, despesas, metas e muito mais num só lugar.",
+    description: "O seu gestor financeiro pessoal, feito para Moçambique. Acompanhe receitas, despesas, contas, metas, empréstimos e orçamentos num só lugar. Tudo offline-first com suporte para M-Pesa, eMola e contas bancárias.",
   },
   {
     icon: Wallet,
-    title: "Adicione as suas Contas",
-    description: "Registe contas bancárias, carteiras móveis ou dinheiro físico para controlar o seu saldo total.",
+    title: "Registe as suas Contas",
+    description: "Adicione contas bancárias, carteiras móveis (M-Pesa, eMola) ou dinheiro físico. Veja o saldo total actualizado em tempo real e organize as suas finanças por instituição.",
   },
   {
     icon: ArrowUpDown,
-    title: "Registe Transacções",
-    description: "Adicione receitas e despesas com categorias para entender para onde vai o seu dinheiro.",
+    title: "Registe Receitas e Despesas",
+    description: "Adicione transacções com categoria, conta e data. O saldo da conta é actualizado automaticamente. Pode marcar transacções como recorrentes para não se esquecer de contas fixas.",
   },
   {
-    icon: Target,
-    title: "Defina Metas",
-    description: "Crie objectivos de poupança e acompanhe o progresso. Contribua regularmente para os alcançar.",
+    icon: Handshake,
+    title: "Empréstimos, Metas e Orçamentos",
+    description: "Registe empréstimos concedidos ou obtidos, crie metas de poupança com contribuições e defina orçamentos mensais por categoria para controlar gastos.",
   },
   {
     icon: PieChart,
     title: "Acompanhe com Relatórios",
-    description: "Veja gráficos detalhados, compare períodos e exporte relatórios para analisar a sua saúde financeira.",
+    description: "Veja gráficos de evolução mensal, gastos por categoria e compare períodos. Receba notificações de saldo baixo, metas a expirar e lembretes de empréstimos.",
   },
 ]
 

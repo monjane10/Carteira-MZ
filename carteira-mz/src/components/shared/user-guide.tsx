@@ -2,68 +2,74 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, BookOpen, ChevronRight, LayoutDashboard, Wallet, ArrowRightLeft, Handshake, Target, BarChart3, PiggyBank, ListOrdered, Settings, HelpCircle } from "lucide-react"
+import { X, BookOpen, ChevronRight, LayoutDashboard, Wallet, ArrowRightLeft, Handshake, Target, BarChart3, PiggyBank, ListOrdered, Bell, Settings, HelpCircle } from "lucide-react"
 
 const sections = [
   {
     id: "dashboard",
     icon: LayoutDashboard,
     title: "Dashboard",
-    content: "Visão geral das suas finanças com gráficos de evolução mensal e gastos por categoria. Navegue entre meses usando as setas ao lado do mês. O botão \"Hoje\" aparece quando está num mês anterior.",
+    content: "Visão geral das suas finanças com gráficos de evolução mensal e gastos por categoria. Navegue entre meses usando as setas ao lado do título do mês. O botão \"Hoje\" aparece quando está num mês anterior para voltar rapidamente. Os cards de resumo mostram saldo total, receitas, despesas e poupança do mês.",
   },
   {
     id: "contas",
     icon: Wallet,
     title: "Contas",
-    content: "Registe as suas contas bancárias, carteiras móveis (M-Pesa, eMola), dinheiro físico e outros. Cada conta mostra o saldo actual. Pode editar o tipo e instituição a qualquer momento. As contas são usadas em transacções, transferências e empréstimos.",
+    content: "Registe contas bancárias, carteiras móveis (M-Pesa, eMola), dinheiro físico, poupanças ou investimentos. Cada conta exibe o saldo actualizado automaticamente com cada transacção. Pode editar o tipo e a instituição a qualquer momento. Use o saldo total no topo para ter uma visão consolidada do seu património.",
   },
   {
     id: "transacoes",
     icon: ArrowRightLeft,
     title: "Transacções",
-    content: "Registe receitas e despesas. Escolha o tipo (Receita/Despesa), conta, categoria, valor e data. Pode marcar como recorrente. As transacções afectam automaticamente o saldo da conta seleccionada.",
+    content: "Registe receitas (salário, freelance, gorjetas) e despesas (alimentação, transporte, água, luz). Escolha a conta, categoria, valor e data. Transacções futuras aparecem com um ícone de calendário. Pode marcar como recorrente para despesas fixas como renda ou mensalidades.",
   },
   {
     id: "transferencias",
     icon: ArrowRightLeft,
     title: "Transferências",
-    content: "Transfira valores entre as suas contas. A transferência é descontada da conta de origem e adicionada à conta de destino automaticamente. Pode incluir uma taxa (ex: custo de levantamento).",
+    content: "Transfira valores entre as suas contas — por exemplo, do M-Pesa para o banco ou do dinheiro físico para a poupança. O valor é descontado automaticamente da conta de origem e adicionado à de destino. Pode incluir uma taxa (ex: custo de levantamento) que será registada como despesa.",
   },
   {
     id: "emprestimos",
     icon: Handshake,
     title: "Empréstimos",
-    content: "Registe empréstimos concedidos (você emprestou) ou obtidos (você pediu). Acompanhe o valor pendente, pagamentos realizados e datas de vencimento. Ao registar um pagamento, o saldo do empréstimo é actualizado automaticamente.",
+    content: "Registe empréstimos concedidos (você emprestou a alguém) ou obtidos (você pediu a alguém). Acompanhe o valor pendente, pagamentos realizados, juros e datas de vencimento. Ao registar um pagamento, o saldo do empréstimo é actualizado. Empréstimos vencidos são destacados a vermelho.",
   },
   {
     id: "metas",
     icon: Target,
     title: "Metas",
-    content: "Defina objectivos financeiros como poupança para viagem, fundo de emergência ou qualquer outro. Acompanhe o progresso com contribuições. Ao adicionar uma contribuição, o valor é descontado da conta associada.",
+    content: "Defina objectivos financeiros como poupança para viagem, fundo de emergência, entrada para casa ou qualquer outro. Escolha uma conta associada, defina o valor alvo e a data limite. Adicione contribuições regularmente — o valor é descontado automaticamente da conta escolhida e o progresso é exibido com barra percentual.",
   },
   {
     id: "orcamentos",
     icon: PiggyBank,
     title: "Orçamentos",
-    content: "Crie orçamentos mensais por categoria para controlar gastos. Defina um limite e acompanhe quanto já gastou. O progresso é actualizado automaticamente com base nas transacções do período.",
+    content: "Crie orçamentos mensais por categoria para controlar gastos. Defina um limite (ex: 5.000 MZN para alimentação) e veja em tempo real quanto já gastou. Quando o orçamento está quase a esgotar (80%), recebe uma notificação. O progresso é actualizado automaticamente com base nas transacções do mês.",
   },
   {
     id: "categorias",
     icon: ListOrdered,
     title: "Categorias",
-    content: "Organize as suas transacções por categorias (Alimentação, Transporte, Salário, etc.). Pode criar categorias personalizadas com ícone e cor. As categorias predefinidas já vêm configuradas.",
+    content: "Organize as suas transacções por categorias como Alimentação, Transporte, Salário, Água/Luz, Saúde, Educação, Lazer e mais. Pode criar categorias personalizadas com ícone e cor à sua escolha. As categorias predefinidas já vêm configuradas para começar a usar imediatamente.",
   },
   {
     id: "relatorios",
     icon: BarChart3,
     title: "Relatórios",
-    content: "Visualize relatórios detalhados sobre as suas finanças com filtros por período, conta e categoria. Útil para análise mensal, anual ou personalizada.",
+    content: "Visualize relatórios detalhados sobre as suas finanças com filtros por período (mês, trimestre, ano), conta e categoria. Compare períodos para ver evolução. Útil para preparar o orçamento do próximo mês ou fazer balanço anual. Os gráficos podem ser exportados.",
+  },
+  {
+    id: "notificacoes",
+    icon: Bell,
+    title: "Notificações",
+    content: "Receba alertas sobre saldo baixo, metas a expirar, empréstimos por pagar, orçamentos quase esgotados e transacções recorrentes. As notificações podem ser marcadas como lidas individualmente ou todas de uma vez. Toque no sino no cabeçalho para abrir a central de notificações.",
   },
   {
     id: "configuracoes",
     icon: Settings,
     title: "Configurações",
-    content: "Personalize a sua experiência: altere o nome, email, palavra-passe, prefira o tema escuro ou claro e gerir as suas preferências de notificação.",
+    content: "Personalize a sua experiência: altere o nome, email e palavra-passe da conta. Active o tema escuro para usar à noite. Escolha receber notificações push no browser. A sua moeda e fuso horário são configurados automaticamente para Moçambique (MZN, Africa/Maputo).",
   },
 ]
 
