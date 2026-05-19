@@ -43,19 +43,20 @@ export function OnboardingTour() {
     const done = localStorage.getItem(STORAGE_KEY)
     if (done) return
 
-    const timer = setTimeout(() => {
-      supabase
-        .from("profiles")
-        .select("onboarding_completed")
-        .single()
-        .then(({ data }) => {
-          if (!data?.onboarding_completed) {
-            setOpen(true)
-          } else {
-            localStorage.setItem(STORAGE_KEY, "true")
-          }
-        })
-        .catch(() => setOpen(true))
+    const timer = setTimeout(async () => {
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("onboarding_completed")
+          .single()
+        if (!data?.onboarding_completed) {
+          setOpen(true)
+        } else {
+          localStorage.setItem(STORAGE_KEY, "true")
+        }
+      } catch {
+        setOpen(true)
+      }
     }, 600)
 
     return () => clearTimeout(timer)
