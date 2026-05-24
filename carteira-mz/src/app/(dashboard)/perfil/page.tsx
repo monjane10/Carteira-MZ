@@ -214,14 +214,21 @@ export default function SettingsPage() {
     }
   }
 
-  return (
+      return (
     <div className="flex flex-col">
       {/* Avatar Section */}
       <div className="flex flex-col items-center pt-2 pb-5">
-        <div className="relative h-20 w-20">
-          <div className="flex h-full w-full items-center justify-center rounded-full bg-emerald-500/20 text-3xl font-bold text-emerald-600 ring-4 ring-slate-200 dark:text-emerald-400 dark:ring-slate-800/50 overflow-hidden">
+        <div className="relative h-24 w-24">
+          <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-emerald-500/15 text-4xl font-bold text-emerald-700 ring-4 ring-slate-200 dark:text-emerald-300 dark:ring-slate-800/60">
             {avatarUrl ? (
-              <Image src={avatarUrl} alt={name} fill className="object-cover" />
+              <Image
+                src={avatarUrl}
+                alt={name || "Foto de perfil"}
+                fill
+                sizes="96px"
+                className="object-cover object-center"
+                priority
+              />
             ) : (
               name ? name.charAt(0).toUpperCase() : "?"
             )}
@@ -237,7 +244,8 @@ export default function SettingsPage() {
             type="button"
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
-            className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg transition-colors hover:bg-emerald-400 disabled:opacity-60"
+            aria-label="Alterar foto de perfil"
+            className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg ring-2 ring-white transition-colors hover:bg-emerald-400 disabled:opacity-60 dark:ring-slate-950"
           >
             {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
           </button>
