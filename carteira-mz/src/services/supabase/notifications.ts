@@ -123,3 +123,50 @@ export async function createNotificationsBatch(
 
   await Promise.allSettled(promises)
 }
+
+export async function deleteNotification(id: string): Promise<void> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+
+    const res = await fetch(`/api/notifications/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error ?? "Erro ao apagar notificação")
+    }
+
+    logger.info("Notification deleted", { id })
+  } catch (e) {
+    return handleError(ENTITY, "apagar", e)
+  }
+}
+
+export async function deleteAllNotifications(): Promise<void> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) throw new Error("Sem sessão")
+
+    const res = await fetch("/api/notifications/delete-all", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error ?? "Erro ao apagar notificações")
+    }
+
+    logger.info("All notifications deleted")
+  } catch (e) {
+    return handleError(ENTITY, "apagar todas", e)
+  }
+}

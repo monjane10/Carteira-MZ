@@ -21,14 +21,14 @@ export function MonthNavigator({ year, month, onPrev, onNext, isCurrent }: Month
       <button
         type="button"
         onClick={onPrev}
-        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
+        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-700"
         aria-label="Mês anterior"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
 
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-sm font-bold text-[#0F172A] whitespace-nowrap">
+        <span className="text-sm font-bold text-[#0F172A] dark:text-white whitespace-nowrap">
           {MONTHS[month]} {year}
         </span>
         {isCurrent && (
@@ -41,7 +41,7 @@ export function MonthNavigator({ year, month, onPrev, onNext, isCurrent }: Month
       <button
         type="button"
         onClick={onNext}
-        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
+        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-700"
         aria-label="Mês seguinte"
         disabled={isCurrent}
         style={{ opacity: isCurrent ? 0.3 : 1 }}

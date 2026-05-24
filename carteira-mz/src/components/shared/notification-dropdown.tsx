@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Bell, CheckCheck, X, Info, AlertTriangle, CheckCircle, PiggyBank, ArrowRightLeft, BellOff } from "lucide-react"
+import { Bell, CheckCheck, X, Info, AlertTriangle, CheckCircle, PiggyBank, ArrowRightLeft, BellOff, Trash2 } from "lucide-react"
 import { useNotificationStore } from "@/store"
 import { formatDate } from "@/lib/utils"
 import { NotificationDetail } from "./notification-detail"
@@ -37,7 +37,7 @@ const TYPE_COLORS: Record<string, string> = {
 export function NotificationDropdown() {
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Notification | null>(null)
-  const { notifications, unreadCount, fetchNotifications, markAsRead, markAllAsRead, getUnreadCount, subscribeToRealtime } = useNotificationStore()
+  const { notifications, unreadCount, fetchNotifications, markAsRead, markAllAsRead, deleteAllNotifications, getUnreadCount, subscribeToRealtime } = useNotificationStore()
 
   useEffect(() => {
     fetchNotifications()
@@ -94,17 +94,26 @@ export function NotificationDropdown() {
                   Notificações
                 </span>
 
-                {unreadCount > 0 ? (
-                  <button
-                    onClick={markAllAsRead}
-                    className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700"
-                  >
-                    <CheckCheck className="h-3.5 w-3.5" />
-                    Marcar todas lidas
-                  </button>
-                ) : (
-                  <div className="w-20" />
-                )}
+                <div className="flex items-center gap-2">
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={markAllAsRead}
+                      className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700"
+                    >
+                      <CheckCheck className="h-3.5 w-3.5" />
+                      Marcar todas lidas
+                    </button>
+                  )}
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={deleteAllNotifications}
+                      className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Apagar todas
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto">

@@ -17,21 +17,21 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-bold text-[#0F172A]">Despesas por Categoria</h2>
+        <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Despesas por Categoria</h2>
         <Link
           href="/relatorios"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
         >
           Ver todas
         </Link>
       </div>
 
       {data.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Nenhuma despesa este mês</p>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-800">
+          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma despesa este mês</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-800">
           <div className="flex items-center gap-5">
             <div className="relative shrink-0" style={{ width: 130, height: 130 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -54,7 +54,7 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                 <p className="text-[10px] font-medium text-slate-400 leading-none">Total</p>
-                <p className="text-[10px] font-bold text-slate-900 leading-tight text-center px-0.5">
+                <p className="text-[10px] font-bold text-slate-900 dark:text-white leading-tight text-center px-0.5">
                   {formatCurrency(total)}
                 </p>
               </div>
@@ -68,9 +68,9 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                       className="h-2.5 w-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     />
-                    <span className="text-xs text-slate-600 truncate">{item.category_name}</span>
+                    <span className="text-xs text-slate-600 dark:text-slate-300 truncate">{item.category_name}</span>
                   </div>
-                  <span className="text-xs font-semibold text-slate-900 shrink-0 ml-1">
+                  <span className="text-xs font-semibold text-slate-900 dark:text-white shrink-0 ml-1">
                     {formatCurrency(item.total)}
                   </span>
                 </div>

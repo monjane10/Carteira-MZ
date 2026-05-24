@@ -26,8 +26,8 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   if (active.length === 0) {
     return (
       <div className="w-full">
-        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
-        <p className="mt-2 text-sm text-slate-500">Nenhuma conta activa</p>
+        <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Minhas Contas</h2>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Nenhuma conta activa</p>
       </div>
     )
   }
@@ -35,10 +35,10 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
+        <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Minhas Contas</h2>
         <Link
           href="/contas"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
         >
           Ver todas
         </Link>
@@ -54,7 +54,7 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <Link
                 key={account.id}
                 href={`/contas/${account.id}`}
-                className="w-[150px] shrink-0 rounded-xl border border-slate-100 bg-white px-2.5 py-2 transition-colors hover:bg-slate-50"
+                className="w-[150px] shrink-0 rounded-xl border border-slate-100 bg-white px-2.5 py-2 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:hover:bg-slate-800"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden bg-slate-50">
@@ -73,12 +73,12 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
                       />
                     )}
                   </div>
-                  <ChevronRight className="h-2.5 w-2.5 text-slate-300 shrink-0" />
+                  <ChevronRight className="h-2.5 w-2.5 text-slate-300 dark:text-slate-600 shrink-0" />
                 </div>
                 <p className="mt-1.5 text-[10px] font-medium text-slate-500 truncate">
                   {account.name}
                 </p>
-                <p className="text-[11px] font-bold text-[#0F172A] truncate">
+                <p className="text-[11px] font-bold text-[#0F172A] dark:text-white truncate">
                   {formatCurrency(account.balance)}
                 </p>
               </Link>

@@ -42,7 +42,7 @@ export function MobileGreeting() {
     <div className="flex items-center justify-between gap-4">
       <div className="min-w-0">
         <p className="text-sm font-medium text-slate-500">{greeting},</p>
-        <h1 className="truncate text-xl font-bold text-[#0F172A] mt-0.5">
+        <h1 className="truncate text-xl font-bold text-[#0F172A] dark:text-white mt-0.5">
           {userName || "Utilizador"}
         </h1>
         <p className="text-xs text-slate-400 mt-0.5 capitalize first-letter:uppercase">

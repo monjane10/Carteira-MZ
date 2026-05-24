@@ -113,5 +113,5 @@ export const NAV_ITEMS = [
   { label: "Metas", href: "/metas", icon: "Target" },
   { label: "Orçamentos", href: "/orcamentos", icon: "PieChart" },
   { label: "Relatórios", href: "/relatorios", icon: "BarChart3" },
-  { label: "Configurações", href: "/configuracoes", icon: "Settings" },
+  { label: "Perfil", href: "/perfil", icon: "User" },
 ]

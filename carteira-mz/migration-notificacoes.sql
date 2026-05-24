@@ -10,5 +10,10 @@ CREATE POLICY "Users can create own notifications"
   ON notifications FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
--- 3. Adicionar tabela notifications à publicação Realtime
+-- 3. Política RLS para permitir que utilizadores apaguem as próprias notificações
+CREATE POLICY "Users can delete own notifications"
+  ON notifications FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- 4. Adicionar tabela notifications à publicação Realtime
 ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
