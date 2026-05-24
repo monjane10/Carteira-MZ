@@ -11,6 +11,8 @@ interface NotificationState {
   fetchNotifications: () => Promise<void>
   markAsRead: (id: string) => Promise<void>
   markAllAsRead: () => Promise<void>
+  deleteNotification: (id: string) => Promise<void>
+  deleteAllNotifications: () => Promise<void>
   getUnreadCount: () => Promise<void>
   subscribeToRealtime: () => () => void
 }
@@ -73,6 +75,27 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     } catch (e) {
       console.error("Failed to mark all as read:", e)
       set({ error: "Erro ao marcar todas como lidas" })
+    }
+  },
+  deleteNotification: async (id) => {
+    try {
+      await notificationService.deleteNotification(id)
+      set(state => ({
+        notifications: state.notifications.filter(n => n.id !== id),
+        unreadCount: state.notifications.filter(n => n.id !== id && !n.is_read).length,
+      }))
+    } catch (e) {
+      console.error("Failed to delete notification:", e)
+      set({ error: "Erro ao apagar notificação" })
+    }
+  },
+  deleteAllNotifications: async () => {
+    try {
+      await notificationService.deleteAllNotifications()
+      set({ notifications: [], unreadCount: 0 })
+    } catch (e) {
+      console.error("Failed to delete all notifications:", e)
+      set({ error: "Erro ao apagar notificações" })
     }
   },
   getUnreadCount: async () => {

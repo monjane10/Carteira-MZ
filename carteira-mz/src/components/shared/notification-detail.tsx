@@ -5,7 +5,6 @@ import { Info, AlertTriangle, CheckCircle, PiggyBank, X, ArrowRightLeft, Chevron
 import type { Notification } from "@/types"
 import { formatDate } from "@/lib/utils"
 import { useNotificationStore } from "@/store"
-import { supabase } from "@/services"
 
 const TYPE_ICONS: Record<string, typeof Info> = {
   BUDGET_LIMIT: AlertTriangle,
@@ -53,7 +52,7 @@ interface NotificationDetailProps {
 
 export function NotificationDetail({ notification: n, onBack }: NotificationDetailProps) {
   const router = useRouter()
-  const { markAsRead, fetchNotifications, getUnreadCount } = useNotificationStore()
+  const { markAsRead, deleteNotification, fetchNotifications, getUnreadCount } = useNotificationStore()
   const Icon = TYPE_ICONS[n.type] ?? Info
   const action = TYPE_ACTIONS[n.type]
 
@@ -62,13 +61,7 @@ export function NotificationDetail({ notification: n, onBack }: NotificationDeta
   }
 
   const handleDelete = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    await supabase
-      .from("notifications")
-      .delete()
-      .eq("id", n.id)
-      .eq("user_id", user.id)
+    await deleteNotification(n.id)
     fetchNotifications()
     getUnreadCount()
     onBack()
