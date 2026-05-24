@@ -2,6 +2,7 @@ import { create } from "zustand"
 import type { Notification } from "@/types"
 import { notifications as notificationService, supabase } from "@/services"
 import { showBrowserNotification } from "@/lib/push-notifications"
+import { toast } from "@/components/ui/toast"
 
 interface NotificationState {
   notifications: Notification[]
@@ -84,8 +85,10 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         notifications: state.notifications.filter(n => n.id !== id),
         unreadCount: state.notifications.filter(n => n.id !== id && !n.is_read).length,
       }))
+      toast({ title: "Sucesso", description: "Notificação apagada.", variant: "success" })
     } catch (e) {
       console.error("Failed to delete notification:", e)
+      toast({ title: "Erro", description: "Não foi possível apagar a notificação.", variant: "error" })
       set({ error: "Erro ao apagar notificação" })
     }
   },
@@ -93,8 +96,10 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     try {
       await notificationService.deleteAllNotifications()
       set({ notifications: [], unreadCount: 0 })
+      toast({ title: "Sucesso", description: "Todas as notificações foram apagadas.", variant: "success" })
     } catch (e) {
       console.error("Failed to delete all notifications:", e)
+      toast({ title: "Erro", description: "Não foi possível apagar as notificações.", variant: "error" })
       set({ error: "Erro ao apagar notificações" })
     }
   },
