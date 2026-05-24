@@ -14,7 +14,7 @@ import { OnboardingTour } from "@/components/shared/onboarding-tour"
 import { supabase } from "@/services/supabase/client"
 import { requestNotificationPermission } from "@/lib/push-notifications"
 
-const mainTabs = ["/dashboard", "/contas", "/transacoes", "/metas"]
+const mainTabs = ["/dashboard", "/contas", "/transacoes", "/metas", "/perfil"]
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -71,7 +71,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         onConfirm={handleLogout}
       />
       <div className="flex-1 overflow-y-auto hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-        <main className="px-4 pt-5 pb-24">
+        <main className="px-4 pt-2 pb-24">
           {showBack && (
             <div className="mb-3">
               <BackButton />

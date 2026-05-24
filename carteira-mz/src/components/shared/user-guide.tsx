@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, BookOpen, ChevronRight, LayoutDashboard, Wallet, ArrowRightLeft, Handshake, Target, BarChart3, PiggyBank, ListOrdered, Bell, Settings, HelpCircle } from "lucide-react"
+import { X, BookOpen, ChevronRight, LayoutDashboard, Wallet, ArrowRightLeft, Handshake, Target, BarChart3, PiggyBank, ListOrdered, Bell, User, HelpCircle } from "lucide-react"
 
 const sections = [
   {
@@ -66,10 +66,10 @@ const sections = [
     content: "Receba alertas sobre saldo baixo, metas a expirar, empréstimos por pagar, orçamentos quase esgotados e transacções recorrentes. As notificações podem ser marcadas como lidas individualmente ou todas de uma vez. Toque no sino no cabeçalho para abrir a central de notificações.",
   },
   {
-    id: "configuracoes",
-    icon: Settings,
-    title: "Configurações",
-    content: "Personalize a sua experiência: altere o nome, email e palavra-passe da conta. Active o tema escuro para usar à noite. Escolha receber notificações push no browser. A sua moeda e fuso horário são configurados automaticamente para Moçambique (MZN, Africa/Maputo).",
+    id: "perfil",
+    icon: User,
+    title: "Perfil",
+    content: "Personalize a sua experiência: altere o nome, email e número de telefone. Active o tema escuro para usar à noite. Escolha receber notificações push no browser. A sua moeda e fuso horário são configurados automaticamente para Moçambique (MZN, Africa/Maputo).",
   },
 ]
 

@@ -11,13 +11,13 @@ interface MobileExpenseListProps {
 }
 
 const typeConfig: Record<TransactionType, { icon: typeof ArrowDownRight; bg: string; text: string; prefix: string }> = {
-  INCOME: { icon: ArrowUpRight, bg: "bg-emerald-50 text-emerald-500", text: "text-emerald-600", prefix: "+" },
-  EXPENSE: { icon: ArrowDownRight, bg: "bg-red-50 text-red-500", text: "text-red-500", prefix: "-" },
-  TRANSFER: { icon: ArrowLeftRight, bg: "bg-blue-50 text-blue-500", text: "text-blue-600", prefix: "" },
-  ADJUSTMENT: { icon: ArrowLeftRight, bg: "bg-slate-100 text-slate-500", text: "text-slate-600", prefix: "" },
-  LOAN_GIVEN: { icon: HandCoins, bg: "bg-orange-50 text-orange-500", text: "text-orange-600", prefix: "-" },
-  LOAN_TAKEN: { icon: HandCoins, bg: "bg-violet-50 text-violet-500", text: "text-violet-600", prefix: "+" },
-  LOAN_PAYMENT: { icon: HandCoins, bg: "bg-emerald-50 text-emerald-500", text: "text-emerald-600", prefix: "-" },
+  INCOME: { icon: ArrowUpRight, bg: "bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400", text: "text-emerald-600 dark:text-emerald-400", prefix: "+" },
+  EXPENSE: { icon: ArrowDownRight, bg: "bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400", text: "text-red-500 dark:text-red-400", prefix: "-" },
+  TRANSFER: { icon: ArrowLeftRight, bg: "bg-blue-50 text-blue-500 dark:bg-blue-500/15 dark:text-blue-400", text: "text-blue-600 dark:text-blue-400", prefix: "" },
+  ADJUSTMENT: { icon: ArrowLeftRight, bg: "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300", text: "text-slate-600 dark:text-slate-300", prefix: "" },
+  LOAN_GIVEN: { icon: HandCoins, bg: "bg-orange-50 text-orange-500 dark:bg-orange-500/15 dark:text-orange-400", text: "text-orange-600 dark:text-orange-400", prefix: "-" },
+  LOAN_TAKEN: { icon: HandCoins, bg: "bg-violet-50 text-violet-500 dark:bg-violet-500/15 dark:text-violet-400", text: "text-violet-600 dark:text-violet-400", prefix: "+" },
+  LOAN_PAYMENT: { icon: HandCoins, bg: "bg-emerald-50 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400", text: "text-emerald-600 dark:text-emerald-400", prefix: "-" },
 }
 
 export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseListProps) {
@@ -27,9 +27,9 @@ export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseLi
     return (
       <section className="w-full">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-[#0F172A]">Movimentos Recentes</h2>
+          <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Movimentos Recentes</h2>
         </div>
-        <p className="text-sm text-slate-500">Nenhum movimento registado</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum movimento registado</p>
       </section>
     )
   }
@@ -37,10 +37,10 @@ export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseLi
   return (
     <section className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-bold text-[#0F172A]">Movimentos Recentes</h2>
+        <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Movimentos Recentes</h2>
         <Link
           href="/transacoes"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
         >
           Ver todos
         </Link>
@@ -56,13 +56,13 @@ export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseLi
             <Link
               key={tx.id}
               href="/transacoes"
-              className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3.5 transition-shadow hover:shadow-sm"
+              className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3.5 transition-shadow hover:shadow-sm dark:border-slate-800 dark:bg-slate-800"
             >
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${config.bg}`}>
                 <Icon className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#0F172A] truncate">
+                <p className="text-sm font-semibold text-[#0F172A] dark:text-white truncate">
                   {tx.description || "Sem descrição"}
                 </p>
                 <p className="mt-0.5 text-xs text-slate-400">
@@ -73,7 +73,7 @@ export function MobileExpenseList({ transactions, categoryMap }: MobileExpenseLi
                 <p className={`text-sm font-bold ${config.text}`}>
                   {config.prefix}{formatCurrency(tx.amount)}
                 </p>
-                <ChevronRight className="h-4 w-4 text-slate-300" />
+                <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
               </div>
             </Link>
           )

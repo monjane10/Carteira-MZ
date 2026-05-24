@@ -52,7 +52,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
               <ArrowUp className="h-3.5 w-3.5 text-emerald-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Receitas</p>
+              <p className="text-[10px] font-medium text-slate-500 dark:text-blue-200/60 uppercase tracking-wide">Receitas</p>
               <p className="text-sm font-bold text-white truncate">
                 {showValues ? formatCurrency(summary.monthly_income) : hidden}
               </p>
@@ -66,7 +66,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
               <ArrowDown className="h-3.5 w-3.5 text-red-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Despesas</p>
+              <p className="text-[10px] font-medium text-slate-500 dark:text-blue-200/60 uppercase tracking-wide">Despesas</p>
               <p className="text-sm font-bold text-white truncate">
                 {showValues ? formatCurrency(summary.monthly_expenses) : hidden}
               </p>

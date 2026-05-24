@@ -13,7 +13,7 @@ import {
   PieChart,
   BarChart3,
   Repeat,
-  Settings,
+  User,
   X,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -29,7 +29,7 @@ const navItems = [
   { id: "orcamentos", label: "Orçamentos", icon: PieChart, href: "/orcamentos" },
   { id: "relatorios", label: "Relatórios", icon: BarChart3, href: "/relatorios" },
   { id: "recorrentes", label: "Recorrentes", icon: Repeat, href: "/recorrentes" },
-  { id: "configuracoes", label: "Configurações", icon: Settings, href: "/configuracoes" },
+  { id: "perfil", label: "Perfil", icon: User, href: "/perfil" },
 ]
 
 export function Sidebar() {

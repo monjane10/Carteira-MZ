@@ -20,7 +20,7 @@ const pageTitles: Record<string, string> = {
   orcamentos: "Orçamentos",
   relatorios: "Relatórios",
   recorrentes: "Recorrentes",
-  configuracoes: "Configurações",
+  perfil: "Perfil",
 }
 
 export function Header() {

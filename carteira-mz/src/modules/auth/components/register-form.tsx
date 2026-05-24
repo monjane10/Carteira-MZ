@@ -12,7 +12,6 @@ import { toast } from "@/hooks/use-toast"
 import { Logo } from "@/components/shared/logo"
 import { UserGuide } from "@/components/shared/user-guide"
 import { supabase } from "@/services"
-import { createNotification } from "@/services/supabase/notifications"
 
 export function RegisterForm() {
   const router = useRouter()
@@ -45,19 +44,12 @@ export function RegisterForm() {
       return
     }
 
-    const { data: { session } } = await supabase.auth.getSession()
-
-    if (session) {
-      createNotification("SYSTEM", "Bem-vindo ao Carteira MZ", "A sua conta foi criada com sucesso. Comece a organizar as suas finanças!")
-      router.push("/dashboard")
-    } else {
-      toast({
-        title: "Conta criada",
-        description: "Registo efetuado com sucesso! Verifique o seu email para confirmar.",
-        variant: "success",
-      })
-      router.push("/login")
-    }
+    toast({
+      title: "Conta criada",
+      description: "Registo efetuado com sucesso!",
+      variant: "success",
+    })
+    router.push("/login")
   }
 
   return (

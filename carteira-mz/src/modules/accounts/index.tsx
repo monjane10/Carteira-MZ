@@ -143,7 +143,8 @@ function AccountsPage() {
       {error ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="text-sm text-red-500 mb-3">{error}</p>
-          <button onClick={fetchAccounts} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
+          <button onClick={fetchAccounts} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500
+">
             Tentar novamente
           </button>
         </div>
