@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { supabase } from "@/services"
 import { useUIStore } from "@/store"
 
@@ -32,6 +33,7 @@ export default function SettingsPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarPreviewOpen, setAvatarPreviewOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState("")
   const [editEmail, setEditEmail] = useState("")
@@ -216,10 +218,38 @@ export default function SettingsPage() {
 
       return (
     <div className="flex flex-col">
+      <Dialog open={avatarPreviewOpen} onOpenChange={setAvatarPreviewOpen}>
+        <DialogContent className="w-[92vw] max-w-3xl p-3 sm:p-4">
+          {avatarUrl ? (
+            <div className="flex items-center justify-center">
+              <Image
+                src={avatarUrl}
+                alt={name || "Foto de perfil"}
+                width={1200}
+                height={1200}
+                sizes="92vw"
+                className="h-auto max-h-[70vh] w-auto max-w-full rounded-xl bg-slate-100 object-contain dark:bg-slate-900"
+              />
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+
       {/* Avatar Section */}
       <div className="flex flex-col items-center pt-2 pb-5">
         <div className="relative h-24 w-24">
-          <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-emerald-500/15 text-4xl font-bold text-emerald-700 ring-4 ring-slate-200 dark:text-emerald-300 dark:ring-slate-800/60">
+          <button
+            type="button"
+            onClick={() => avatarUrl && setAvatarPreviewOpen(true)}
+            disabled={!avatarUrl}
+            aria-label={avatarUrl ? "Ver foto de perfil" : "Sem foto de perfil"}
+            className={[
+              "relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-emerald-500/15 text-4xl font-bold text-emerald-700 ring-4 ring-slate-200 dark:text-emerald-300 dark:ring-slate-800/60",
+              avatarUrl
+                ? "cursor-zoom-in transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"
+                : "cursor-default",
+            ].join(" ")}
+          >
             {avatarUrl ? (
               <Image
                 src={avatarUrl}
@@ -232,7 +262,7 @@ export default function SettingsPage() {
             ) : (
               name ? name.charAt(0).toUpperCase() : "?"
             )}
-          </div>
+          </button>
           <input
             ref={fileInputRef}
             type="file"
