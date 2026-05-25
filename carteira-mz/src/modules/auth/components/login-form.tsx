@@ -180,6 +180,15 @@ export function LoginForm() {
               Lourenço Monjane
             </a>
           </p>
+          <div className="mt-3 flex items-center justify-center gap-3 text-xs text-slate-400">
+            <Link href="/privacy" className="hover:text-emerald-600 transition-colors">
+              Política de Privacidade
+            </Link>
+            <span className="text-slate-300">•</span>
+            <Link href="/terms" className="hover:text-emerald-600 transition-colors">
+              Termos de Serviço
+            </Link>
+          </div>
           </motion.div>
         </div>
       </div>
