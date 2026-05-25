@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import Image from "next/image"
@@ -411,6 +412,17 @@ export default function SettingsPage() {
             <Trash2 className="h-4 w-4" />
             Excluir Conta
           </button>
+        </div>
+
+        {/* Links Legais */}
+        <div className="pt-6 pb-2 flex items-center justify-center gap-3 text-xs text-slate-400">
+          <Link href="/privacy" className="hover:text-emerald-600 transition-colors">
+            Política de Privacidade
+          </Link>
+          <span className="text-slate-300 dark:text-slate-600">•</span>
+          <Link href="/terms" className="hover:text-emerald-600 transition-colors">
+            Termos de Serviço
+          </Link>
         </div>
       </div>
 
