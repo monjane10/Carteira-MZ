@@ -109,14 +109,39 @@ export async function updateAccount(
 
 export async function deleteAccount(id: string): Promise<void> {
   try {
-    await supabase.from("goal_contributions").delete().eq("account_id", id)
-    await supabase.from("loan_payments").delete().in("loan_id", (await supabase.from("loans").select("id").eq("account_id", id)).data?.map(l => l.id) ?? [])
-    await supabase.from("goals").delete().eq("account_id", id)
-    await supabase.from("loans").delete().eq("account_id", id)
-    await supabase.from("recurring_transactions").delete().eq("account_id", id)
-    await supabase.from("transfers").delete().eq("from_account_id", id)
-    await supabase.from("transfers").delete().eq("to_account_id", id)
-    await supabase.from("transactions").delete().eq("account_id", id)
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+
+    if (token) {
+      const res = await fetch(`/api/accounts/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        logger.info("Deleted account via API", { id })
+        return
+      }
+      const body = await res.json().catch(() => ({}))
+      throw new Error(body.error || "Erro ao remover conta pelo servidor")
+    }
+
+    // Fallback client-side (se nao houver sessao)
+    const checkError = (label: string, result: { error: unknown }) => {
+      if (result.error) throw new Error(`Erro ao eliminar ${label}: ${String(result.error)}`)
+    }
+
+    checkError("contribuições de metas", await supabase.from("goal_contributions").delete().eq("account_id", id))
+    const loanIds = (await supabase.from("loans").select("id").eq("account_id", id)).data?.map(l => l.id) ?? []
+    if (loanIds.length > 0) {
+      checkError("pagamentos de empréstimos", await supabase.from("loan_payments").delete().in("loan_id", loanIds))
+    }
+    checkError("metas", await supabase.from("goals").delete().eq("account_id", id))
+    checkError("empréstimos", await supabase.from("loans").delete().eq("account_id", id))
+    checkError("transacções recorrentes", await supabase.from("recurring_transactions").delete().eq("account_id", id))
+    checkError("transferências (origem)", await supabase.from("transfers").delete().eq("from_account_id", id))
+    checkError("transferências (destino)", await supabase.from("transfers").delete().eq("to_account_id", id))
+    checkError("transacções", await supabase.from("transactions").delete().eq("account_id", id))
+
     const { error } = await supabase.from("accounts").delete().eq("id", id)
     if (error) throw error
     logger.info("Deleted account", { id })
