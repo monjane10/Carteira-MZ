@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { format } from "date-fns"
 import { pt } from "date-fns/locale"
 import { supabase } from "@/services"
+import Image from "next/image"
 
 function getMozambiqueTime(): Date {
   const now = new Date()
@@ -40,13 +41,23 @@ export function MobileGreeting() {
   const firstName = userName.trim().split(/\s+/)[0] || "Utilizador"
 
   return (
-    <div className="min-w-0">
-      <h1 className="truncate text-lg font-bold leading-tight text-[#0F172A]">
-        {greeting}, {firstName}
-      </h1>
-      <p className="truncate text-xs text-slate-500 capitalize first-letter:uppercase">
-        {dateStr}
-      </p>
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <h1 className="truncate text-base font-bold leading-tight text-[#0F172A]">
+          {greeting}, {firstName}
+        </h1>
+        <p className="mt-0.5 truncate text-xs text-slate-500 capitalize first-letter:uppercase">
+          {dateStr}
+        </p>
+      </div>
+      <Image
+        src="/crescimento.png"
+        alt="Ilustração de crescimento financeiro"
+        width={112}
+        height={80}
+        priority
+        className="h-12 w-[68px] shrink-0 object-contain"
+      />
     </div>
   )
 }

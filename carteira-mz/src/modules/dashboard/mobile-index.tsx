@@ -159,7 +159,7 @@ export function MobileDashboard() {
 
   return (
     <div
-      className="flex w-full max-w-full min-w-0 flex-1 flex-col gap-2"
+      className="flex w-full max-w-full min-w-0 flex-1 flex-col gap-3.5 pt-2"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
