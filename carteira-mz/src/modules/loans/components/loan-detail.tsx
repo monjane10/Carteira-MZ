@@ -116,8 +116,8 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       <Card>
         <CardContent className="p-6">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100">
                 <User className="h-6 w-6 text-slate-600" />
               </div>
               <div>
@@ -176,7 +176,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
 
           <div className="mb-4">
             <Progress value={progress} className="mb-1" />
-            <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-slate-500">
               <span>{progress}% pago</span>
               {loan.due_date && (
                 <span className={cn("flex items-center gap-1", isOverdue && "font-medium text-red-500")}>

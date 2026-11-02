@@ -22,6 +22,14 @@ html {
   }
 }
 
+/* Itens de grelha podem encolher abaixo da largura do conteúdo (sem isto, um
+   nome ou valor longo empurra o cartão para fora do ecrã no telemóvel) */
+@layer base {
+  .grid > * {
+    min-width: 0;
+  }
+}
+
 /* dvh só existe a partir do Chromium 108: nesses browsers usa vh */
 @supports not (height: 100dvh) {
   .min-h-dvh {

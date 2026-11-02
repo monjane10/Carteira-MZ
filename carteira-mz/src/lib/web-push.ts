@@ -22,7 +22,7 @@ export interface PushSubscriptionRow {
 
 export async function sendPushNotification(
   subscription: PushSubscriptionRow,
-  payload: { title: string; body: string; url?: string },
+  payload: { title: string; body: string; url?: string; tag?: string },
 ) {
   if (!publicKey || !privateKey) return
 
@@ -53,14 +53,21 @@ export async function sendPushNotification(
 
 export async function sendPushToUser(
   subscriptions: PushSubscriptionRow[],
-  payload: { title: string; body: string; url?: string },
+  payload: { title: string; body: string; url?: string; tag?: string },
 ): Promise<string[]> {
   const expiredIds: string[] = []
 
+  // O mesmo dispositivo (endpoint) pode estar registado várias vezes: envia só uma
+  const byEndpoint = new Map<string, PushSubscriptionRow[]>()
+  for (const sub of subscriptions) {
+    byEndpoint.set(sub.endpoint, [...(byEndpoint.get(sub.endpoint) ?? []), sub])
+  }
+
   await Promise.allSettled(
-    subscriptions.map(async (sub) => {
-      const result = await sendPushNotification(sub, payload)
-      if (result?.expired) expiredIds.push(result.id)
+    [...byEndpoint.values()].map(async (subs) => {
+      const latest = subs.reduce((a, b) => (b.created_at > a.created_at ? b : a))
+      const result = await sendPushNotification(latest, payload)
+      if (result?.expired) expiredIds.push(...subs.map((s) => s.id))
     }),
   )
 

@@ -1,6 +1,6 @@
-const STATIC_CACHE = "carteira-mz-static-v2"
-const IMAGE_CACHE = "carteira-mz-images-v2"
-const NAV_CACHE = "carteira-mz-nav-v2"
+const STATIC_CACHE = "carteira-mz-static-v3"
+const IMAGE_CACHE = "carteira-mz-images-v3"
+const NAV_CACHE = "carteira-mz-nav-v3"
 
 self.addEventListener("install", (event) => {
   self.skipWaiting()
@@ -109,6 +109,8 @@ self.addEventListener("push", (event) => {
         body,
         icon: "/logo.png",
         badge: "/logo.png",
+        // A mesma notificação recebida mais de uma vez substitui a anterior em vez de se acumular
+        tag: data.tag || undefined,
         data: { url },
         vibrate: [200, 100, 200],
       })

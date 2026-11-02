@@ -46,24 +46,20 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
         )}
         onClick={onClick}
       >
-        <CardContent className="p-5">
-          <div className="mb-3 flex items-start justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                <User className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="truncate text-sm font-semibold text-slate-900">{loan.person_name}</p>
-                {loan.phone && (
-                  <p className="flex items-center gap-1 text-xs text-slate-500">
-                    <Phone className="h-3 w-3" />
-                    {loan.phone}
-                  </p>
-                )}
-              </div>
+        <CardContent className="p-4 sm:p-5">
+          <div className="mb-3 flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+              <User className="h-5 w-5" />
             </div>
-            <div className="flex shrink-0 items-start gap-1">
-              <div className="flex gap-1">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-slate-900">{loan.person_name}</p>
+              {loan.phone && (
+                <p className="flex items-center gap-1 text-xs text-slate-500">
+                  <Phone className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{loan.phone}</span>
+                </p>
+              )}
+              <div className="mt-1.5 flex flex-wrap gap-1">
                 <Badge variant={loan.type === "GIVEN" ? "info" : "warning"}>
                   {LOAN_TYPE_LABELS[loan.type]}
                 </Badge>
@@ -71,19 +67,20 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
                   {LOAN_STATUS_LABELS[loan.status]}
                 </Badge>
               </div>
-              {onDelete && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDelete()
-                  }}
-                  className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-100 [@media(hover:hover)]:opacity-0 transition-all hover:bg-red-50 hover:text-red-500 [@media(hover:hover)]:group-hover:opacity-100"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              )}
             </div>
+            {onDelete && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete()
+                }}
+                aria-label="Apagar empréstimo"
+                className="shrink-0 rounded-lg p-1.5 text-slate-500 opacity-100 [@media(hover:hover)]:opacity-0 transition-all hover:bg-red-50 hover:text-red-500 [@media(hover:hover)]:group-hover:opacity-100"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
 
           <div className="mb-3 space-y-1">
@@ -116,7 +113,7 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
 
           <Progress value={progress} className="mb-2" />
 
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-slate-500">
             <span>{progress}% pago</span>
             {loan.due_date && (
               <span className={cn("flex items-center gap-1", isOverdue && "font-medium text-red-500")}>

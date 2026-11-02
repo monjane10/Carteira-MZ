@@ -103,7 +103,7 @@ describe("sendPushToUser", () => {
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = "test-public-key"
     process.env.VAPID_PRIVATE_KEY = "test-private-key"
 
-    const sub2 = { ...mockSubscription, id: "sub-2" }
+    const sub2 = { ...mockSubscription, id: "sub-2", endpoint: "https://push.example.com/other-device" }
     const webPush = await import("web-push")
     const error = new Error("Gone")
     ;(error as { statusCode: number }).statusCode = 410
@@ -116,6 +116,41 @@ describe("sendPushToUser", () => {
     const result = await mod.sendPushToUser([mockSubscription, sub2], mockPayload)
     expect(result).toEqual(["sub-2"])
     expect(webPush.default.sendNotification).toHaveBeenCalledTimes(2)
+  })
+
+  it("sends only once per device when the same endpoint is registered several times", async () => {
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = "test-public-key"
+    process.env.VAPID_PRIVATE_KEY = "test-private-key"
+
+    const webPush = await import("web-push")
+    vi.mocked(webPush.default.sendNotification).mockResolvedValue(undefined)
+
+    const duplicates = [
+      { ...mockSubscription, id: "a", created_at: "2026-11-01T10:00:00Z" },
+      { ...mockSubscription, id: "b", created_at: "2026-11-02T10:00:00Z" },
+      { ...mockSubscription, id: "c", created_at: "2026-10-30T10:00:00Z" },
+    ]
+
+    const mod = await import("../web-push")
+    await mod.sendPushToUser(duplicates, mockPayload)
+    expect(webPush.default.sendNotification).toHaveBeenCalledTimes(1)
+  })
+
+  it("marks every duplicate of an expired device as expired", async () => {
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = "test-public-key"
+    process.env.VAPID_PRIVATE_KEY = "test-private-key"
+
+    const webPush = await import("web-push")
+    const error = new Error("Gone")
+    ;(error as { statusCode: number }).statusCode = 410
+    vi.mocked(webPush.default.sendNotification).mockRejectedValue(error)
+
+    const mod = await import("../web-push")
+    const result = await mod.sendPushToUser(
+      [{ ...mockSubscription, id: "a" }, { ...mockSubscription, id: "b" }],
+      mockPayload,
+    )
+    expect(result.sort()).toEqual(["a", "b"])
   })
 
   it("returns empty array when all succeed", async () => {

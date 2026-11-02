@@ -26,6 +26,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Campos obrigatórios: endpoint, p256dh, auth" }, { status: 400 })
     }
 
+    // Um registo por dispositivo: o browser envia o mesmo endpoint sempre que a app abre
+    const { error: cleanupError } = await supabaseAdmin
+      .from("push_subscriptions")
+      .delete()
+      .eq("endpoint", endpoint)
+    if (cleanupError) {
+      console.error("Error replacing push subscription:", cleanupError)
+      return NextResponse.json({ error: "Erro ao salvar subscrição" }, { status: 500 })
+    }
+
     const { data, error } = await supabaseAdmin
       .from("push_subscriptions")
       .insert({

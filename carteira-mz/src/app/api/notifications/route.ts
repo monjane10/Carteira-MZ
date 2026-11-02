@@ -53,6 +53,7 @@ export async function POST(request: Request) {
           title,
           body: message,
           url: targetUrl,
+          tag: data.id,
         },
       )
 
