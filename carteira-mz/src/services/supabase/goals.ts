@@ -2,6 +2,7 @@
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
 import { createNotification } from "./notifications"
+import { wasNotified, markNotified } from "@/lib/notification-throttle"
 import type { Goal, GoalContribution, NotificationType } from "@/types"
 
 const ENTITY = "meta"
@@ -133,6 +134,9 @@ export async function checkExpiringGoals(): Promise<void> {
     for (const g of goals) {
       if (g.status === "COMPLETED") continue
       if (g.target_date && g.target_date <= sevenDays && g.target_date >= today.toISOString().slice(0, 10)) {
+        const key = `goal-expiring:${g.id}:${g.target_date}`
+        if (wasNotified(key)) continue
+        markNotified(key)
         notify(
           "GOAL_EXPIRING",
           `Meta "${g.title}" a expirar`,

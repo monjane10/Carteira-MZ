@@ -2,6 +2,7 @@
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
 import { createNotification } from "./notifications"
+import { wasNotified, markNotified } from "@/lib/notification-throttle"
 import type { Budget, NotificationType } from "@/types"
 
 const ENTITY = "orcamento"
@@ -159,10 +160,17 @@ export async function checkBudgetLimits(): Promise<void> {
 
       const bCast = b as Budget & { spent: number }
       const pct = bCast.amount_limit > 0 ? Math.round((bCast.spent / bCast.amount_limit) * 100) : 0
+      const level = pct >= 100 ? 100 : pct >= 80 ? 80 : 0
+      if (level === 0) continue
 
-      if (pct >= 100) {
+      // Um aviso por nível (80% / 100%) em cada período do orçamento
+      const key = `budget:${b.id}:${b.start_date}:${level}`
+      if (wasNotified(key)) continue
+      markNotified(key)
+
+      if (level === 100) {
         notify("BUDGET_LIMIT", "Orçamento Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} atingiu ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`, "/orcamentos")
-      } else if (pct >= 80) {
+      } else {
         notify("BUDGET_LIMIT", "Orçamento Quase Esgotado", `O orçamento para ${bCast.category?.name ?? bCast.category_id} está em ${pct}% do limite (${bCast.spent}/${bCast.amount_limit} Mzn).`, "/orcamentos")
       }
     }

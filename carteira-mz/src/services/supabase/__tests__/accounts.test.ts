@@ -125,7 +125,7 @@ describe("checkLowBalances", () => {
     await checkLowBalances(500)
 
     const dayAgo = Date.now() - 25 * 60 * 60 * 1000
-    localStorage.setItem("carteira-mz-low-balance-notified", JSON.stringify({ "acc-1": dayAgo }))
+    localStorage.setItem("carteira-mz-notified", JSON.stringify({ "low-balance:acc-1": dayAgo }))
     await checkLowBalances(500)
 
     expect(mockCreateNotification).toHaveBeenCalledTimes(2)

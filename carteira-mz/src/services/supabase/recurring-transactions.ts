@@ -2,6 +2,7 @@ import { supabase } from "./client"
 import { logger } from "./logger"
 import { handleError } from "./errors"
 import { createNotification } from "./notifications"
+import { wasNotified, markNotified } from "@/lib/notification-throttle"
 import type { RecurringTransaction } from "@/types"
 
 const ENTITY = "transacao-recorrente"
@@ -113,6 +114,9 @@ export async function checkRecurringTransactions(): Promise<void> {
     for (const t of transactions) {
       if (!t.is_active) continue
       if (t.next_execution && t.next_execution <= threeDays && t.next_execution >= today.toISOString().slice(0, 10)) {
+        const key = `recurring-upcoming:${t.id}:${t.next_execution}`
+        if (wasNotified(key)) continue
+        markNotified(key)
         createNotification(
           "RECURRING_DUE",
           "Transacção Recorrente Próxima",

@@ -2,6 +2,7 @@
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
 import { createNotification } from "./notifications"
+import { wasNotified, markNotified, ONE_DAY_MS } from "@/lib/notification-throttle"
 import type { Loan, LoanPayment, NotificationType } from "@/types"
 
 const ENTITY = "emprestimo"
@@ -225,6 +226,9 @@ export async function checkOverdueLoans(): Promise<void> {
 
     for (const loan of loans) {
       if (loan.due_date && loan.due_date < today) {
+        const key = `loan-overdue:${loan.id}`
+        if (wasNotified(key, ONE_DAY_MS)) continue
+        markNotified(key)
         if (loan.type === "TAKEN") {
           notify("LOAN_DUE", "Empréstimo Vencido", `O empréstimo com ${loan.person_name} de ${loan.remaining_amount} Mzn venceu em ${loan.due_date}.`, "/emprestimos")
         } else {
