@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -16,7 +16,22 @@ const actions = [
 
 export function Fab() {
   const [open, setOpen] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const lastScrollY = useRef(0)
   const pathname = usePathname()
+
+  // Esconde ao fazer scroll para baixo (para não tapar o conteúdo) e volta ao subir
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      const delta = y - lastScrollY.current
+      if (Math.abs(delta) < 8) return
+      setHidden(delta > 0 && y > 80)
+      lastScrollY.current = y
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   if (pathname !== "/dashboard") return null
 
@@ -34,7 +49,12 @@ export function Fab() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2">
+      <div
+        className={cn(
+          "fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2 transition-all duration-200",
+          hidden && !open && "pointer-events-none translate-y-6 opacity-0"
+        )}
+      >
         <AnimatePresence>
           {open && actions.map((action, i) => {
             const Icon = action.icon
