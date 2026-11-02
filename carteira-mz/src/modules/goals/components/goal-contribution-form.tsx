@@ -103,11 +103,11 @@ export function GoalContributionForm({
               />
               {errors.amount && <p className="text-xs text-red-500">{errors.amount.message}</p>}
               {exceedsRemaining && (
-                <p className="text-xs text-amber-600 dark:text-amber-400">
+                <p className="text-xs text-amber-600">
                   O valor não pode exceder {formatCurrency(remainingAmount)}
                 </p>
               )}
-              <p className="text-xs text-slate-400">Máximo: {formatCurrency(remainingAmount)}</p>
+              <p className="text-xs text-slate-500">Máximo: {formatCurrency(remainingAmount)}</p>
             </div>
 
             <div className="space-y-2">

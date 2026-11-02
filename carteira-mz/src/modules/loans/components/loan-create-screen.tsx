@@ -100,7 +100,7 @@ export function LoanCreateScreen() {
                     <option key={type} value={type}>{LOAN_TYPE_LABELS[type]}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.type && <p className="text-xs text-red-500 mt-1">{errors.type.message}</p>}
             </div>
@@ -170,7 +170,7 @@ export function LoanCreateScreen() {
                     <option key={account.id} value={account.id}>{account.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
             </div>
 

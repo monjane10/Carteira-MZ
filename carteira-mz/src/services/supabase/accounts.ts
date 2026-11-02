@@ -150,19 +150,49 @@ export async function deleteAccount(id: string): Promise<void> {
   }
 }
 
+const LOW_BALANCE_STORAGE_KEY = "carteira-mz-low-balance-notified"
+const LOW_BALANCE_COOLDOWN_MS = 24 * 60 * 60 * 1000
+
+function readLowBalanceNotified(): Record<string, number> {
+  if (typeof window === "undefined") return {}
+  try {
+    return JSON.parse(localStorage.getItem(LOW_BALANCE_STORAGE_KEY) ?? "{}")
+  } catch {
+    return {}
+  }
+}
+
+function saveLowBalanceNotified(notified: Record<string, number>) {
+  if (typeof window === "undefined") return
+  localStorage.setItem(LOW_BALANCE_STORAGE_KEY, JSON.stringify(notified))
+}
+
+// Notifica uma vez quando o saldo fica baixo e, no máximo, uma vez por dia enquanto se mantiver baixo.
 export async function checkLowBalances(threshold = 500): Promise<void> {
   try {
     const accounts = await getAccounts()
+    const notified = readLowBalanceNotified()
+    const now = Date.now()
+
     for (const account of accounts) {
-      if (account.is_active && account.balance < threshold) {
-        await createNotification(
-          "LOW_BALANCE",
-          `Saldo baixo em ${account.name}`,
-          `O saldo da sua conta ${account.name} está abaixo de ${threshold} MZN (${account.balance} MZN). Considere fazer um depósito.`,
-          `/contas/${account.id}`,
-        )
+      const isLow = account.is_active && account.balance < threshold
+      if (!isLow) {
+        delete notified[account.id]
+        continue
       }
+      const last = notified[account.id]
+      if (last && now - last < LOW_BALANCE_COOLDOWN_MS) continue
+
+      await createNotification(
+        "LOW_BALANCE",
+        `Saldo baixo em ${account.name}`,
+        `O saldo da sua conta ${account.name} está abaixo de ${threshold} MZN (${account.balance} MZN). Considere fazer um depósito.`,
+        `/contas/${account.id}`,
+      )
+      notified[account.id] = now
     }
+
+    saveLowBalanceNotified(notified)
   } catch (e) {
     logger.warn("Failed to check low balances", { error: e })
   }

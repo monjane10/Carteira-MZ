@@ -52,7 +52,7 @@ export default function AdminContasPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-sm text-slate-400">
+      <div className="flex items-center justify-center h-64 text-sm text-slate-500">
         A carregar...
       </div>
     )
@@ -73,7 +73,7 @@ export default function AdminContasPage() {
 
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <input
             placeholder="Pesquisar por nome da conta..."
             value={searchQuery}

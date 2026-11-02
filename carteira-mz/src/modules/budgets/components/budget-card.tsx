@@ -33,8 +33,8 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
       <Card
         className={cn(
           "cursor-pointer transition-all hover:shadow-md",
-          isOverLimit && "border-red-300 dark:border-red-800",
-          isWarning && !isOverLimit && "border-amber-300 dark:border-amber-800"
+          isOverLimit && "border-red-300",
+          isWarning && !isOverLimit && "border-amber-300"
         )}
         onClick={onClick}
       >
@@ -55,10 +55,10 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
                 />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                <p className="text-sm font-semibold text-slate-900 truncate">
                   {budget.category?.name ?? "Sem categoria"}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500">
                   {BUDGET_PERIOD_LABELS[budget.period]}
                 </p>
               </div>
@@ -70,7 +70,7 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
                   e.stopPropagation()
                   onDelete()
                 }}
-                className="ml-1 rounded-lg p-1.5 text-slate-400 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-900/20 shrink-0"
+                className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -79,14 +79,14 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
 
           <div className="mb-3 space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Gasto</span>
-              <span className="font-semibold text-slate-900 dark:text-white">
+              <span className="text-slate-500">Gasto</span>
+              <span className="font-semibold text-slate-900">
                 {formatCurrency(spent)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Limite</span>
-              <span className="font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-slate-500">Limite</span>
+              <span className="font-medium text-slate-700">
                 {formatCurrency(limit)}
               </span>
             </div>
@@ -105,9 +105,9 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
             <span
               className={cn(
                 "font-medium",
-                isOverLimit && "text-red-600 dark:text-red-400",
-                isWarning && !isOverLimit && "text-amber-600 dark:text-amber-400",
-                !isWarning && !isOverLimit && "text-emerald-600 dark:text-emerald-400"
+                isOverLimit && "text-red-600",
+                isWarning && !isOverLimit && "text-amber-600",
+                !isWarning && !isOverLimit && "text-emerald-600"
               )}
             >
               {usedPercent}% usado
@@ -115,8 +115,8 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
             <span
               className={cn(
                 "font-medium",
-                isOverLimit && "text-red-600 dark:text-red-400",
-                remaining > 0 && "text-slate-500 dark:text-slate-400"
+                isOverLimit && "text-red-600",
+                remaining > 0 && "text-slate-500"
               )}
             >
               {isOverLimit

@@ -38,15 +38,15 @@ export function Header() {
   }
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-950 lg:px-6">
+    <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6">
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
-          className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 lg:hidden dark:hover:bg-slate-800 dark:hover:text-slate-300"
+          className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-slate-900">
           {pageTitles[activePage] || activePage}
         </h2>
       </div>
@@ -59,20 +59,20 @@ export function Header() {
           )}
         >
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <Input
               placeholder="Pesquisar transacções..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") handleSearch(searchValue) }}
-              className="h-9 w-48 rounded-lg border-slate-200 pl-8 text-sm dark:border-slate-800 lg:w-64"
+              className="h-9 w-48 rounded-lg border-slate-200 pl-8 text-sm lg:w-64"
             />
           </div>
         </div>
 
         <button
           onClick={() => setSearchOpen(!searchOpen)}
-          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 md:hidden dark:hover:bg-slate-800 dark:hover:text-slate-300"
+          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 md:hidden"
         >
           <Search className="h-4 w-4" />
         </button>
@@ -80,7 +80,7 @@ export function Header() {
         <NotificationDropdown />
 
         <Avatar className="h-8 w-8 cursor-pointer">
-          <AvatarFallback className="bg-slate-200 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+          <AvatarFallback className="bg-slate-200 text-xs font-medium text-slate-600">
             U
           </AvatarFallback>
         </Avatar>

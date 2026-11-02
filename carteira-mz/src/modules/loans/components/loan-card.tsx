@@ -42,20 +42,20 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
       <Card
         className={cn(
           "cursor-pointer transition-all hover:shadow-md",
-          isOverdue && "border-red-300 dark:border-red-800"
+          isOverdue && "border-red-300"
         )}
         onClick={onClick}
       >
         <CardContent className="p-5">
           <div className="mb-3 flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-900 dark:text-white">{loan.person_name}</p>
+                <p className="text-sm font-semibold text-slate-900">{loan.person_name}</p>
                 {loan.phone && (
-                  <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+                  <p className="flex items-center gap-1 text-xs text-slate-500">
                     <Phone className="h-3 w-3" />
                     {loan.phone}
                   </p>
@@ -78,7 +78,7 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
                     e.stopPropagation()
                     onDelete()
                   }}
-                  className="ml-1 rounded-lg p-1.5 text-slate-400 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-900/20"
+                  className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -88,25 +88,25 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
 
           <div className="mb-3 space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Total</span>
-              <span className="font-semibold text-slate-900 dark:text-white">
+              <span className="text-slate-500">Total</span>
+              <span className="font-semibold text-slate-900">
                 {formatCurrency(loan.total_amount)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Pago</span>
-              <span className="font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="text-slate-500">Pago</span>
+              <span className="font-medium text-emerald-600">
                 {formatCurrency(loan.paid_amount)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Restante</span>
+              <span className="text-slate-500">Restante</span>
               <span
                 className={cn(
                   "font-medium",
                   loan.remaining_amount > 0
-                    ? "text-red-600 dark:text-red-400"
-                    : "text-emerald-600 dark:text-emerald-400"
+                    ? "text-red-600"
+                    : "text-emerald-600"
                 )}
               >
                 {formatCurrency(loan.remaining_amount)}
@@ -116,7 +116,7 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
 
           <Progress value={progress} className="mb-2" />
 
-          <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center justify-between text-xs text-slate-500">
             <span>{progress}% pago</span>
             {loan.due_date && (
               <span className={cn("flex items-center gap-1", isOverdue && "font-medium text-red-500")}>

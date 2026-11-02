@@ -94,7 +94,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button
                 type="button"
                 onClick={() => setSidebarOpen(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-gray-50 transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-gray-50 transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="3" y1="6" x2="21" y2="6" />
@@ -104,9 +104,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </button>
             )}
             <span className="h-6 px-2.5 rounded-full bg-emerald-500 text-white text-[11px] font-semibold flex items-center">Admin</span>
-            <span className="text-sm text-slate-400">Painel Administrativo</span>
+            <span className="text-sm text-slate-500">Painel Administrativo</span>
           </div>
-          <button onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-500 transition-colors">
+          <button onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-red-500 transition-colors">
             <LogOut className="h-4 w-4" />
             Sair
           </button>

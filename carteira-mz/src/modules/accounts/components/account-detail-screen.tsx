@@ -178,36 +178,36 @@ export function AccountDetailScreen() {
             <h2 className="text-xl font-bold text-[#0F172A]">{account.name}</h2>
             <p className="text-sm text-slate-500 mt-1">{ACCOUNT_TYPE_LABELS[account.type] ?? account.type}</p>
             <p className="text-3xl font-bold text-[#0F172A] mt-4">{formatCurrency(account.balance)}</p>
-            <p className="text-xs text-slate-400 mt-1">{account.currency === "USD" ? "Dólar Americano" : "Metical Moçambicano"}</p>
+            <p className="text-xs text-slate-500 mt-1">{account.currency === "USD" ? "Dólar Americano" : "Metical Moçambicano"}</p>
           </div>
 
           <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <Building2 className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Instituição</p>
+                <p className="text-[11px] text-slate-500 font-medium">Instituição</p>
                 <p className="text-sm font-bold text-[#0F172A] truncate mt-0.5">
                   {account.institution?.name ?? account.name}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <div className="h-4 w-4 rounded-full border-2 border-slate-300" style={{ backgroundColor: accentColor }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Tipo</p>
+                <p className="text-[11px] text-slate-500 font-medium">Tipo</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{ACCOUNT_TYPE_LABELS[account.type] ?? account.type}</p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <Wallet className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Saldo Inicial</p>
+                <p className="text-[11px] text-slate-500 font-medium">Saldo Inicial</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{formatCurrency(account.initial_balance)}</p>
               </div>
             </div>
@@ -244,7 +244,7 @@ export function AccountDetailScreen() {
             className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto"
           >
             <h3 className="text-lg font-bold text-[#0F172A] text-center mb-1">Editar Conta</h3>
-            <p className="text-xs text-slate-400 text-center mb-6">Altere os dados da sua conta</p>
+            <p className="text-xs text-slate-500 text-center mb-6">Altere os dados da sua conta</p>
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Tipo</label>

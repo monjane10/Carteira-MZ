@@ -97,7 +97,7 @@ export function BudgetCreateScreen() {
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.category_id && <p className="text-xs text-red-500 mt-1">{errors.category_id.message}</p>}
             </div>
@@ -129,7 +129,7 @@ export function BudgetCreateScreen() {
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
             </div>
 

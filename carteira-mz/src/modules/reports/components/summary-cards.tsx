@@ -28,9 +28,9 @@ export function SummaryCards({ summary, loading }: SummaryCardsProps) {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950"
+            className="rounded-xl border border-slate-200 bg-white p-5"
           >
-            <p className="text-xs text-slate-400">Sem dados</p>
+            <p className="text-xs text-slate-500">Sem dados</p>
           </div>
         ))}
       </div>

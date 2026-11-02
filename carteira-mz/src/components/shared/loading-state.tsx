@@ -26,7 +26,7 @@ export function LoadingState({ type = "card" }: LoadingStateProps) {
   if (type === "table") {
     return (
       <div className="space-y-2">
-        <div className="flex gap-4 border-b border-slate-200 pb-3 dark:border-slate-800">
+        <div className="flex gap-4 border-b border-slate-200 pb-3">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-4 flex-1" />
           ))}
@@ -66,7 +66,7 @@ export function LoadingState({ type = "card" }: LoadingStateProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950",
+        "rounded-xl border border-slate-200 bg-white p-6",
         "space-y-4"
       )}
     >

@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-[#0F172A] block">Email</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 18, height: 18 }} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 18, height: 18 }} />
                 <input
                   type="email"
                   value={email}
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-[#0F172A] block">Senha</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 18, height: 18 }} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 18, height: 18 }} />
                 <input
                   type="password"
                   value={password}
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
+          <p className="text-center text-xs text-slate-500 mt-6">
             Apenas administradores autorizados
           </p>
         </motion.div>

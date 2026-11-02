@@ -10,7 +10,7 @@ export function BackButton() {
     <button
       type="button"
       onClick={() => router.back()}
-      className="inline-flex items-center gap-0.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors dark:text-emerald-400 dark:hover:text-emerald-300"
+      className="inline-flex items-center gap-0.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
     >
       <ChevronLeft className="h-5 w-5" />
       Voltar

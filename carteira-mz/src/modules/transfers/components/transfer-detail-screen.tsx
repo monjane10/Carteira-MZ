@@ -124,41 +124,41 @@ export function TransferDetailScreen() {
 
           <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <Calendar className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Data</p>
+                <p className="text-[11px] text-slate-500 font-medium">Data</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">
                   {new Date(transfer.transfer_date).toLocaleDateString("pt-MZ")}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-50 text-red-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-50 text-red-500 shrink-0">
                 <ArrowRightLeft className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Origem</p>
+                <p className="text-[11px] text-slate-500 font-medium">Origem</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.from_account?.name ?? "—"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 shrink-0">
                 <ArrowRightLeft className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Destino</p>
+                <p className="text-[11px] text-slate-500 font-medium">Destino</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.to_account?.name ?? "—"}</p>
               </div>
             </div>
             {transfer.fee > 0 && (
               <div className="flex items-center gap-3.5 px-4 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                   <Percent className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-slate-400 font-medium">Taxa</p>
+                  <p className="text-[11px] text-slate-500 font-medium">Taxa</p>
                   <p className="text-sm font-bold text-[#0F172A] mt-0.5">{formatCurrency(transfer.fee)}</p>
                 </div>
               </div>

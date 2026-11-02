@@ -75,7 +75,7 @@ export function TransferCreateScreen() {
         </div>
         <div className="flex-1 flex flex-col items-center justify-center px-8 pb-20 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 mb-4">
-            <Building2 className="h-8 w-8 text-slate-400" />
+            <Building2 className="h-8 w-8 text-slate-500" />
           </div>
           <h2 className="text-lg font-bold text-[#0F172A] mb-2">Nenhuma conta criada</h2>
           <p className="text-sm text-slate-500 mb-6 max-w-xs">
@@ -122,7 +122,7 @@ export function TransferCreateScreen() {
                     <option key={a.id} value={a.id} disabled={a.id === toAccount}>{a.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.from_account_id && <p className="text-xs text-red-500 mt-1">{errors.from_account_id.message}</p>}
             </div>
@@ -142,7 +142,7 @@ export function TransferCreateScreen() {
                     <option key={a.id} value={a.id} disabled={a.id === fromAccount}>{a.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.to_account_id && <p className="text-xs text-red-500 mt-1">{errors.to_account_id.message}</p>}
             </div>

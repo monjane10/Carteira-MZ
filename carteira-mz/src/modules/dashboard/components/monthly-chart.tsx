@@ -18,8 +18,8 @@ interface MonthlyChartProps {
 
 export function MonthlyChart({ data }: MonthlyChartProps) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
-      <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+    <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <h3 className="mb-4 text-sm font-semibold text-slate-900">
         Evolução Mensal
       </h3>
       <div className="h-[280px] w-full">

@@ -124,7 +124,7 @@ function GoalsPage() {
       {error ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="text-sm text-red-500 mb-3">{error}</p>
-          <button onClick={fetchGoals} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500">
+          <button onClick={fetchGoals} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
             Tentar novamente
           </button>
         </div>
@@ -136,8 +136,8 @@ function GoalsPage() {
         </div>
       ) : goals.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-center">
-          <Target className="h-12 w-12 text-slate-400 mb-4" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma meta criada.</p>
+          <Target className="h-12 w-12 text-slate-500 mb-4" />
+          <p className="text-sm text-slate-500">Nenhuma meta criada.</p>
         </div>
       ) : (
         <>

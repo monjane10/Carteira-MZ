@@ -24,11 +24,11 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
-        <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 className="mb-4 text-sm font-semibold text-slate-900">
           Despesas por Categoria
         </h3>
-        <div className="flex h-[280px] items-center justify-center text-sm text-slate-400">
+        <div className="flex h-[280px] items-center justify-center text-sm text-slate-500">
           Nenhuma despesa no período
         </div>
       </div>
@@ -36,8 +36,8 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
-      <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+    <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <h3 className="mb-4 text-sm font-semibold text-slate-900">
         Despesas por Categoria
       </h3>
       <div className="h-[280px] w-full">
@@ -85,11 +85,11 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
                     d.category_color ?? DEFAULT_COLORS[i % DEFAULT_COLORS.length],
                 }}
               />
-              <span className="text-slate-600 dark:text-slate-400">
+              <span className="text-slate-600">
                 {d.category_name}
               </span>
             </div>
-            <span className="font-medium text-slate-900 dark:text-white">
+            <span className="font-medium text-slate-900">
               {d.percentage.toFixed(1)}%
             </span>
           </div>

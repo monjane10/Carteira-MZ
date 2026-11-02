@@ -11,8 +11,6 @@ import {
   Globe,
   Edit3,
   Trash2,
-  Sun,
-  Moon,
   Lock,
   LogOut,
   Camera,
@@ -23,7 +21,6 @@ import { toast } from "@/hooks/use-toast"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { supabase } from "@/services"
-import { useUIStore } from "@/store"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -44,8 +41,6 @@ export default function SettingsPage() {
   const [deleting, setDeleting] = useState(false)
   const [showLogout, setShowLogout] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
-  const theme = useUIStore((s) => s.theme)
-  const toggleTheme = useUIStore((s) => s.toggleTheme)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -229,7 +224,7 @@ export default function SettingsPage() {
                 width={1200}
                 height={1200}
                 sizes="92vw"
-                className="h-auto max-h-[70vh] w-auto max-w-full rounded-xl bg-slate-100 object-contain dark:bg-slate-900"
+                className="h-auto max-h-[70vh] w-auto max-w-full rounded-xl bg-slate-100 object-contain"
               />
             </div>
           ) : null}
@@ -245,9 +240,9 @@ export default function SettingsPage() {
             disabled={!avatarUrl}
             aria-label={avatarUrl ? "Ver foto de perfil" : "Sem foto de perfil"}
             className={[
-              "relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-emerald-500/15 text-4xl font-bold text-emerald-700 ring-4 ring-slate-200 dark:text-emerald-300 dark:ring-slate-800/60",
+              "relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-emerald-500/15 text-4xl font-bold text-emerald-700 ring-4 ring-slate-200",
               avatarUrl
-                ? "cursor-zoom-in transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"
+                ? "cursor-zoom-in transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 : "cursor-default",
             ].join(" ")}
           >
@@ -276,18 +271,18 @@ export default function SettingsPage() {
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
             aria-label="Alterar foto de perfil"
-            className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg ring-2 ring-white transition-colors hover:bg-emerald-400 disabled:opacity-60 dark:ring-slate-950"
+            className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg ring-2 ring-white transition-colors hover:bg-emerald-400 disabled:opacity-60"
           >
             {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
           </button>
         </div>
-        <p className="mt-3 text-lg font-bold text-slate-900 dark:text-slate-100">{name || "Carregando..."}</p>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{email}</p>
+        <p className="mt-3 text-lg font-bold text-slate-900">{name || "Carregando..."}</p>
+        <p className="text-xs text-slate-500 mt-0.5">{email}</p>
 
         <button
           type="button"
           onClick={handleEditClick}
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50"
         >
           <Edit3 className="h-3.5 w-3.5" />
           Editar Perfil
@@ -297,27 +292,27 @@ export default function SettingsPage() {
       <div className="space-y-4">
         {/* Informações Pessoais */}
         <div>
-          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             Informações Pessoais
           </p>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800/60 dark:bg-slate-900/40">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <div className="flex items-center gap-3.5 px-4 py-3.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 shrink-0">
                 <User className="h-4.5 w-4.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Nome</p>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate mt-0.5">{name}</p>
+                <p className="text-[11px] text-slate-500 font-medium">Nome</p>
+                <p className="text-sm font-semibold text-slate-900 truncate mt-0.5">{name}</p>
               </div>
             </div>
-            <div className="mx-4 h-px bg-slate-200 dark:bg-slate-800/50" />
+            <div className="mx-4 h-px bg-slate-200" />
             <div className="flex items-center gap-3.5 px-4 py-3.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 shrink-0">
                 <Mail className="h-4.5 w-4.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Email</p>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate mt-0.5">{email}</p>
+                <p className="text-[11px] text-slate-500 font-medium">Email</p>
+                <p className="text-sm font-semibold text-slate-900 truncate mt-0.5">{email}</p>
               </div>
             </div>
           </div>
@@ -325,79 +320,58 @@ export default function SettingsPage() {
 
         {/* Preferências */}
         <div>
-          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             Preferências
           </p>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800/60 dark:bg-slate-900/40">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <div className="flex items-center gap-3.5 px-4 py-3.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 shrink-0">
                 <Globe className="h-4.5 w-4.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Moeda</p>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-0.5">
+                <p className="text-[11px] text-slate-500 font-medium">Moeda</p>
+                <p className="text-sm font-semibold text-slate-900 mt-0.5">
                   {currency === "MZN" ? "MZN (MT)" : "USD ($)"}
                 </p>
               </div>
             </div>
-            <div className="mx-4 h-px bg-slate-200 dark:bg-slate-800/50" />
-            <button
-              type="button"
-              onClick={() => toggleTheme()}
-              className="flex items-center gap-3.5 px-4 py-3.5 w-full text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 shrink-0">
-                {theme === "dark" ? (
-                  <Moon className="h-4.5 w-4.5" />
-                ) : (
-                  <Sun className="h-4.5 w-4.5" />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Tema</p>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-0.5">
-                  {theme === "dark" ? "Escuro" : "Claro"}
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600" />
-            </button>
           </div>
         </div>
 
         {/* Segurança */}
         <div>
-          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+          <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             Segurança
           </p>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800/60 dark:bg-slate-900/40">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <button
               type="button"
               onClick={() => router.push("/reset-password")}
-              className="flex items-center gap-3.5 px-4 py-3.5 w-full text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
+              className="flex items-center gap-3.5 px-4 py-3.5 w-full text-left transition-colors hover:bg-slate-50"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 shrink-0">
                 <Lock className="h-4.5 w-4.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Palavra-passe</p>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-0.5">Alterar senha</p>
+                <p className="text-[11px] text-slate-500 font-medium">Palavra-passe</p>
+                <p className="text-sm font-semibold text-slate-900 mt-0.5">Alterar senha</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600" />
+              <ChevronRight className="h-4 w-4 text-slate-500" />
             </button>
-            <div className="mx-4 h-px bg-slate-200 dark:bg-slate-800/50" />
+            <div className="mx-4 h-px bg-slate-200" />
             <button
               type="button"
               onClick={() => setShowLogout(true)}
-              className="flex items-center gap-3.5 px-4 py-3.5 w-full text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
+              className="flex items-center gap-3.5 px-4 py-3.5 w-full text-left transition-colors hover:bg-slate-50"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-red-500 dark:bg-slate-800 dark:text-red-400/70 shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-red-500 shrink-0">
                 <LogOut className="h-4.5 w-4.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-500 dark:text-slate-500 font-medium">Sessão</p>
-                <p className="text-sm font-semibold text-red-600 dark:text-red-400/80 mt-0.5">Terminar sessão</p>
+                <p className="text-[11px] text-slate-500 font-medium">Sessão</p>
+                <p className="text-sm font-semibold text-red-600 mt-0.5">Terminar sessão</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600" />
+              <ChevronRight className="h-4 w-4 text-slate-500" />
             </button>
           </div>
         </div>
@@ -407,7 +381,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setShowDelete(true)}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-950/40"
+            className="w-full flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
           >
             <Trash2 className="h-4 w-4" />
             Excluir Conta
@@ -415,11 +389,11 @@ export default function SettingsPage() {
         </div>
 
         {/* Links Legais */}
-        <div className="pt-6 pb-2 flex items-center justify-center gap-3 text-xs text-slate-400">
+        <div className="pt-6 pb-2 flex items-center justify-center gap-3 text-xs text-slate-500">
           <Link href="/privacy" className="hover:text-emerald-600 transition-colors">
             Política de Privacidade
           </Link>
-          <span className="text-slate-300 dark:text-slate-600">•</span>
+          <span className="text-slate-300">•</span>
           <Link href="/terms" className="hover:text-emerald-600 transition-colors">
             Termos de Serviço
           </Link>
@@ -452,56 +426,56 @@ export default function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+            className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
           >
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 text-center mb-1">
+            <h3 className="text-lg font-bold text-slate-900 text-center mb-1">
               Editar Perfil
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 text-center mb-6">
+            <p className="text-xs text-slate-500 text-center mb-6">
               Actualize a sua informação pessoal
             </p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 block mb-1.5">
                   Nome Completo
                 </label>
                 <input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100 dark:placeholder:text-slate-500"
+                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 block mb-1.5">
                   Email
                 </label>
                 <input
                   type="email"
                   value={editEmail}
                   onChange={(e) => setEditEmail(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100 dark:placeholder:text-slate-500"
+                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 block mb-1.5">
                   Telefone
                 </label>
                 <input
                   type="text"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100 dark:placeholder:text-slate-500"
+                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 block mb-1.5">
                   Moeda
                 </label>
                 <select
                   value={editCurrency}
                   onChange={(e) => setEditCurrency(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors appearance-none dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100"
+                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors appearance-none"
                 >
                   <option value="MZN">MZN (MT)</option>
                   <option value="USD">USD ($)</option>
@@ -512,7 +486,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex-1 h-11 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/30 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+                className="flex-1 h-11 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
               >
                 Cancelar
               </button>

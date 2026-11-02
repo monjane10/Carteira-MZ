@@ -115,7 +115,7 @@ export function UserGuide() {
                 <button
                   type="button"
                   onClick={() => { setOpen(false); setSelected(null) }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>

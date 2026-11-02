@@ -131,7 +131,7 @@ function ReportsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <p className="text-sm text-red-500 mb-3">{error}</p>
-        <button onClick={() => setRefreshKey((k) => k + 1)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500">
+        <button onClick={() => setRefreshKey((k) => k + 1)} className="h-10 px-4 rounded-xl bg-[#0F172A] text-white text-sm font-medium hover:bg-[#1E293B] transition-colors">
           Tentar novamente
         </button>
       </div>
@@ -157,15 +157,15 @@ function ReportsPage() {
               ))}
             </SelectContent>
           </Select>
-          <div className="flex rounded-lg border border-slate-200 p-0.5 dark:border-slate-800">
+          <div className="flex rounded-lg border border-slate-200 p-0.5">
             {(["3", "6", "12", "custom"] as DateRange[]).map((range) => (
               <button
                 key={range}
                 onClick={() => setDateRange(range)}
                 className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
                   dateRange === range
-                    ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {range === "custom" ? "Personalizado" : `${range}m`}
@@ -180,7 +180,7 @@ function ReportsPage() {
       </PageHeader>
 
       {dateRange === "custom" && (
-        <div className="flex flex-wrap gap-3 items-end p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex flex-wrap gap-3 items-end p-4 rounded-xl border border-slate-200 bg-slate-50">
           <div>
             <label className="block text-xs font-medium text-slate-500 mb-1">De</label>
             <Input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-40" />
@@ -210,12 +210,12 @@ function ReportsPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 overflow-hidden"
+          className="rounded-xl border border-slate-200 bg-white overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Transacções Recentes</h3>
+          <div className="px-5 py-4 border-b border-slate-100">
+            <h3 className="text-sm font-semibold text-slate-900">Transacções Recentes</h3>
           </div>
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-slate-100">
             {recentTransactions.map((tx) => (
               <div key={tx.id} className="flex items-center gap-3 px-5 py-3">
                 <span className={`flex h-8 w-8 items-center justify-center rounded-full ${
@@ -224,8 +224,8 @@ function ReportsPage() {
                   {tx.type === "INCOME" ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{tx.description || tx.category?.name || "Sem descrição"}</p>
-                  <p className="text-xs text-slate-400">{formatDate(tx.transaction_date)}</p>
+                  <p className="text-sm font-medium text-slate-900 truncate">{tx.description || tx.category?.name || "Sem descrição"}</p>
+                  <p className="text-xs text-slate-500">{formatDate(tx.transaction_date)}</p>
                 </div>
                 <span className={`text-sm font-bold ${tx.type === "INCOME" ? "text-emerald-600" : "text-red-600"}`}>
                   {tx.type === "INCOME" ? "+" : "-"}{formatCurrency(tx.amount)}
