@@ -1,12 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Plus } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { LoadingState } from "@/components/shared/loading-state"
-import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { CategoryList } from "./components/category-list"
 import { CategoryForm } from "./components/category-form"

@@ -80,7 +80,7 @@ export default function SettingsPage() {
         throw new Error("Bucket 'avatars' não encontrado. Cria-o no Supabase Storage.")
       }
 
-      const { data: uploadData, error: uploadError } = await avatarBucket.upload(filePath, file)
+      const { error: uploadError } = await avatarBucket.upload(filePath, file)
 
       if (uploadError) {
         console.error("Upload error detail:", JSON.stringify(uploadError, null, 2))

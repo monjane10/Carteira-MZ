@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingDown, Award, TrendingUp } from "lucide-react"
+import { TrendingDown, Award } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import type { DashboardSummary, CategorySpending } from "@/types"
 

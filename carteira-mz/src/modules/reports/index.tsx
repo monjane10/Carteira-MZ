@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
-import { Download, TrendingUp, TrendingDown, ChevronDown, Filter, Calendar } from "lucide-react"
+import { Download, TrendingUp, TrendingDown } from "lucide-react"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
 import { dashboard as dashboardService, accounts as accountService } from "@/services"
-import { formatCurrency, formatDate, cn } from "@/lib/utils"
+import { formatCurrency, formatDate } from "@/lib/utils"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Account } from "@/types"
 import {
   Select,
@@ -43,6 +43,8 @@ function ReportsPage() {
   useEffect(() => {
     accountService.getAccounts().then(setAccounts)
   }, [])
+
+  const waitingForCustomRange = dateRange === "custom" && !(customFrom && customTo)
 
   useEffect(() => {
     let cancelled = false
@@ -85,13 +87,12 @@ function ReportsPage() {
         if (!cancelled) setLoading(false)
       }
     }
-    if (dateRange !== "custom" || (customFrom && customTo)) {
-      load()
-    } else {
-      setLoading(false)
-    }
+    if (!waitingForCustomRange) load()
     return () => { cancelled = true }
-  }, [dateRange, customFrom, customTo, accountFilter, refreshKey])
+  }, [dateRange, customFrom, customTo, accountFilter, refreshKey, waitingForCustomRange])
+
+  // Com intervalo personalizado incompleto não há nada a carregar
+  const showLoading = loading && !waitingForCustomRange
 
   const handleExport = () => {
     if (!evolution.length && !expenseSpending.length) {
@@ -192,16 +193,16 @@ function ReportsPage() {
         </div>
       )}
 
-      <SummaryCards summary={summary} loading={loading} />
+      <SummaryCards summary={summary} loading={showLoading} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <IncomeVsExpenseChart data={evolution} loading={loading} />
-        <CategoryReport data={expenseSpending} loading={loading} title="Despesas por Categoria" />
+        <IncomeVsExpenseChart data={evolution} loading={showLoading} />
+        <CategoryReport data={expenseSpending} loading={showLoading} title="Despesas por Categoria" />
       </div>
 
       {incomeSpending.length > 0 && (
         <div className="grid gap-6 lg:grid-cols-2">
-          <CategoryReport data={incomeSpending} loading={loading} title="Receitas por Categoria" />
+          <CategoryReport data={incomeSpending} loading={showLoading} title="Receitas por Categoria" />
         </div>
       )}
 
