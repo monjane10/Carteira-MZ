@@ -177,7 +177,7 @@ export function AccountDetailScreen() {
             </div>
             <h2 className="text-xl font-bold text-[#0F172A]">{account.name}</h2>
             <p className="text-sm text-slate-500 mt-1">{ACCOUNT_TYPE_LABELS[account.type] ?? account.type}</p>
-            <p className="text-3xl font-bold text-[#0F172A] mt-4">{formatCurrency(account.balance)}</p>
+            <p className="text-3xl font-bold text-[#0F172A] mt-4 break-words">{formatCurrency(account.balance)}</p>
             <p className="text-xs text-slate-500 mt-1">Metical Moçambicano</p>
           </div>
 
@@ -284,7 +284,7 @@ export function AccountDetailScreen() {
                           type="button"
                           onClick={() => setEditInstitution(inst.name)}
                           className={cn(
-                            "flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all relative",
+                            "relative flex min-w-0 flex-col items-center gap-1.5 rounded-xl border-2 px-1.5 py-3 transition-all",
                             isSelected
                               ? "border-emerald-500 bg-emerald-50/50"
                               : "border-slate-200 bg-white hover:border-slate-300"
@@ -299,7 +299,7 @@ export function AccountDetailScreen() {
                               {inst.name[0]}
                             </div>
                           )}
-                          <span className="text-[11px] font-medium text-slate-600 text-center leading-tight">
+                          <span className="w-full break-words text-[11px] font-medium text-slate-600 text-center leading-tight">
                             {inst.name}
                           </span>
                           {isSelected && (

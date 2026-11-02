@@ -92,7 +92,7 @@ export function CategoryList({
                 </div>
               </div>
             </div>
-            <div className="mt-3 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="mt-3 flex gap-2 opacity-100 [@media(hover:hover)]:opacity-0 transition-opacity [@media(hover:hover)]:group-hover:opacity-100">
               <button
                 type="button"
                 onClick={() => onEditCategory(category)}

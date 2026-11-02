@@ -40,7 +40,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
         </div>
 
         <div className="mt-2 flex items-baseline gap-1">
-          <p className="text-3xl font-bold tracking-tight text-white">
+          <p className="text-3xl font-bold tracking-tight text-white break-words">
             {showValues ? amountPart : hidden}
           </p>
           {showValues && currencyPart && (

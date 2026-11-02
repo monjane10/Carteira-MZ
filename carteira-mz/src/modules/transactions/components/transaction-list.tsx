@@ -326,7 +326,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
                       e.stopPropagation()
                       onDelete(transaction)
                     }}
-                    className="shrink-0 rounded-lg p-2 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                    className="shrink-0 rounded-lg p-2 text-slate-500 opacity-100 [@media(hover:hover)]:opacity-0 transition-all hover:bg-red-50 hover:text-red-500 [@media(hover:hover)]:group-hover:opacity-100"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

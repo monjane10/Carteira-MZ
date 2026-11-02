@@ -110,6 +110,7 @@ export function BudgetForm({ open, onOpenChange, onSubmit, editingBudget }: Budg
                 disabled={loadingData}
               >
                 <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
+                  <SelectValue placeholder="Seleccione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (

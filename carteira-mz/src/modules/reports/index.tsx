@@ -141,9 +141,9 @@ function ReportsPage() {
       className="space-y-6"
     >
       <PageHeader title="Relatórios" description="Análise detalhada das suas finanças">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Select value={accountFilter} onValueChange={setAccountFilter}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue placeholder="Conta" />
             </SelectTrigger>
             <SelectContent>
@@ -153,12 +153,12 @@ function ReportsPage() {
               ))}
             </SelectContent>
           </Select>
-          <div className="flex rounded-lg border border-slate-200 p-0.5">
+          <div className="flex flex-1 rounded-lg border border-slate-200 p-0.5 sm:flex-none">
             {(["3", "6", "12", "custom"] as DateRange[]).map((range) => (
               <button
                 key={range}
                 onClick={() => setDateRange(range)}
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-all sm:flex-none sm:px-3 ${
                   dateRange === range
                     ? "bg-slate-900 text-white"
                     : "text-slate-500 hover:text-slate-900"
@@ -176,14 +176,14 @@ function ReportsPage() {
       </PageHeader>
 
       {dateRange === "custom" && (
-        <div className="flex flex-wrap gap-3 items-end p-4 rounded-xl border border-slate-200 bg-slate-50">
-          <div>
+        <div className="grid grid-cols-2 gap-3 items-end p-4 rounded-xl border border-slate-200 bg-slate-50 sm:flex sm:flex-wrap">
+          <div className="min-w-0">
             <label className="block text-xs font-medium text-slate-500 mb-1">De</label>
-            <Input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-40" />
+            <Input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-full sm:w-40" />
           </div>
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-medium text-slate-500 mb-1">Até</label>
-            <Input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-40" />
+            <Input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-full sm:w-40" />
           </div>
         </div>
       )}

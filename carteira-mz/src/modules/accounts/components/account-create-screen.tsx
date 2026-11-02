@@ -178,7 +178,7 @@ export function AccountCreateScreen() {
           {/* Instituição */}
           <div className="mb-5">
             <p className="text-sm font-semibold text-[#0F172A] mb-3">Instituição</p>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2 min-[400px]:grid-cols-4">
               {institutions.map((inst) => {
                 const logo = getAccountLogo(inst.name)
                 const isSelected = selectedInstitution === inst.name
@@ -188,7 +188,7 @@ export function AccountCreateScreen() {
                     type="button"
                     onClick={() => setValue("institution", inst.name)}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all",
+                      "relative flex min-w-0 flex-col items-center gap-1.5 rounded-xl border-2 px-1.5 py-3 transition-all",
                       isSelected
                         ? "border-emerald-500 bg-emerald-50/50"
                         : "border-slate-200 bg-white hover:border-slate-300"
@@ -203,7 +203,7 @@ export function AccountCreateScreen() {
                         {inst.name[0]}
                       </div>
                     )}
-                    <span className="text-[11px] font-medium text-slate-600 text-center leading-tight">
+                    <span className="w-full break-words text-[11px] font-medium text-slate-600 text-center leading-tight">
                       {inst.name}
                     </span>
                     {isSelected && (

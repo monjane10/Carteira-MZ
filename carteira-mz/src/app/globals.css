@@ -5,6 +5,33 @@ html {
   color-scheme: light;
 }
 
+/* Browsers Android mais antigos (Chromium < 104) não suportam as propriedades
+   translate/scale/rotate que o Tailwind v4 usa: diálogos ficavam descentrados e
+   ícones desalinhados. Aqui o mesmo efeito com transform. */
+@supports not (translate: 0) {
+  [class*="translate-"],
+  [class*="scale-"] {
+    transform: translate(var(--tw-translate-x, 0), var(--tw-translate-y, 0))
+      scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1));
+  }
+  .rotate-45 {
+    transform: rotate(45deg);
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+}
+
+/* dvh só existe a partir do Chromium 108: nesses browsers usa vh */
+@supports not (height: 100dvh) {
+  .min-h-dvh {
+    min-height: 100vh;
+  }
+  .h-dvh {
+    height: 100vh;
+  }
+}
+
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

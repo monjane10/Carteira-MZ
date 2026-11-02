@@ -45,7 +45,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-white">
+    <div className="flex h-dvh flex-col bg-white">
       <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white pl-0 pr-4">
         <div className="flex items-center gap-2">
           <Logo size="sm" />
@@ -70,8 +70,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         description="Tem a certeza que deseja terminar a sessão?"
         onConfirm={handleLogout}
       />
-      <div className="flex-1 overflow-y-auto hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-        <main className="px-4 pt-2 pb-24">
+      <div data-scroll-container className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
+        <main className="w-full min-w-0 px-4 pt-2 pb-28">
           {showBack && (
             <div className="mb-3">
               <BackButton />

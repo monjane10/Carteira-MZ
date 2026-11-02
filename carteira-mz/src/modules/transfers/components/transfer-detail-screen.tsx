@@ -116,7 +116,7 @@ export function TransferDetailScreen() {
                 <ArrowRightLeft className="h-8 w-8 text-blue-500" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-[#0F172A]">{formatCurrency(transfer.amount)}</p>
+            <p className="text-3xl font-bold text-[#0F172A] break-words">{formatCurrency(transfer.amount)}</p>
             {transfer.description && (
               <p className="text-sm text-slate-500 mt-3">{transfer.description}</p>
             )}

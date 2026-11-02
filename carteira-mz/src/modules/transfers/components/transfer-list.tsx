@@ -69,7 +69,7 @@ export function TransferList({ transfers, loading, onClick }: TransferListProps)
                 {transfer.description ?? "Sem descrição"}
               </p>
             </div>
-            <div className="text-right">
+            <div className="shrink-0 text-right">
               <p className="text-sm font-semibold text-slate-900">
                 {formatCurrency(transfer.amount)}
               </p>

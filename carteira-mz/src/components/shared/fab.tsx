@@ -20,17 +20,20 @@ export function Fab() {
   const lastScrollY = useRef(0)
   const pathname = usePathname()
 
-  // Esconde ao fazer scroll para baixo (para não tapar o conteúdo) e volta ao subir
+  // Esconde ao fazer scroll para baixo (para não tapar o conteúdo) e volta ao subir.
+  // No telemóvel o scroll é feito num contentor do layout, não na janela: o evento
+  // "scroll" não sobe na árvore, por isso é apanhado na fase de captura.
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY
+    const onScroll = (e: Event) => {
+      const target = e.target
+      const y = target instanceof HTMLElement ? target.scrollTop : window.scrollY
       const delta = y - lastScrollY.current
       if (Math.abs(delta) < 8) return
       setHidden(delta > 0 && y > 80)
       lastScrollY.current = y
     }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    window.addEventListener("scroll", onScroll, { capture: true, passive: true })
+    return () => window.removeEventListener("scroll", onScroll, { capture: true })
   }, [])
 
   if (pathname !== "/dashboard") return null

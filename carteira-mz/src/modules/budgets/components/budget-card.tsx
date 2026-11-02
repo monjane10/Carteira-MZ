@@ -70,7 +70,7 @@ export function BudgetCard({ budget, onClick, onDelete }: BudgetCardProps) {
                   e.stopPropagation()
                   onDelete()
                 }}
-                className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 shrink-0"
+                className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-100 [@media(hover:hover)]:opacity-0 transition-all hover:bg-red-50 hover:text-red-500 [@media(hover:hover)]:group-hover:opacity-100 shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>

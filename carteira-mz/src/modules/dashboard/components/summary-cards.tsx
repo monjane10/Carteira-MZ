@@ -59,7 +59,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
           </div>
 
           <div className="mt-3">
-            <p className="text-3xl font-bold tracking-tight text-white">
+            <p className="text-3xl font-bold tracking-tight text-white break-words">
               {showBalance ? formatCurrency(summary.total_balance) : "••••••"}
             </p>
           </div>

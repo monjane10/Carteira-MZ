@@ -78,16 +78,16 @@ function RecurringTransactionsPage() {
           {transactions.map((t) => (
             <Card key={t.id}>
               <CardContent className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className={`h-10 w-10 shrink-0 rounded-xl flex items-center justify-center ${
                       t.type === "INCOME" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
                     }`}>
                       <Repeat className="h-5 w-5" />
                     </div>
-                    <div>
-                      <p className="font-semibold text-slate-900">{t.description || "Sem descrição"}</p>
-                      <p className="text-xs text-slate-500">{t.account?.name ?? "—"}</p>
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-slate-900">{t.description || "Sem descrição"}</p>
+                      <p className="truncate text-xs text-slate-500">{t.account?.name ?? "—"}</p>
                     </div>
                   </div>
                   <Badge variant={t.is_active ? "success" : "default"}>

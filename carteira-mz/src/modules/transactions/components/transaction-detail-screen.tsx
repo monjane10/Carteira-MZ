@@ -145,7 +145,7 @@ export function TransactionDetailScreen() {
             <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold mb-3" style={{ backgroundColor: `${typeColor}12`, color: typeColor }}>
               {TRANSACTION_TYPE_LABELS[transaction.type] ?? transaction.type}
             </div>
-            <p className="text-3xl font-bold text-[#0F172A]">{formatCurrency(transaction.amount)}</p>
+            <p className="text-3xl font-bold text-[#0F172A] break-words">{formatCurrency(transaction.amount)}</p>
             {transaction.description && (
               <p className="text-sm text-slate-500 mt-3">{transaction.description}</p>
             )}

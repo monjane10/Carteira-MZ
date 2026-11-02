@@ -47,13 +47,13 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
         onClick={onClick}
       >
         <CardContent className="p-5">
-          <div className="mb-3 flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <div className="mb-3 flex items-start justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-900">{loan.person_name}</p>
+                <p className="truncate text-sm font-semibold text-slate-900">{loan.person_name}</p>
                 {loan.phone && (
                   <p className="flex items-center gap-1 text-xs text-slate-500">
                     <Phone className="h-3 w-3" />
@@ -62,7 +62,7 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
                 )}
               </div>
             </div>
-            <div className="flex items-start gap-1">
+            <div className="flex shrink-0 items-start gap-1">
               <div className="flex gap-1">
                 <Badge variant={loan.type === "GIVEN" ? "info" : "warning"}>
                   {LOAN_TYPE_LABELS[loan.type]}
@@ -78,7 +78,7 @@ export function LoanCard({ loan, onClick, onDelete }: LoanCardProps) {
                     e.stopPropagation()
                     onDelete()
                   }}
-                  className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                  className="ml-1 rounded-lg p-1.5 text-slate-500 opacity-100 [@media(hover:hover)]:opacity-0 transition-all hover:bg-red-50 hover:text-red-500 [@media(hover:hover)]:group-hover:opacity-100"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

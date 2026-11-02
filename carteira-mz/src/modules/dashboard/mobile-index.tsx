@@ -85,7 +85,9 @@ export function MobileDashboard() {
   }, [])
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.scrollY === 0) {
+    const scroller = (e.currentTarget as HTMLElement).closest("[data-scroll-container]")
+    const scrollTop = scroller ? scroller.scrollTop : window.scrollY
+    if (scrollTop === 0) {
       touchStartY.current = e.touches[0].clientY
       pulling.current = true
     }

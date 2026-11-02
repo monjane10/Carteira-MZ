@@ -125,6 +125,7 @@ export function LoanForm({ open, onOpenChange, onSubmit, editingLoan }: LoanForm
                 onValueChange={(value) => setValue("type", value as "GIVEN" | "TAKEN")}
               >
                 <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
+                  <SelectValue placeholder="Seleccione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="GIVEN">{LOAN_TYPE_LABELS.GIVEN}</SelectItem>

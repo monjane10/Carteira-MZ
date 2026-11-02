@@ -18,6 +18,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { goalContributionSchema } from "@/validators"
@@ -113,10 +114,11 @@ export function GoalContributionForm({
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Conta</Label>
               <Select
-                value={watch("account_id") ?? ""}
-                onValueChange={(value) => setValue("account_id", value || null)}
+                value={watch("account_id") ?? "none"}
+                onValueChange={(value) => setValue("account_id", value === "none" ? null : value)}
               >
                 <SelectTrigger className="h-14 rounded-xl text-[15px] border-slate-200 w-full">
+                  <SelectValue placeholder="Seleccione uma conta" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Nenhuma</SelectItem>

@@ -26,7 +26,7 @@ export function StatCard({ label, value, change, changeType = "neutral", icon: I
           </div>
         )}
       </div>
-      <p className="mt-2 text-2xl font-bold text-slate-900">
+      <p className="mt-2 break-words text-2xl font-bold text-slate-900">
         {value}
       </p>
       {description && (
