@@ -38,7 +38,9 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
     >
       <motion.div variants={item} className="sm:col-span-2 lg:col-span-1">
-        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-[#1E3A5F] via-[#2563EB] to-[#3B82F6] p-5 shadow-sm">
+        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-[#1E3A5F] p-5 text-white shadow-sm"
+          style={{ backgroundImage: "linear-gradient(135deg, #1E3A5F 0%, #2563EB 50%, #3B82F6 100%)" }}
+        >
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/5" />
           <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/[0.03]" />
 

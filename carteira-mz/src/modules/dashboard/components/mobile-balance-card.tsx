@@ -20,7 +20,9 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
     : [balanceStr, ""]
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#0B1633] via-[#0F1D40] to-[#1A2D5A] p-5 text-white shadow-sm">
+    <div className="relative w-full overflow-hidden rounded-2xl bg-[#0F1D40] p-5 text-white shadow-sm"
+      style={{ backgroundImage: "linear-gradient(135deg, #0B1633 0%, #0F1D40 50%, #1A2D5A 100%)" }}
+    >
       <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/5" />
       <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/[0.03]" />
 
