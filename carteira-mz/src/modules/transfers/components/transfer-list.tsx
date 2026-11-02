@@ -20,7 +20,7 @@ export function TransferList({ transfers, loading, onClick }: TransferListProps)
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 rounded-xl border border-slate-200 p-4 dark:border-slate-800"
+            className="flex items-center gap-4 rounded-xl border border-slate-200 p-4"
           >
             <Skeleton className="h-10 w-10 rounded-lg" />
             <div className="flex-1 space-y-2">
@@ -52,33 +52,33 @@ export function TransferList({ transfers, loading, onClick }: TransferListProps)
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.03 }}
-          className="rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50 cursor-pointer dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900"
+          className="rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50 cursor-pointer"
           onClick={() => onClick?.(transfer)}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
               <ChevronRight className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-900 dark:text-white">
+              <p className="text-sm font-medium text-slate-900">
                 {transfer.from_account?.name ?? "Conta origem"}
-                <ChevronRight className="mx-1.5 inline h-3.5 w-3.5 text-slate-400" />
+                <ChevronRight className="mx-1.5 inline h-3.5 w-3.5 text-slate-500" />
                 {transfer.to_account?.name ?? "Conta destino"}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500">
                 {transfer.description ?? "Sem descrição"}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">
+              <p className="text-sm font-semibold text-slate-900">
                 {formatCurrency(transfer.amount)}
               </p>
-              <p className="text-xs text-slate-400">{formatDate(transfer.transfer_date)}</p>
+              <p className="text-xs text-slate-500">{formatDate(transfer.transfer_date)}</p>
             </div>
             <ChevronRight className="h-4 w-4 text-slate-300 shrink-0" />
           </div>
           {transfer.fee > 0 && (
-            <p className="mt-2 text-xs text-slate-400">Taxa: {formatCurrency(transfer.fee)}</p>
+            <p className="mt-2 text-xs text-slate-500">Taxa: {formatCurrency(transfer.fee)}</p>
           )}
         </motion.div>
       ))}

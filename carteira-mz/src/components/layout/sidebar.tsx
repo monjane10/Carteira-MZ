@@ -51,16 +51,16 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-white transition-transform duration-200 dark:border-slate-800 dark:bg-slate-950 lg:static lg:z-auto lg:translate-x-0",
+          "fixed top-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-white transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{ width: "280px" }}
       >
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
           <Logo size="sm" />
           <button
             onClick={() => setSidebarOpen(false)}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 lg:hidden dark:hover:bg-slate-800 dark:hover:text-slate-300"
+            className="rounded-lg p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-600 lg:hidden"
           >
             <X className="h-5 w-5" />
           </button>
@@ -81,8 +81,8 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-slate-900 text-white dark:bg-slate-800 dark:text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 )}
               >
                 <Icon className="h-5 w-5 shrink-0" />

@@ -71,7 +71,7 @@ export function LoginForm() {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 20, height: 20 }} />
                 <input
                   type="email"
                   placeholder="seu@email.com"
@@ -88,7 +88,7 @@ export function LoginForm() {
                 Senha
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 20, height: 20 }} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 20, height: 20 }} />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
@@ -99,7 +99,7 @@ export function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute text-slate-500 hover:text-slate-600 transition-colors"
                   style={{ right: 16, top: "50%", transform: "translateY(-50%)" }}
                   tabIndex={-1}
                 >
@@ -136,7 +136,7 @@ export function LoginForm() {
                 <div className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-slate-400">ou</span>
+                <span className="bg-white px-3 text-slate-500">ou</span>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ export function LoginForm() {
             </Link>
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-4">
+          <p className="text-center text-xs text-slate-500 mt-4">
             © 2026 Carteira MZ. Desenvolvido por{" "}
             <a
               href="https://lourencomonjane.vercel.app"
@@ -180,7 +180,7 @@ export function LoginForm() {
               Lourenço Monjane
             </a>
           </p>
-          <div className="mt-3 flex items-center justify-center gap-3 text-xs text-slate-400">
+          <div className="mt-3 flex items-center justify-center gap-3 text-xs text-slate-500">
             <Link href="/privacy" className="hover:text-emerald-600 transition-colors">
               Política de Privacidade
             </Link>

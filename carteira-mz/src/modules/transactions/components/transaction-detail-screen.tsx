@@ -153,41 +153,41 @@ export function TransactionDetailScreen() {
 
           <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <Calendar className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Data</p>
+                <p className="text-[11px] text-slate-500 font-medium">Data</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">
                   {new Date(transaction.transaction_date).toLocaleDateString("pt-MZ")}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <div className="h-4 w-4 rounded-full border-2 border-slate-300" style={{ backgroundColor: typeColor }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Conta</p>
+                <p className="text-[11px] text-slate-500 font-medium">Conta</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.account?.name ?? "—"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                 <div className="h-4 w-4 rounded-full border-2 border-slate-300" style={{ backgroundColor: transaction.category?.color ?? "#CBD5E1" }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-slate-400 font-medium">Categoria</p>
+                <p className="text-[11px] text-slate-500 font-medium">Categoria</p>
                 <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.category?.name ?? "—"}</p>
               </div>
             </div>
             {transaction.is_recurring && (
               <div className="flex items-center gap-3.5 px-4 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-400 shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
                   <RefreshCw className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-slate-400 font-medium">Recorrente</p>
+                  <p className="text-[11px] text-slate-500 font-medium">Recorrente</p>
                   <p className="text-sm font-bold text-[#0F172A] mt-0.5">Sim</p>
                 </div>
               </div>

@@ -68,7 +68,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
                 <ArrowUp className="h-3.5 w-3.5 text-emerald-400" />
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Receitas</p>
+                <p className="text-[10px] font-medium text-blue-200 uppercase tracking-wide">Receitas</p>
                 <p className="text-sm font-bold text-white truncate">
                   {formatCurrency(summary.monthly_income)}
                 </p>
@@ -82,7 +82,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
                 <ArrowDown className="h-3.5 w-3.5 text-red-400" />
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wide">Despesas</p>
+                <p className="text-[10px] font-medium text-blue-200 uppercase tracking-wide">Despesas</p>
                 <p className="text-sm font-bold text-white truncate">
                   {formatCurrency(summary.monthly_expenses)}
                 </p>
@@ -120,7 +120,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
       </motion.div>
 
       <div className="col-span-full mt-2">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Métricas Avançadas</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Métricas Avançadas</p>
       </div>
 
       <motion.div variants={item}>

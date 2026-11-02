@@ -25,7 +25,7 @@ export function CategoryReport({ data, loading, title = "Gastos por Categoria" }
     return (
       <Card>
         <CardContent className="p-6">
-          <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+          <h3 className="mb-4 text-sm font-semibold text-slate-900">
             {title}
           </h3>
           <LoadingState type="chart" />
@@ -38,7 +38,7 @@ export function CategoryReport({ data, loading, title = "Gastos por Categoria" }
     return (
       <Card>
         <CardContent className="p-6">
-          <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+          <h3 className="mb-4 text-sm font-semibold text-slate-900">
             {title}
           </h3>
           <p className="text-sm text-slate-500">Sem dados disponíveis.</p>
@@ -56,7 +56,7 @@ export function CategoryReport({ data, loading, title = "Gastos por Categoria" }
   return (
     <Card>
       <CardContent className="p-6">
-        <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+        <h3 className="mb-4 text-sm font-semibold text-slate-900">
           {title}
         </h3>
         <div className="h-72">

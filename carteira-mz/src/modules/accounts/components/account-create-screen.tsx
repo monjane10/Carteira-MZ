@@ -286,7 +286,7 @@ export function AccountCreateScreen() {
 
           {/* Pré-visualização */}
           <div className="mb-5">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
               Pré-visualização da conta
             </p>
             <div className="rounded-xl border border-slate-200 bg-white p-4">

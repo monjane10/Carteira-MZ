@@ -32,7 +32,7 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:shadow-sm dark:border-slate-800 dark:bg-slate-950",
+        "relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:shadow-sm",
         onClick && "cursor-pointer"
       )}
     >
@@ -58,15 +58,15 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-[#0F172A] dark:text-white truncate">
+          <p className="text-sm font-bold text-[#0F172A] truncate">
             {account.name}
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500">
             {ACCOUNT_TYPE_LABELS[account.type] ?? account.type}
           </p>
         </div>
         <div className="text-right flex-shrink-0">
-          <p className="text-sm font-bold text-[#0F172A] dark:text-white">
+          <p className="text-sm font-bold text-[#0F172A]">
             {formatCurrency(account.balance)}
           </p>
         </div>

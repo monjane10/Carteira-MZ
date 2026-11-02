@@ -134,13 +134,13 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
         <CardContent className="p-4">
           <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-900">
                 <Target className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-white">{goal.title}</h2>
+                <h2 className="text-base font-bold text-slate-900">{goal.title}</h2>
                 {goal.description && (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{goal.description}</p>
+                  <p className="text-sm text-slate-500">{goal.description}</p>
                 )}
               </div>
             </div>
@@ -151,26 +151,26 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
 
           <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Actual</p>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500">Actual</p>
+              <p className="text-sm font-bold text-slate-900">
                 {formatCurrency(goal.current_amount)}
               </p>
             </div>
             <div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Meta</p>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500">Meta</p>
+              <p className="text-sm font-bold text-slate-900">
                 {formatCurrency(goal.target_amount)}
               </p>
             </div>
             <div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Restante</p>
-              <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+              <p className="text-[11px] text-slate-500">Restante</p>
+              <p className="text-sm font-bold text-emerald-600">
                 {formatCurrency(remaining)}
               </p>
             </div>
             <div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Progresso</p>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-[11px] text-slate-500">Progresso</p>
+              <p className="text-sm font-bold text-slate-900">
                 {progress}%
               </p>
             </div>
@@ -178,7 +178,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
 
           <Progress value={progress} className="mb-2" />
 
-          <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center justify-between text-xs text-slate-500">
             <span>{progress}% concluído</span>
             {goal.target_date && (
               <span className="flex items-center gap-1">
@@ -189,7 +189,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
           </div>
 
           {goal.account && (
-            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-3 text-xs text-slate-500">
               Conta associada: {goal.account.name}
             </p>
           )}
@@ -199,7 +199,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       {chartData.length > 0 && (
         <Card>
           <CardContent className="p-4">
-            <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="mb-3 text-sm font-semibold text-slate-900 flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Histórico de Contribuições
             </h3>
@@ -225,7 +225,7 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       )}
 
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Contribuições</h3>
+        <h3 className="text-sm font-semibold text-slate-900">Contribuições</h3>
         {goal.status === "ACTIVE" && (
           <Button size="sm" onClick={() => setShowContributionForm(true)}>
             <Plus className="mr-1 h-4 w-4" />
@@ -237,8 +237,8 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
       {contributions.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center py-10">
-            <PiggyBank className="mb-3 h-8 w-8 text-slate-400" />
-            <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma contribuição registada.</p>
+            <PiggyBank className="mb-3 h-8 w-8 text-slate-500" />
+            <p className="text-sm text-slate-500">Nenhuma contribuição registada.</p>
           </CardContent>
         </Card>
       ) : (
@@ -249,17 +249,17 @@ export function GoalDetail({ goalId, onBack, onGoalUpdated }: GoalDetailProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+              className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                   <TrendingUp className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm font-medium text-slate-900">
                     {formatCurrency(c.amount)}
                   </p>
-                  <p className="text-xs text-slate-400">{formatDate(c.contribution_date)}</p>
+                  <p className="text-xs text-slate-500">{formatDate(c.contribution_date)}</p>
                 </div>
               </div>
             </motion.div>

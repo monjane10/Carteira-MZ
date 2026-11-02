@@ -100,7 +100,7 @@ export function RecurringCreateScreen() {
         </div>
         <div className="flex-1 flex flex-col items-center justify-center px-8 pb-20 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 mb-4">
-            <Building2 className="h-8 w-8 text-slate-400" />
+            <Building2 className="h-8 w-8 text-slate-500" />
           </div>
           <h2 className="text-lg font-bold text-[#0F172A] mb-2">Nenhuma conta criada</h2>
           <p className="text-sm text-slate-500 mb-6 max-w-xs">
@@ -149,7 +149,7 @@ export function RecurringCreateScreen() {
                     <option key={type} value={type}>{TRANSACTION_TYPE_LABELS[type]}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.type && <p className="text-xs text-red-500 mt-1">{errors.type.message}</p>}
             </div>
@@ -168,7 +168,7 @@ export function RecurringCreateScreen() {
                     <option key={account.id} value={account.id}>{account.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.account_id && <p className="text-xs text-red-500 mt-1">{errors.account_id.message}</p>}
             </div>
@@ -189,7 +189,7 @@ export function RecurringCreateScreen() {
                     <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
             </div>
 
@@ -230,7 +230,7 @@ export function RecurringCreateScreen() {
                     <option key={freq} value={freq}>{RECURRING_FREQUENCY_LABELS[freq]}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
               </div>
               {errors.frequency && <p className="text-xs text-red-500 mt-1">{errors.frequency.message}</p>}
             </div>

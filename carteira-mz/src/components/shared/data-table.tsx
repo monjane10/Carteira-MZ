@@ -21,23 +21,23 @@ export function DataTable<T extends Record<string, unknown>>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center py-12 text-sm text-slate-500 dark:text-slate-400">
+      <div className="flex items-center justify-center py-12 text-sm text-slate-500">
         Nenhum registo encontrado
       </div>
     )
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+    <div className="overflow-x-auto rounded-xl border border-slate-200">
       <table className="w-full" role="grid">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+          <tr className="border-b border-slate-200 bg-slate-50">
             {columns.map((col) => (
               <th
                 key={col.key}
                 scope="col"
                 className={cn(
-                  "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400",
+                  "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500",
                   col.className
                 )}
               >
@@ -46,7 +46,7 @@ export function DataTable<T extends Record<string, unknown>>({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+        <tbody className="divide-y divide-slate-200">
           {data.map((row, i) => (
             <tr
               key={(row.id as string) ?? i}
@@ -55,8 +55,8 @@ export function DataTable<T extends Record<string, unknown>>({
               tabIndex={onRowClick ? 0 : undefined}
               onKeyDown={onRowClick ? (e) => { if (e.key === "Enter") onRowClick(row) } : undefined}
               className={cn(
-                "bg-white transition-colors dark:bg-slate-950",
-                onRowClick && "cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900"
+                "bg-white transition-colors",
+                onRowClick && "cursor-pointer hover:bg-slate-50"
               )}
             >
               {columns.map((col) => (
@@ -64,7 +64,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   key={col.key}
                   role="gridcell"
                   className={cn(
-                    "px-4 py-3 text-sm text-slate-700 dark:text-slate-300",
+                    "px-4 py-3 text-sm text-slate-700",
                     col.className
                   )}
                 >

@@ -45,17 +45,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-white dark:bg-slate-950">
-      <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white pl-0 pr-4 dark:border-slate-800 dark:bg-slate-950">
+    <div className="flex h-screen flex-col bg-white">
+      <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white pl-0 pr-4">
         <div className="flex items-center gap-2">
           <Logo size="sm" />
-          <span className="text-base font-bold text-slate-900 dark:text-white">Carteira MZ</span>
+          <span className="text-base font-bold text-slate-900">Carteira MZ</span>
         </div>
         <div className="flex items-center gap-1">
           <NotificationDropdown />
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+            className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
             title="Sair"
           >
             <LogOut className="h-5 w-5" />

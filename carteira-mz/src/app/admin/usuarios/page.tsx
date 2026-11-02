@@ -45,7 +45,7 @@ export default function AdminUsuariosPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-sm text-slate-400">
+      <div className="flex items-center justify-center h-64 text-sm text-slate-500">
         A carregar...
       </div>
     )
@@ -66,7 +66,7 @@ export default function AdminUsuariosPage() {
 
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <input
             placeholder="Pesquisar por nome ou email..."
             value={searchQuery}
@@ -169,15 +169,15 @@ export default function AdminUsuariosPage() {
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
-                  <Mail className="h-4 w-4 text-slate-400" />
+                  <Mail className="h-4 w-4 text-slate-500" />
                   <span className="text-slate-600">{selectedUser.email}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <Calendar className="h-4 w-4 text-slate-400" />
+                  <Calendar className="h-4 w-4 text-slate-500" />
                   <span className="text-slate-600">Registado em {formatDate(selectedUser.created_at, "long")}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <Wallet className="h-4 w-4 text-slate-400" />
+                  <Wallet className="h-4 w-4 text-slate-500" />
                   <span className="text-slate-600">{selectedUser.accounts_count} conta(s) — saldo total {formatCurrency(selectedUser.total_balance)}</span>
                 </div>
               </div>

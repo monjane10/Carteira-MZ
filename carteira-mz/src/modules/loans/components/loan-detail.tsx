@@ -117,13 +117,13 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
         <CardContent className="p-6">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+                <User className="h-6 w-6 text-slate-600" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{loan.person_name}</h2>
+                <h2 className="text-lg font-bold text-slate-900">{loan.person_name}</h2>
                 {loan.phone && (
-                  <p className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="flex items-center gap-1 text-sm text-slate-500">
                     <Phone className="h-3.5 w-3.5" />
                     {loan.phone}
                   </p>
@@ -142,33 +142,33 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
 
           <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-white">
+              <p className="text-xs text-slate-500">Total</p>
+              <p className="text-lg font-bold text-slate-900">
                 {formatCurrency(loan.total_amount)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Pago</p>
-              <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+              <p className="text-xs text-slate-500">Pago</p>
+              <p className="text-lg font-bold text-emerald-600">
                 {formatCurrency(loan.paid_amount)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Restante</p>
+              <p className="text-xs text-slate-500">Restante</p>
               <p
                 className={cn(
                   "text-lg font-bold",
                   loan.remaining_amount > 0
-                    ? "text-red-600 dark:text-red-400"
-                    : "text-emerald-600 dark:text-emerald-400"
+                    ? "text-red-600"
+                    : "text-emerald-600"
                 )}
               >
                 {formatCurrency(loan.remaining_amount)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Juros</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-white">
+              <p className="text-xs text-slate-500">Juros</p>
+              <p className="text-lg font-bold text-slate-900">
                 {formatCurrency(loan.interest_amount)}
               </p>
             </div>
@@ -176,7 +176,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
 
           <div className="mb-4">
             <Progress value={progress} className="mb-1" />
-            <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center justify-between text-xs text-slate-500">
               <span>{progress}% pago</span>
               {loan.due_date && (
                 <span className={cn("flex items-center gap-1", isOverdue && "font-medium text-red-500")}>
@@ -189,11 +189,11 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
           </div>
 
           {loan.description && (
-            <p className="text-sm text-slate-600 dark:text-slate-400">{loan.description}</p>
+            <p className="text-sm text-slate-600">{loan.description}</p>
           )}
 
           {loan.account && (
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-xs text-slate-500">
               Conta associada: {loan.account.name}
             </p>
           )}
@@ -201,7 +201,7 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       </Card>
 
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Histórico de Pagamentos</h3>
+        <h3 className="text-sm font-semibold text-slate-900">Histórico de Pagamentos</h3>
         {loan.remaining_amount > 0 && (
           <Button size="sm" onClick={() => setShowPaymentForm(true)}>
             <Plus className="mr-1 h-4 w-4" />
@@ -213,8 +213,8 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
       {payments.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center py-10">
-            <TrendingUp className="mb-3 h-8 w-8 text-slate-400" />
-            <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum pagamento registado.</p>
+            <TrendingUp className="mb-3 h-8 w-8 text-slate-500" />
+            <p className="text-sm text-slate-500">Nenhum pagamento registado.</p>
           </CardContent>
         </Card>
       ) : (
@@ -225,21 +225,21 @@ export function LoanDetail({ loanId, onLoanUpdated }: LoanDetailProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+              className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                   <TrendingUp className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm font-medium text-slate-900">
                     {formatCurrency(payment.amount)}
                   </p>
-                  <p className="text-xs text-slate-400">{formatDate(payment.payment_date)}</p>
+                  <p className="text-xs text-slate-500">{formatDate(payment.payment_date)}</p>
                 </div>
               </div>
               {payment.notes && (
-                <p className="text-xs text-slate-500 dark:text-slate-400">{payment.notes}</p>
+                <p className="text-xs text-slate-500">{payment.notes}</p>
               )}
             </motion.div>
           ))}

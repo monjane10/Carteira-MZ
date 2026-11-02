@@ -26,7 +26,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
 
       <div className="relative">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-[11px] font-medium tracking-wide text-blue-200/70 uppercase">Saldo Total</p>
+          <p className="text-[11px] font-medium tracking-wide text-blue-200 uppercase">Saldo Total</p>
           <button
             type="button"
             onClick={() => setShowValues(!showValues)}
@@ -42,7 +42,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
             {showValues ? amountPart : hidden}
           </p>
           {showValues && currencyPart && (
-            <span className="text-sm font-medium text-white/60">{currencyPart}</span>
+            <span className="text-sm font-medium text-white/80">{currencyPart}</span>
           )}
         </div>
 
@@ -52,7 +52,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
               <ArrowUp className="h-3.5 w-3.5 text-emerald-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium text-slate-500 dark:text-blue-200/60 uppercase tracking-wide">Receitas</p>
+              <p className="text-[10px] font-medium text-blue-200 uppercase tracking-wide">Receitas</p>
               <p className="text-sm font-bold text-white truncate">
                 {showValues ? formatCurrency(summary.monthly_income) : hidden}
               </p>
@@ -66,7 +66,7 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
               <ArrowDown className="h-3.5 w-3.5 text-red-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium text-slate-500 dark:text-blue-200/60 uppercase tracking-wide">Despesas</p>
+              <p className="text-[10px] font-medium text-blue-200 uppercase tracking-wide">Despesas</p>
               <p className="text-sm font-bold text-white truncate">
                 {showValues ? formatCurrency(summary.monthly_expenses) : hidden}
               </p>

@@ -118,7 +118,7 @@ export function TransactionForm({
         {!loadingData && accounts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 mb-4">
-              <Building2 className="h-7 w-7 text-slate-400" />
+              <Building2 className="h-7 w-7 text-slate-500" />
             </div>
             <p className="text-sm font-semibold text-[#0F172A] mb-1">Nenhuma conta criada</p>
             <p className="text-xs text-slate-500 mb-5 max-w-[220px]">

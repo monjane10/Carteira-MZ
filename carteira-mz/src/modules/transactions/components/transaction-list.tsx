@@ -104,7 +104,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 rounded-xl border border-slate-200 p-4 dark:border-slate-800"
+            className="flex items-center gap-4 rounded-xl border border-slate-200 p-4"
           >
             <Skeleton className="h-10 w-10 rounded-lg" />
             <div className="flex-1 space-y-2">
@@ -155,7 +155,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <Input
               placeholder="Pesquisar por descrição, categoria ou conta..."
               value={search}
@@ -190,7 +190,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
               variant="outline"
               size="sm"
               onClick={() => setFiltersOpen(!filtersOpen)}
-              className={cn("shrink-0", filtersOpen && "bg-slate-100 dark:bg-slate-800")}
+              className={cn("shrink-0", filtersOpen && "bg-slate-100")}
               aria-label="Mais filtros"
             >
               <Filter className="mr-1.5 h-4 w-4" />
@@ -213,7 +213,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50"
           >
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">Conta</label>
@@ -257,8 +257,8 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center py-12 text-center">
-          <Filter className="mb-3 h-8 w-8 text-slate-400" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <Filter className="mb-3 h-8 w-8 text-slate-500" />
+          <p className="text-sm text-slate-500">
             Nenhuma transacção encontrada com os filtros actuais.
           </p>
           <Button
@@ -290,24 +290,24 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.03 }}
-                  className="group flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-slate-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700"
+                  className="group flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-slate-300 hover:shadow-sm"
                   onClick={() => router.push(`/transacoes/${transaction.id}`)}
                 >
                   <div
                     className={cn(
                       "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
                       isIncome
-                        ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                        : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                        ? "bg-emerald-100 text-emerald-600"
+                        : "bg-red-100 text-red-600"
                     )}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-slate-900 dark:text-white">
+                    <p className="truncate text-sm font-medium text-slate-900">
                       {transaction.description ?? "Sem descrição"}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-slate-500">
                       {transaction.category?.name ?? "Sem categoria"}
                       {transaction.account && <> &middot; {transaction.account.name}</>}
                     </p>
@@ -317,14 +317,14 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
                       className={cn(
                         "text-sm font-semibold",
                         isIncome
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-red-600 dark:text-red-400"
+                          ? "text-emerald-600"
+                          : "text-red-600"
                       )}
                     >
                       {isIncome ? "+" : "-"}
                       {formatCurrency(transaction.amount)}
                     </p>
-                    <p className="text-xs text-slate-400">{formatDate(transaction.transaction_date)}</p>
+                    <p className="text-xs text-slate-500">{formatDate(transaction.transaction_date)}</p>
                   </div>
                   <button
                     type="button"
@@ -332,7 +332,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
                       e.stopPropagation()
                       onDelete(transaction)
                     }}
-                    className="shrink-0 rounded-lg p-2 text-slate-400 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-900/20"
+                    className="shrink-0 rounded-lg p-2 text-slate-500 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -353,7 +353,7 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
             </div>
           )}
 
-          <p className="text-center text-xs text-slate-400">
+          <p className="text-center text-xs text-slate-500">
             Mostrando {visible.length} de {filtered.length} transacções
           </p>
         </>

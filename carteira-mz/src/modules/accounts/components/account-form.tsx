@@ -156,8 +156,8 @@ export function AccountForm({
                         className={cn(
                           "flex flex-1 flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all",
                           isSelected
-                            ? "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950/30"
-                            : "border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600"
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-slate-200 hover:border-slate-300"
                         )}
                       >
                         {logoPath && (
@@ -172,8 +172,8 @@ export function AccountForm({
                         <span className={cn(
                           "text-xs font-medium",
                           isSelected
-                            ? "text-emerald-700 dark:text-emerald-300"
-                            : "text-slate-600 dark:text-slate-400"
+                            ? "text-emerald-700"
+                            : "text-slate-600"
                         )}>
                           {op.name}
                         </span>
@@ -199,8 +199,8 @@ export function AccountForm({
                         className={cn(
                           "flex flex-1 flex-col items-center gap-1.5 rounded-xl border-2 p-3 transition-all",
                           isSelected
-                            ? "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950/30"
-                            : "border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600"
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-slate-200 hover:border-slate-300"
                         )}
                       >
                         {logoPath && (
@@ -215,8 +215,8 @@ export function AccountForm({
                         <span className={cn(
                           "text-xs font-medium",
                           isSelected
-                            ? "text-emerald-700 dark:text-emerald-300"
-                            : "text-slate-600 dark:text-slate-400"
+                            ? "text-emerald-700"
+                            : "text-slate-600"
                         )}>
                           {op.name}
                         </span>

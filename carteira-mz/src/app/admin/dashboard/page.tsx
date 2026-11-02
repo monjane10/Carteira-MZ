@@ -15,7 +15,7 @@ function StatCard({ title, value, icon: Icon, subtitle, color }: { title: string
       <div className="min-w-0">
         <p className="text-sm text-slate-500">{title}</p>
         <p className="text-xl font-bold text-slate-900 mt-0.5">{value}</p>
-        {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
       </div>
     </div>
   )
@@ -60,7 +60,7 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-sm text-slate-400">
+      <div className="flex items-center justify-center h-64 text-sm text-slate-500">
         A carregar...
       </div>
     )

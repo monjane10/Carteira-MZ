@@ -57,7 +57,7 @@ export function CategoryList({
         {categories.map((category) => (
           <div
             key={category.id}
-            className="group relative rounded-xl border border-slate-200 bg-white p-4 transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950"
+            className="group relative rounded-xl border border-slate-200 bg-white p-4 transition-all hover:shadow-md"
           >
             <div className="flex items-start gap-3">
               <div
@@ -77,7 +77,7 @@ export function CategoryList({
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">
+                <p className="truncate text-sm font-semibold text-slate-900">
                   {category.name}
                 </p>
                 <div className="mt-1">
@@ -96,7 +96,7 @@ export function CategoryList({
               <button
                 type="button"
                 onClick={() => onEditCategory(category)}
-                className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                className="text-xs font-medium text-slate-500 hover:text-slate-900"
               >
                 Editar
               </button>
