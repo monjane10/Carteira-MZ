@@ -44,6 +44,7 @@ function mockAccounts(accounts: Account[]) {
 describe("checkLowBalances", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
   })
 
   it("creates a LOW_BALANCE notification when account balance is below threshold", async () => {
@@ -109,5 +110,35 @@ describe("checkLowBalances", () => {
       expect.any(String),
       "/contas/acc-2",
     )
+  })
+
+  it("does not notify again on reload while balance stays low", async () => {
+    mockAccounts([activeAccount({ balance: 200 })])
+    await checkLowBalances(500)
+    await checkLowBalances(500)
+
+    expect(mockCreateNotification).toHaveBeenCalledTimes(1)
+  })
+
+  it("notifies again after 24h if balance is still low", async () => {
+    mockAccounts([activeAccount({ balance: 200 })])
+    await checkLowBalances(500)
+
+    const dayAgo = Date.now() - 25 * 60 * 60 * 1000
+    localStorage.setItem("carteira-mz-low-balance-notified", JSON.stringify({ "acc-1": dayAgo }))
+    await checkLowBalances(500)
+
+    expect(mockCreateNotification).toHaveBeenCalledTimes(2)
+  })
+
+  it("notifies again when balance recovers and drops below threshold again", async () => {
+    mockAccounts([activeAccount({ balance: 200 })])
+    await checkLowBalances(500)
+    mockAccounts([activeAccount({ balance: 1000 })])
+    await checkLowBalances(500)
+    mockAccounts([activeAccount({ balance: 100 })])
+    await checkLowBalances(500)
+
+    expect(mockCreateNotification).toHaveBeenCalledTimes(2)
   })
 })
