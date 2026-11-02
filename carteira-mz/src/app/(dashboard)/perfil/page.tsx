@@ -26,7 +26,6 @@ export default function SettingsPage() {
   const router = useRouter()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [currency, setCurrency] = useState("MZN")
   const [phone, setPhone] = useState("")
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -36,7 +35,6 @@ export default function SettingsPage() {
   const [editName, setEditName] = useState("")
   const [editEmail, setEditEmail] = useState("")
   const [editPhone, setEditPhone] = useState("")
-  const [editCurrency, setEditCurrency] = useState("MZN")
   const [showDelete, setShowDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showLogout, setShowLogout] = useState(false)
@@ -51,13 +49,12 @@ export default function SettingsPage() {
       setEmail(user.email ?? "")
       supabase
         .from("profiles")
-        .select("phone, currency, avatar_url")
+        .select("phone, avatar_url")
         .eq("id", user.id)
         .single()
         .then(({ data: profile }) => {
           if (profile) {
             setPhone(profile.phone ?? "")
-            setCurrency(profile.currency ?? "MZN")
             setAvatarUrl(profile.avatar_url)
           }
         })
@@ -123,12 +120,11 @@ export default function SettingsPage() {
       id: userId,
       full_name: editName,
       phone: editPhone,
-      currency: editCurrency,
+      currency: "MZN",
     })
 
     setName(editName)
     setPhone(editPhone)
-    setCurrency(editCurrency)
     setEditing(false)
     toast({
       title: "Perfil actualizado",
@@ -141,7 +137,6 @@ export default function SettingsPage() {
     setEditName(name)
     setEditEmail(email)
     setEditPhone(phone)
-    setEditCurrency(currency)
     setEditing(false)
   }
 
@@ -149,7 +144,6 @@ export default function SettingsPage() {
     setEditName(name)
     setEditEmail(email)
     setEditPhone(phone)
-    setEditCurrency(currency)
     setEditing(true)
   }
 
@@ -331,7 +325,7 @@ export default function SettingsPage() {
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] text-slate-500 font-medium">Moeda</p>
                 <p className="text-sm font-semibold text-slate-900 mt-0.5">
-                  {currency === "MZN" ? "MZN (MT)" : "USD ($)"}
+                  MZN (MT)
                 </p>
               </div>
             </div>
@@ -467,19 +461,6 @@ export default function SettingsPage() {
                   onChange={(e) => setEditPhone(e.target.value)}
                   className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
                 />
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-slate-600 block mb-1.5">
-                  Moeda
-                </label>
-                <select
-                  value={editCurrency}
-                  onChange={(e) => setEditCurrency(e.target.value)}
-                  className="w-full h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors appearance-none"
-                >
-                  <option value="MZN">MZN (MT)</option>
-                  <option value="USD">USD ($)</option>
-                </select>
               </div>
             </div>
             <div className="mt-6 flex gap-3">

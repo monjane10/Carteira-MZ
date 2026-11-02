@@ -22,7 +22,6 @@ const schema = z.object({
   type: z.enum(["BANK", "MOBILE_MONEY"]),
   institution: z.string().min(1, "Seleccione uma instituição"),
   initial_balance: z.number().min(0),
-  currency: z.enum(["MZN", "USD"]),
 })
 
 type FormData = z.infer<typeof schema>
@@ -76,12 +75,10 @@ export function AccountCreateScreen() {
       type: "BANK",
       institution: "",
       initial_balance: 0,
-      currency: "MZN",
     },
   })
 
   const selectedInstitution = watch("institution")
-  const selectedCurrency = watch("currency")
   const accountName = watch("name")
   const balance = watch("initial_balance")
   const currentType = watch("type")
@@ -101,7 +98,7 @@ export function AccountCreateScreen() {
       await accountService.createAccount({
         name: data.name || data.institution,
         type: data.type,
-        currency: data.currency,
+        currency: "MZN",
         balance: data.initial_balance,
         initial_balance: data.initial_balance,
         color: "#0F172A",
@@ -233,7 +230,7 @@ export function AccountCreateScreen() {
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
 
-          {/* Saldo Inicial + Moeda */}
+          {/* Saldo Inicial */}
           <div className="mb-5">
             <label className="text-sm font-semibold text-[#0F172A] block mb-1.5">Saldo inicial</label>
             <div className="relative">
@@ -245,39 +242,8 @@ export function AccountCreateScreen() {
                 className="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 pr-16 text-[14px] text-[#0F172A] placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">
-                {selectedCurrency === "MZN" ? "Mzn" : "$"}
-              </span>
-            </div>
-          </div>
-
-          {/* Moeda */}
-          <div className="mb-5">
-            <p className="text-sm font-semibold text-[#0F172A] block mb-1.5">Moeda</p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setValue("currency", "MZN")}
-                className={cn(
-                  "flex-1 h-13 rounded-xl font-semibold text-sm transition-all",
-                  selectedCurrency === "MZN"
-                    ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700"
-                    : "border border-slate-200 bg-white text-slate-600"
-                )}
-              >
                 Mzn
-              </button>
-              <button
-                type="button"
-                onClick={() => setValue("currency", "USD")}
-                className={cn(
-                  "flex-1 h-13 rounded-xl font-semibold text-sm transition-all",
-                  selectedCurrency === "USD"
-                    ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700"
-                    : "border border-slate-200 bg-white text-slate-600"
-                )}
-              >
-                $
-              </button>
+              </span>
             </div>
           </div>
 
@@ -306,7 +272,7 @@ export function AccountCreateScreen() {
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-sm font-bold text-[#0F172A]">
-                    {balance > 0 ? formatCurrency(balance) : `0,00 ${selectedCurrency === "MZN" ? "Mzn" : "$"}`}
+                    {balance > 0 ? formatCurrency(balance) : "0,00 Mzn"}
                   </p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-slate-300" />

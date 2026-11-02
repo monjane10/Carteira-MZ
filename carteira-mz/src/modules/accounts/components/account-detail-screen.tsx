@@ -133,7 +133,7 @@ export function AccountDetailScreen() {
         icon: account.icon ?? null,
         institution_id: institutionId,
         is_active: account.is_active,
-        currency: account.currency,
+        currency: "MZN",
       })
       setAccount((prev) => prev ? { ...prev, name: editName.trim(), type: editType, balance: Number(editBalance) || prev.balance, institution_id: institutionId, institution: institutionId ? prev?.institution : undefined } : prev)
       setShowEdit(false)
@@ -178,7 +178,7 @@ export function AccountDetailScreen() {
             <h2 className="text-xl font-bold text-[#0F172A]">{account.name}</h2>
             <p className="text-sm text-slate-500 mt-1">{ACCOUNT_TYPE_LABELS[account.type] ?? account.type}</p>
             <p className="text-3xl font-bold text-[#0F172A] mt-4">{formatCurrency(account.balance)}</p>
-            <p className="text-xs text-slate-500 mt-1">{account.currency === "USD" ? "Dólar Americano" : "Metical Moçambicano"}</p>
+            <p className="text-xs text-slate-500 mt-1">Metical Moçambicano</p>
           </div>
 
           <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden mt-4">
