@@ -8,14 +8,13 @@ import { BackButton } from "@/components/shared/back-button"
 import { Logo } from "@/components/shared/logo"
 import { NotificationDropdown } from "@/components/shared/notification-dropdown"
 import { MobileNav } from "./mobile-nav"
-import { Fab } from "@/components/shared/fab"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { OnboardingTour } from "@/components/shared/onboarding-tour"
 import { supabase } from "@/services/supabase/client"
 import { cn } from "@/lib/utils"
 import { requestNotificationPermission } from "@/lib/push-notifications"
 
-const mainTabs = ["/dashboard", "/contas", "/transacoes", "/metas", "/perfil"]
+const mainTabs = ["/dashboard", "/contas", "/transacoes", "/perfil"]
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -74,7 +73,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         onConfirm={handleLogout}
       />
       <div data-scroll-container className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-        <main className={cn("flex w-full min-w-0 flex-1 flex-col px-4 pt-2", isHome ? "pb-[64px] md:pb-28" : "pb-28")}>
+        <main className={cn("flex w-full min-w-0 flex-1 flex-col px-4 pt-2", isHome ? "pb-[84px] md:pb-28" : "pb-28")}>
           {showBack && (
             <div className="mb-3">
               <BackButton />
@@ -84,7 +83,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </main>
       </div>
       <MobileNav />
-      <Fab />
       <OnboardingTour />
     </div>
   )
