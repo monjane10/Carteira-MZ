@@ -140,7 +140,7 @@ export function TransferDetailScreen() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] text-slate-500 font-medium">Origem</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.from_account?.name ?? "—"}</p>
+                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.from_account?.name ?? "-"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
@@ -149,7 +149,7 @@ export function TransferDetailScreen() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] text-slate-500 font-medium">Destino</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.to_account?.name ?? "—"}</p>
+                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transfer.to_account?.name ?? "-"}</p>
               </div>
             </div>
             {transfer.fee > 0 && (

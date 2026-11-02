@@ -27,7 +27,7 @@ const sections = [
     id: "transferencias",
     icon: ArrowRightLeft,
     title: "Transferências",
-    content: "Transfira valores entre as suas contas — por exemplo, do M-Pesa para o banco ou do dinheiro físico para a poupança. O valor é descontado automaticamente da conta de origem e adicionado à de destino. Pode incluir uma taxa (ex: custo de levantamento) que será registada como despesa.",
+    content: "Transfira valores entre as suas contas - por exemplo, do M-Pesa para o banco ou do dinheiro físico para a poupança. O valor é descontado automaticamente da conta de origem e adicionado à de destino. Pode incluir uma taxa (ex: custo de levantamento) que será registada como despesa.",
   },
   {
     id: "emprestimos",
@@ -39,7 +39,7 @@ const sections = [
     id: "metas",
     icon: Target,
     title: "Metas",
-    content: "Defina objectivos financeiros como poupança para viagem, fundo de emergência, entrada para casa ou qualquer outro. Escolha uma conta associada, defina o valor alvo e a data limite. Adicione contribuições regularmente — o valor é descontado automaticamente da conta escolhida e o progresso é exibido com barra percentual.",
+    content: "Defina objectivos financeiros como poupança para viagem, fundo de emergência, entrada para casa ou qualquer outro. Escolha uma conta associada, defina o valor alvo e a data limite. Adicione contribuições regularmente - o valor é descontado automaticamente da conta escolhida e o progresso é exibido com barra percentual.",
   },
   {
     id: "orcamentos",

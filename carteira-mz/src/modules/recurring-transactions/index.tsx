@@ -87,7 +87,7 @@ function RecurringTransactionsPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="truncate font-semibold text-slate-900">{t.description || "Sem descrição"}</p>
-                      <p className="truncate text-xs text-slate-500">{t.account?.name ?? "—"}</p>
+                      <p className="truncate text-xs text-slate-500">{t.account?.name ?? "-"}</p>
                     </div>
                   </div>
                   <Badge variant={t.is_active ? "success" : "default"}>

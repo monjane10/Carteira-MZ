@@ -22,7 +22,7 @@ export function MobileMetrics({ summary, categorySpending }: MobileMetricsProps)
           </div>
         </div>
         <p className="text-sm font-bold text-slate-900 truncate -mt-0.5">
-          {topCategory ? topCategory.category_name : "—"}
+          {topCategory ? topCategory.category_name : "-"}
         </p>
         {topCategory && (
           <p className="text-[9px] text-slate-500 -mt-0.5">
@@ -39,7 +39,7 @@ export function MobileMetrics({ summary, categorySpending }: MobileMetricsProps)
           </div>
         </div>
         <p className="text-sm font-bold text-slate-900 truncate -mt-0.5">
-          {summary.biggest_expense ? formatCurrency(summary.biggest_expense.amount) : "—"}
+          {summary.biggest_expense ? formatCurrency(summary.biggest_expense.amount) : "-"}
         </p>
         {summary.biggest_expense?.description && (
           <p className="text-[9px] text-slate-500 truncate -mt-0.5">

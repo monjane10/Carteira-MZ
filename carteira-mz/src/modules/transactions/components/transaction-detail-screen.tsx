@@ -169,7 +169,7 @@ export function TransactionDetailScreen() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] text-slate-500 font-medium">Conta</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.account?.name ?? "—"}</p>
+                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.account?.name ?? "-"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-slate-50">
@@ -178,7 +178,7 @@ export function TransactionDetailScreen() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] text-slate-500 font-medium">Categoria</p>
-                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.category?.name ?? "—"}</p>
+                <p className="text-sm font-bold text-[#0F172A] mt-0.5">{transaction.category?.name ?? "-"}</p>
               </div>
             </div>
             {transaction.is_recurring && (

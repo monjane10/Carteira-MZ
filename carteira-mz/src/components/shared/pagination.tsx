@@ -43,7 +43,7 @@ export function Pagination({
     <div className="flex items-center justify-between border-t border-slate-200 px-5 py-3">
       <div className="flex items-center gap-2 text-sm text-slate-500">
         <span>
-          {startItem}–{endItem} de {totalItems}
+          {startItem}-{endItem} de {totalItems}
         </span>
         <select
           value={pageSize}

@@ -145,7 +145,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
       <motion.div variants={item}>
         <StatCard
           label="Taxa de Poupança"
-          value={summary.savings_rate >= 0 ? `${summary.savings_rate}%` : "—"}
+          value={summary.savings_rate >= 0 ? `${summary.savings_rate}%` : "-"}
           changeType={summary.savings_rate >= 10 ? "positive" : summary.savings_rate >= 0 ? "neutral" : "negative"}
           icon={Target}
         />
@@ -154,7 +154,7 @@ export function SummaryCards({ summary, categorySpending }: SummaryCardsProps) {
       <motion.div variants={item}>
         <StatCard
           label="Maior Despesa"
-          value={summary.biggest_expense ? formatCurrency(summary.biggest_expense.amount) : "—"}
+          value={summary.biggest_expense ? formatCurrency(summary.biggest_expense.amount) : "-"}
           description={summary.biggest_expense?.description ?? "Nenhuma despesa este mês"}
           icon={Award}
         />

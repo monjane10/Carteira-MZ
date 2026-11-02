@@ -83,7 +83,7 @@ export async function createLoan(data: {
     logger.info("Loan created", { id: result.id })
 
     if (data.type === "TAKEN") {
-      notify("LOAN_DUE", "Empréstimo a Pagar", `Empréstimo de ${data.total_amount} Mzn com ${result.person_name} — vence em ${data.due_date ?? "data a definir"}.`, "/emprestimos")
+      notify("LOAN_DUE", "Empréstimo a Pagar", `Empréstimo de ${data.total_amount} Mzn com ${result.person_name} - vence em ${data.due_date ?? "data a definir"}.`, "/emprestimos")
     } else {
       notify("LOAN_RECEIVED", "Empréstimo Concedido", `Emprestou ${data.total_amount} Mzn a ${result.person_name}.`, "/emprestimos")
     }

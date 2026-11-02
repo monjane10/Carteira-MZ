@@ -178,7 +178,7 @@ export default function AdminUsuariosPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Wallet className="h-4 w-4 text-slate-500" />
-                  <span className="text-slate-600">{selectedUser.accounts_count} conta(s) — saldo total {formatCurrency(selectedUser.total_balance)}</span>
+                  <span className="text-slate-600">{selectedUser.accounts_count} conta(s) - saldo total {formatCurrency(selectedUser.total_balance)}</span>
                 </div>
               </div>
 
