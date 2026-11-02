@@ -1,6 +1,22 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+// Páginas que exigem sessão: todo o grupo (dashboard) e o painel admin
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/contas",
+  "/transacoes",
+  "/transferencias",
+  "/emprestimos",
+  "/metas",
+  "/orcamentos",
+  "/recorrentes",
+  "/relatorios",
+  "/notificacoes",
+  "/perfil",
+  "/admin",
+]
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -30,12 +46,13 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   const isAuthPage = path === "/login" || path === "/register"
-  const isProtectedRoute = path.startsWith("/dashboard") || path.startsWith("/admin")
+  const isProtectedRoute = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`))
   const isAdminLogin = path === "/admin/login"
 
   if (!user && isProtectedRoute && !isAdminLogin) {
     const url = request.nextUrl.clone()
-    url.pathname = "/login"
+    url.pathname = path.startsWith("/admin") ? "/admin/login" : "/login"
+    url.search = ""
     return NextResponse.redirect(url)
   }
 
