@@ -1,45 +1,39 @@
 import { NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/admin-auth"
+import { fetchAll } from "@/lib/supabase-fetch-all"
 
 export async function GET(request: Request) {
   const supabaseAdmin = await requireAdmin(request)
   if (supabaseAdmin instanceof NextResponse) return supabaseAdmin
 
-  const { count: totalUsers } = await supabaseAdmin
-    .from("profiles")
-    .select("*", { count: "exact", head: true })
+  const countRows = (table: string) =>
+    supabaseAdmin.from(table).select("*", { count: "exact", head: true }).then(({ count }) => count ?? 0)
 
-  const { count: totalAccounts } = await supabaseAdmin
-    .from("accounts")
-    .select("*", { count: "exact", head: true })
+  try {
+    const [totalUsers, totalAccounts, totalTransactions, totalLoans, activeAccounts] = await Promise.all([
+      countRows("profiles"),
+      countRows("accounts"),
+      countRows("transactions"),
+      countRows("loans"),
+      fetchAll<{ user_id: string; balance: number }>((from, to) =>
+        supabaseAdmin.from("accounts").select("user_id, balance").eq("is_active", true).order("id").range(from, to),
+      ),
+    ])
 
-  const { count: totalTransactions } = await supabaseAdmin
-    .from("transactions")
-    .select("*", { count: "exact", head: true })
+    const totalBalance = activeAccounts.reduce((s, a) => s + Number(a.balance), 0)
+    const activeUserIds = new Set(activeAccounts.map((a) => a.user_id))
 
-  const { count: totalLoans } = await supabaseAdmin
-    .from("loans")
-    .select("*", { count: "exact", head: true })
-
-  const { data: accounts } = await supabaseAdmin
-    .from("accounts")
-    .select("balance")
-    .eq("is_active", true)
-  const totalBalance = (accounts ?? []).reduce((s: number, a: { balance: number }) => s + a.balance, 0)
-
-  const { data: activeAccounts } = await supabaseAdmin
-    .from("accounts")
-    .select("user_id")
-    .eq("is_active", true)
-  const activeUserIds = new Set((activeAccounts ?? []).map((a: { user_id: string }) => a.user_id))
-
-  return NextResponse.json({
-    total_users: totalUsers ?? 0,
-    total_accounts: totalAccounts ?? 0,
-    total_transactions: totalTransactions ?? 0,
-    total_balance: totalBalance,
-    active_users: activeUserIds.size,
-    total_loans: totalLoans ?? 0,
-    monthly_growth: 0,
-  })
+    return NextResponse.json({
+      total_users: totalUsers,
+      total_accounts: totalAccounts,
+      total_transactions: totalTransactions,
+      total_balance: totalBalance,
+      active_users: activeUserIds.size,
+      total_loans: totalLoans,
+      monthly_growth: 0,
+    })
+  } catch (e) {
+    console.error("Admin stats error:", e)
+    return NextResponse.json({ error: "Erro ao carregar estatísticas" }, { status: 500 })
+  }
 }
