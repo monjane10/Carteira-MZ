@@ -79,6 +79,7 @@ export async function createLoan(data: {
       .select("*, account:accounts(*)")
       .single()
     if (error) throw error
+    // O saldo da conta é actualizado pelo trigger loans_balance (migration-emprestimos.sql)
     logger.info("Loan created", { id: result.id })
 
     if (data.type === "TAKEN") {
@@ -137,7 +138,7 @@ export async function deleteLoan(id: string): Promise<void> {
     const existing = await getLoanById(id)
     if (!existing) throw new NotFoundError(ENTITY, id)
 
-    await supabase.from("loan_payments").delete().eq("loan_id", id)
+    // Os pagamentos são apagados em cascata; o trigger loans_balance_delete repõe o saldo
     const { error } = await supabase.from("loans").delete().eq("id", id)
     if (error) throw error
     logger.info("Loan deleted", { id })
@@ -184,18 +185,10 @@ export async function createLoanPayment(
       .single()
     if (error) throw error
 
-    const newPaid = existing.paid_amount + data.amount
-    const newRemaining = Math.max(0, existing.total_amount - newPaid)
-    const newStatus = newPaid >= existing.total_amount ? "PAID" : "PARTIALLY_PAID"
-
-    await supabase
-      .from("loans")
-      .update({
-        paid_amount: newPaid,
-        remaining_amount: newRemaining,
-        status: newStatus,
-      })
-      .eq("id", loanId)
+    // O trigger loan_payments_balance (migration-emprestimos.sql) actualiza o saldo
+    // da conta e os valores pagos/em falta do empréstimo
+    const updated = await getLoanById(loanId)
+    const newRemaining = updated?.remaining_amount ?? Math.max(0, existing.remaining_amount - data.amount)
 
     logger.info("Loan payment created", { loanId, amount: data.amount })
 

@@ -44,8 +44,8 @@ npm run vapid:generate  # npx web-push generate-vapid-keys --json
 - Error handling: `ServiceError`, `NotFoundError`, `handleError()`, `logger`.
 - Auth: `supabase.auth.signInWithPassword()` / `signUp()` / `signOut()` — client-side only.
 - Schema completo em `supabase-schema.sql` (14 tabelas, RLS, trigger, seed data).
-- Migrações adicionais (correr por esta ordem no SQL Editor, depois do schema): `supabase-migration.sql`, `supabase-push-subscriptions.sql`, `migration-notificacoes.sql`, `migration-delete-conta.sql`, `migration-saldos.sql`, `migration-recorrentes.sql`, `migration-moeda.sql`.
-- **Saldos**: `accounts.balance` é actualizado por triggers (`migration-saldos.sql`) em `transactions`, `transfers` e `goal_contributions`. Nunca actualizar o saldo no cliente ao criar/editar/apagar estes registos (contaria a dobrar).
+- Migrações adicionais (correr por esta ordem no SQL Editor, depois do schema): `supabase-migration.sql`, `supabase-push-subscriptions.sql`, `migration-notificacoes.sql`, `migration-delete-conta.sql`, `migration-saldos.sql`, `migration-recorrentes.sql`, `migration-moeda.sql`, `migration-emprestimos.sql`.
+- **Saldos**: `accounts.balance` é actualizado por triggers (`migration-saldos.sql`) em `transactions`, `transfers`, `goal_contributions`, `loans` e `loan_payments` (estes também actualizam `paid_amount`/`remaining_amount`/`status`). Nunca actualizar o saldo no cliente ao criar/editar/apagar estes registos (contaria a dobrar).
 - **Recorrentes**: executadas no servidor pela RPC `execute_due_recurring_transactions()` (`migration-recorrentes.sql`).
 - **Moeda**: só MZN.
 
