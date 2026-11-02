@@ -52,6 +52,7 @@ export function GoalCreateScreen() {
         title: data.title,
         description: data.description ?? null,
         target_amount: data.target_amount,
+        current_amount: data.current_amount ?? 0,
         target_date: data.target_date ?? null,
         color: data.color ?? null,
         icon: data.icon ?? null,

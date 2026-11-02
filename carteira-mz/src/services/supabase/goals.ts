@@ -50,6 +50,7 @@ export async function getGoalById(id: string): Promise<Goal | null> {
 export async function createGoal(data: {
   title: string
   target_amount: number
+  current_amount?: number
   account_id?: string | null
   description?: string | null
   target_date?: string | null
@@ -66,7 +67,8 @@ export async function createGoal(data: {
         user_id: user.id,
         title: data.title,
         target_amount: data.target_amount,
-        current_amount: 0,
+        current_amount: Math.min(data.current_amount ?? 0, data.target_amount),
+        status: (data.current_amount ?? 0) >= data.target_amount ? "COMPLETED" : "ACTIVE",
         account_id: data.account_id ?? null,
         description: data.description ?? null,
         target_date: data.target_date ?? null,
@@ -203,20 +205,21 @@ export async function createGoalContribution(
       .single()
     if (error) throw error
 
-    const newCurrent = Math.min(existing.target_amount, existing.current_amount + data.amount)
-    const newStatus = newCurrent >= existing.target_amount ? "COMPLETED" : "ACTIVE"
-
-    await supabase
-      .from("goals")
-      .update({ current_amount: newCurrent, status: newStatus })
-      .eq("id", goalId)
+    // O progresso da meta é actualizado pelo trigger goal_contributions_progress (migration-metas.sql)
+    const updated = await getGoalById(goalId)
+    const newCurrent = updated?.current_amount ?? Math.min(existing.target_amount, existing.current_amount + data.amount)
+    const nowCompleted = (updated?.status ?? (newCurrent >= existing.target_amount ? "COMPLETED" : "ACTIVE")) === "COMPLETED"
 
     logger.info("Goal contribution created", { goalId, amount: data.amount })
 
-    const accName = data.account_id ? `da conta ${data.account_id.slice(0, 8)}` : "manual"
-    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${accName}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`, "/metas")
+    let source = "manual"
+    if (data.account_id) {
+      const { data: account } = await supabase.from("accounts").select("name").eq("id", data.account_id).single()
+      source = account?.name ? `da conta ${account.name}` : "de uma conta"
+    }
+    notify("GOAL_CONTRIBUTION", `Depósito para "${existing.title}"`, `Foram depositados ${data.amount} Mzn (${source}). Progresso: ${newCurrent}/${existing.target_amount} Mzn.`, "/metas")
 
-    if (newStatus === "COMPLETED") {
+    if (nowCompleted && existing.status !== "COMPLETED") {
       notify("GOAL_COMPLETED", `Meta "${existing.title}" Concluída!`, `Parabéns! Atingiu o objectivo de ${existing.target_amount} Mzn.`, "/metas")
     }
 
