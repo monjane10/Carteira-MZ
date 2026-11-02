@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast"
 import { SummaryCards } from "./components/summary-cards"
 import { dashboard as dashboardService, accounts as accountService } from "@/services"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { downloadCsv, type CsvValue } from "@/lib/csv"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Account } from "@/types"
 import {
   Select,
@@ -100,31 +101,25 @@ function ReportsPage() {
       return
     }
 
-    const rows: string[][] = [["Mês", "Receitas", "Despesas", "Saldo"]]
+    const pct = (value: number) => `${value.toFixed(1).replace(".", ",")}%`
+    const rows: CsvValue[][] = [["Mês", "Receitas", "Despesas", "Saldo"]]
     for (const e of evolution) {
-      rows.push([e.month, String(e.income), String(e.expense), String(e.balance)])
+      rows.push([e.month, e.income, e.expense, e.balance])
     }
 
     rows.push([])
     rows.push(["Categoria (Despesas)", "Total", "Percentagem", "Transacções"])
     for (const c of expenseSpending) {
-      rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
+      rows.push([c.category_name, c.total, pct(c.percentage), String(c.transaction_count)])
     }
 
     rows.push([])
     rows.push(["Categoria (Receitas)", "Total", "Percentagem", "Transacções"])
     for (const c of incomeSpending) {
-      rows.push([c.category_name, String(c.total), c.percentage.toFixed(1) + "%", String(c.transaction_count)])
+      rows.push([c.category_name, c.total, pct(c.percentage), String(c.transaction_count)])
     }
 
-    const csv = rows.map((r) => r.join(",")).join("\n")
-    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `relatorio-${dateRange}-${new Date().toISOString().slice(0, 10)}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
+    downloadCsv(`relatorio-${dateRange}-${new Date().toISOString().slice(0, 10)}.csv`, rows)
     toast({ title: "Exportado", description: "Relatório exportado com sucesso.", variant: "success" })
   }
 

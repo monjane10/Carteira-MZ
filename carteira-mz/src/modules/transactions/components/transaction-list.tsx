@@ -29,6 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shared/empty-state"
 import { TRANSACTION_TYPE_LABELS } from "@/constants"
 import { formatCurrency, formatDate, cn } from "@/lib/utils"
+import { downloadCsv, type CsvValue } from "@/lib/csv"
 import { accounts as accountService, categories as categoryService } from "@/services"
 import type { Transaction, TransactionType, Account, Category } from "@/types"
 
@@ -118,25 +119,19 @@ export function TransactionList({ transactions, loading, onDelete }: Transaction
   }
 
   function exportTransactionsCSV() {
-    const BOM = "\uFEFF"
-    const headers = "Data,Tipo,Descrição,Categoria,Conta,Valor (MZN)"
-    const rows = filtered.map((t) => {
-      const date = new Date(t.transaction_date).toLocaleDateString("pt-MZ")
-      const type = TRANSACTION_TYPE_LABELS[t.type] ?? t.type
-      const desc = (t.description ?? "").replace(/,/g, " ")
-      const cat = t.category?.name ?? ""
-      const acc = t.account?.name ?? ""
-      const value = t.type === "INCOME" ? t.amount : -t.amount
-      return `${date},${type},${desc},${cat},${acc},${value.toFixed(2)}`
-    })
-    const csv = BOM + headers + "\n" + rows.join("\n")
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `transacoes_${new Date().toISOString().split("T")[0]}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
+    const rows: CsvValue[][] = [["Data", "Tipo", "Descrição", "Categoria", "Conta", "Valor (MZN)"]]
+    for (const t of filtered) {
+      const outflow = t.type === "EXPENSE" || t.type === "LOAN_GIVEN" || t.type === "LOAN_PAYMENT"
+      rows.push([
+        new Date(t.transaction_date).toLocaleDateString("pt-MZ"),
+        TRANSACTION_TYPE_LABELS[t.type] ?? t.type,
+        t.description ?? "",
+        t.category?.name ?? "",
+        t.account?.name ?? "",
+        outflow ? -t.amount : t.amount,
+      ])
+    }
+    downloadCsv(`transacoes_${new Date().toISOString().split("T")[0]}.csv`, rows)
   }
 
   if (transactions.length === 0) {
