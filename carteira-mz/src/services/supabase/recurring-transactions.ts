@@ -2,8 +2,7 @@ import { supabase } from "./client"
 import { logger } from "./logger"
 import { handleError } from "./errors"
 import { createNotification } from "./notifications"
-import { createTransaction } from "./transactions"
-import type { RecurringTransaction, RecurringFrequency } from "@/types"
+import type { RecurringTransaction } from "@/types"
 
 const ENTITY = "transacao-recorrente"
 
@@ -77,50 +76,27 @@ export async function updateRecurringTransaction(
   }
 }
 
-function calcNextExecution(date: string, frequency: RecurringFrequency): string {
-  const d = new Date(date)
-  switch (frequency) {
-    case "DAILY": d.setDate(d.getDate() + 1); break
-    case "WEEKLY": d.setDate(d.getDate() + 7); break
-    case "MONTHLY": d.setMonth(d.getMonth() + 1); break
-    case "YEARLY": d.setFullYear(d.getFullYear() + 1); break
-  }
-  return d.toISOString().slice(0, 10)
+interface ExecutedRecurring {
+  recurring_id: string
+  description: string | null
+  amount: number
+  executions: number
 }
 
+// A execução corre no servidor (migration-recorrentes.sql) numa única transacção:
+// bloqueia cada recorrente, lança todos os períodos em atraso e actualiza o saldo.
 export async function executeRecurringTransactions(): Promise<void> {
   try {
-    const transactions = await getRecurringTransactions()
-    const today = new Date().toISOString().slice(0, 10)
+    const { data, error } = await supabase.rpc("execute_due_recurring_transactions")
+    if (error) throw error
 
-    for (const t of transactions) {
-      if (!t.is_active) continue
-      if (t.next_execution > today) continue
-
-      await createTransaction({
-        account_id: t.account_id,
-        category_id: t.category_id,
-        type: t.type,
-        amount: t.amount,
-        description: t.description ? `[Recorrente] ${t.description}` : `[Recorrente] ${t.type}`,
-        transaction_date: today,
-        is_recurring: true,
-      })
-
-      const nextDate = calcNextExecution(today, t.frequency)
-
-      await supabase
-        .from("recurring_transactions")
-        .update({
-          next_execution: nextDate,
-          last_execution: today,
-        })
-        .eq("id", t.id)
-
+    for (const t of (data ?? []) as ExecutedRecurring[]) {
+      if (t.executions <= 0) continue
+      const times = t.executions > 1 ? ` (${t.executions} vezes)` : ""
       createNotification(
         "RECURRING_DUE",
         "Transacção Recorrente Executada",
-        `A transacção "${t.description ?? t.type}" de ${t.amount} MZN foi executada automaticamente.`,
+        `A transacção "${t.description ?? "Recorrente"}" de ${t.amount} MZN foi executada automaticamente${times}.`,
       )
     }
   } catch (e) {
