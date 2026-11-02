@@ -11,11 +11,8 @@ import { MobileBalanceCard } from "./components/mobile-balance-card"
 import { MobileMetrics } from "./components/mobile-metrics"
 import { MobileAccounts } from "./components/mobile-accounts"
 import { MobileExpenseList } from "./components/mobile-expense-list"
-import { dashboard as dashboardService, accounts as accountService, categories as categoryService, budgets as budgetService } from "@/services"
-import { checkOverdueLoans } from "@/services/supabase/loans"
-import { checkLowBalances } from "@/services/supabase/accounts"
-import { checkExpiringGoals } from "@/services/supabase/goals"
-import { checkRecurringTransactions, executeRecurringTransactions } from "@/services/supabase/recurring-transactions"
+import { dashboard as dashboardService, accounts as accountService, categories as categoryService } from "@/services"
+import { runDashboardBackgroundTasks } from "@/services/supabase/background-checks"
 import type { DashboardSummary, CategorySpending, Transaction, Account, Category } from "@/types"
 
 const MobileExpenseChart = dynamic(() => import("./components/mobile-expense-chart").then((m) => ({ default: m.MobileExpenseChart })), { ssr: false })
@@ -68,12 +65,6 @@ export function MobileDashboard() {
           map[cat.id] = cat
         }
         setCategoryMap(map)
-        budgetService.checkBudgetLimits()
-        checkOverdueLoans()
-        checkLowBalances()
-        checkExpiringGoals()
-        checkRecurringTransactions()
-        executeRecurringTransactions()
       } catch (error) {
         if (cancelled) return
         console.error("Failed to fetch mobile dashboard data:", error)
@@ -86,6 +77,12 @@ export function MobileDashboard() {
     load()
     return () => { cancelled = true }
   }, [targetYear, targetMonth, refreshKey])
+
+  useEffect(() => {
+    runDashboardBackgroundTasks().then((changed) => {
+      if (changed) setRefreshKey((k) => k + 1)
+    })
+  }, [])
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (window.scrollY === 0) {

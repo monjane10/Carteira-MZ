@@ -8,11 +8,8 @@ import { MonthNavigator } from "./components/month-navigator"
 import { SummaryCards } from "./components/summary-cards"
 import { RecentTransactions } from "./components/recent-transactions"
 import { GoalsOverview } from "./components/goals-overview"
-import { dashboard as dashboardService, categories as categoryService, goals as goalService, budgets as budgetService } from "@/services"
-import { checkOverdueLoans } from "@/services/supabase/loans"
-import { checkLowBalances } from "@/services/supabase/accounts"
-import { checkExpiringGoals } from "@/services/supabase/goals"
-import { checkRecurringTransactions, executeRecurringTransactions } from "@/services/supabase/recurring-transactions"
+import { dashboard as dashboardService, categories as categoryService, goals as goalService } from "@/services"
+import { runDashboardBackgroundTasks } from "@/services/supabase/background-checks"
 import type { DashboardSummary, MonthlyEvolution, CategorySpending, Transaction, Category, Goal } from "@/types"
 
 const MonthlyChart = dynamic(() => import("./components/monthly-chart").then((m) => ({ default: m.MonthlyChart })), { ssr: false })
@@ -66,12 +63,6 @@ function DashboardPage() {
           }, {})
         )
         setError(null)
-        budgetService.checkBudgetLimits()
-        checkOverdueLoans()
-        checkLowBalances()
-        checkExpiringGoals()
-        checkRecurringTransactions()
-        executeRecurringTransactions()
       } catch (e) {
         if (cancelled) return
         const msg = e instanceof Error ? e.message : String(e)
@@ -84,6 +75,12 @@ function DashboardPage() {
     load()
     return () => { cancelled = true }
   }, [targetYear, targetMonth, refreshKey])
+
+  useEffect(() => {
+    runDashboardBackgroundTasks().then((changed) => {
+      if (changed) setRefreshKey((k) => k + 1)
+    })
+  }, [])
 
   if (loading) {
     return (

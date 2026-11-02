@@ -85,14 +85,17 @@ interface ExecutedRecurring {
 }
 
 // A execução corre no servidor (migration-recorrentes.sql) numa única transacção:
-// bloqueia cada recorrente, lança todos os períodos em atraso e actualiza o saldo.
-export async function executeRecurringTransactions(): Promise<void> {
+// bloqueia cada recorrente e lança todos os períodos em atraso.
+// Devolve o número de transacções lançadas.
+export async function executeRecurringTransactions(): Promise<number> {
   try {
     const { data, error } = await supabase.rpc("execute_due_recurring_transactions")
     if (error) throw error
 
+    let total = 0
     for (const t of (data ?? []) as ExecutedRecurring[]) {
       if (t.executions <= 0) continue
+      total += t.executions
       const times = t.executions > 1 ? ` (${t.executions} vezes)` : ""
       createNotification(
         "RECURRING_DUE",
@@ -100,8 +103,10 @@ export async function executeRecurringTransactions(): Promise<void> {
         `A transacção "${t.description ?? "Recorrente"}" de ${t.amount} MZN foi executada automaticamente${times}.`,
       )
     }
+    return total
   } catch (e) {
     logger.warn("Failed to execute recurring transactions", { error: e })
+    return 0
   }
 }
 
