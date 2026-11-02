@@ -65,32 +65,7 @@ export async function createTransfer(data: {
       .single()
     if (error) throw error
 
-    const totalDebit = data.amount + (data.fee ?? 0)
-
-    const { data: fromAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", data.from_account_id)
-      .single()
-    if (fromAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (fromAcc.balance as number) - totalDebit, updated_at: new Date().toISOString() })
-        .eq("id", data.from_account_id)
-    }
-
-    const { data: toAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", data.to_account_id)
-      .single()
-    if (toAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (toAcc.balance as number) + data.amount, updated_at: new Date().toISOString() })
-        .eq("id", data.to_account_id)
-    }
-
+    // Os saldos das contas são actualizados pelo trigger transfers_balance (migration-saldos.sql)
     logger.info("Transfer created", { id: result.id })
 
     const { data: fromAccount } = await supabase.from("accounts").select("name").eq("id", data.from_account_id).single()
@@ -119,46 +94,6 @@ export async function updateTransfer(
     const newAmount = data.amount ?? old.amount
     const newFee = data.fee ?? old.fee
 
-    const oldTotalDebit = old.amount + old.fee
-    const newTotalDebit = newAmount + newFee
-
-    const revertBalances = async () => {
-      const { data: fAcc } = await supabase.from("accounts").select("balance").eq("id", old.from_account_id).single()
-      if (fAcc) {
-        await supabase.from("accounts").update({ balance: (fAcc.balance as number) + oldTotalDebit }).eq("id", old.from_account_id)
-      }
-      const { data: tAcc } = await supabase.from("accounts").select("balance").eq("id", old.to_account_id).single()
-      if (tAcc) {
-        await supabase.from("accounts").update({ balance: (tAcc.balance as number) - old.amount }).eq("id", old.to_account_id)
-      }
-    }
-
-    await revertBalances()
-
-    const { data: fromAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", newFrom)
-      .single()
-    if (fromAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (fromAcc.balance as number) - newTotalDebit })
-        .eq("id", newFrom)
-    }
-
-    const { data: toAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", newTo)
-      .single()
-    if (toAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (toAcc.balance as number) + newAmount })
-        .eq("id", newTo)
-    }
-
     const { data: result, error } = await supabase
       .from("transfers")
       .update({
@@ -185,32 +120,6 @@ export async function deleteTransfer(id: string): Promise<void> {
   try {
     const old = await getTransferById(id)
     if (!old) throw new NotFoundError(ENTITY, id)
-
-    const totalDebit = old.amount + old.fee
-
-    const { data: fromAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", old.from_account_id)
-      .single()
-    if (fromAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (fromAcc.balance as number) + totalDebit })
-        .eq("id", old.from_account_id)
-    }
-
-    const { data: toAcc } = await supabase
-      .from("accounts")
-      .select("balance")
-      .eq("id", old.to_account_id)
-      .single()
-    if (toAcc) {
-      await supabase
-        .from("accounts")
-        .update({ balance: (toAcc.balance as number) - old.amount })
-        .eq("id", old.to_account_id)
-    }
 
     const { error } = await supabase.from("transfers").delete().eq("id", id)
     if (error) throw error

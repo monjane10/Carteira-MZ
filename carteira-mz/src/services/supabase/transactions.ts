@@ -1,7 +1,6 @@
 ﻿import { supabase } from "./client"
 import { logger } from "./logger"
 import { NotFoundError, handleError } from "./errors"
-import { balanceDelta } from "./balance"
 import type { Transaction, TransactionType } from "@/types"
 
 const ENTITY = "transaccao"
@@ -37,25 +36,6 @@ export async function getTransactionById(id: string): Promise<Transaction | null
   }
 }
 
-async function applyBalance(accountId: string, delta: number): Promise<void> {
-  if (delta === 0) return
-  const { data: account } = await supabase
-    .from("accounts")
-    .select("balance")
-    .eq("id", accountId)
-    .single()
-  if (!account) {
-    logger.warn("Account not found for balance update", { accountId })
-    return
-  }
-  const newBalance = (account.balance as number) + delta
-  const { error } = await supabase
-    .from("accounts")
-    .update({ balance: newBalance, updated_at: new Date().toISOString() })
-    .eq("id", accountId)
-  if (error) logger.warn("Balance update failed", { accountId, delta, error: error.message })
-}
-
 export async function createTransaction(data: {
   account_id: string
   type: TransactionType
@@ -89,7 +69,7 @@ export async function createTransaction(data: {
       .single()
     if (error) throw error
 
-    await applyBalance(data.account_id, balanceDelta(data.type, data.amount))
+    // O saldo da conta é actualizado pelo trigger transactions_balance (migration-saldos.sql)
     logger.info("Transaction created", { id: result.id })
     return result as unknown as Transaction
   } catch (e) {
@@ -108,9 +88,6 @@ export async function updateTransaction(
     const newType = (data.type ?? old.type) as TransactionType
     const newAmount = data.amount ?? old.amount
     const newAccountId = data.account_id ?? old.account_id
-
-    await applyBalance(old.account_id, -balanceDelta(old.type as TransactionType, old.amount))
-    await applyBalance(newAccountId, balanceDelta(newType, newAmount))
 
     const { data: result, error } = await supabase
       .from("transactions")
@@ -145,7 +122,6 @@ export async function deleteTransaction(id: string): Promise<void> {
     const { error } = await supabase.from("transactions").delete().eq("id", id)
     if (error) throw error
 
-    await applyBalance(old.account_id, -balanceDelta(old.type as TransactionType, old.amount))
     logger.info("Transaction deleted", { id })
   } catch (e) {
     return handleError(ENTITY, "remover", e)

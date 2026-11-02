@@ -151,25 +151,7 @@ export async function deleteGoal(id: string): Promise<void> {
     const existing = await getGoalById(id)
     if (!existing) throw new NotFoundError(ENTITY, id)
 
-    const { data: contributions } = await supabase
-      .from("goal_contributions")
-      .select("amount, account_id")
-      .eq("goal_id", id)
-
-    if (contributions) {
-      for (const c of contributions) {
-        if (c.account_id) {
-          const { data: acc } = await supabase.from("accounts").select("balance").eq("id", c.account_id).single()
-          if (acc) {
-            await supabase
-              .from("accounts")
-              .update({ balance: (acc.balance as number) + c.amount, updated_at: new Date().toISOString() })
-              .eq("id", c.account_id)
-          }
-        }
-      }
-    }
-
+    // Apagar as contribuições devolve o valor às contas (trigger goal_contributions_balance)
     await supabase.from("goal_contributions").delete().eq("goal_id", id)
     const { error } = await supabase.from("goals").delete().eq("id", id)
     if (error) throw error
@@ -224,16 +206,6 @@ export async function createGoalContribution(
       .from("goals")
       .update({ current_amount: newCurrent, status: newStatus })
       .eq("id", goalId)
-
-    if (data.account_id) {
-      const { data: acc } = await supabase.from("accounts").select("balance").eq("id", data.account_id).single()
-      if (acc) {
-        await supabase
-          .from("accounts")
-          .update({ balance: (acc.balance as number) - data.amount, updated_at: new Date().toISOString() })
-          .eq("id", data.account_id)
-      }
-    }
 
     logger.info("Goal contribution created", { goalId, amount: data.amount })
 

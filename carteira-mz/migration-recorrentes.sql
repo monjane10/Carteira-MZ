@@ -1,7 +1,8 @@
 -- Executa as transacções recorrentes vencidas de forma atómica no servidor.
 -- Evita duplicados (bloqueio da linha com FOR UPDATE SKIP LOCKED), lança todos os
--- períodos em atraso e actualiza o saldo da conta na mesma transacção.
--- Correr no SQL Editor do Supabase.
+-- períodos em atraso. O saldo da conta é actualizado pelo trigger de transactions
+-- (migration-saldos.sql), na mesma transacção.
+-- Correr no SQL Editor do Supabase, depois de migration-saldos.sql.
 
 CREATE OR REPLACE FUNCTION recurring_next_date(
   p_start DATE,
@@ -42,7 +43,6 @@ DECLARE
   run_date DATE;
   last_run DATE;
   runs INT;
-  delta NUMERIC;
 BEGIN
   FOR r IN
     SELECT * FROM recurring_transactions rt
@@ -71,19 +71,6 @@ BEGIN
       runs := runs + 1;
       run_date := recurring_next_date(r.start_date, run_date, r.frequency);
     END LOOP;
-
-    delta := CASE r.type
-      WHEN 'INCOME' THEN r.amount
-      WHEN 'EXPENSE' THEN -r.amount
-      WHEN 'LOAN_GIVEN' THEN -r.amount
-      WHEN 'LOAN_TAKEN' THEN r.amount
-      WHEN 'ADJUSTMENT' THEN r.amount
-      ELSE 0
-    END;
-
-    UPDATE accounts
-    SET balance = balance + delta * runs, updated_at = NOW()
-    WHERE id = r.account_id;
 
     UPDATE recurring_transactions
     SET next_execution = run_date, last_execution = last_run, updated_at = NOW()
