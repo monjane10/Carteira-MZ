@@ -12,6 +12,7 @@ import { Fab } from "@/components/shared/fab"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { OnboardingTour } from "@/components/shared/onboarding-tour"
 import { supabase } from "@/services/supabase/client"
+import { cn } from "@/lib/utils"
 import { requestNotificationPermission } from "@/lib/push-notifications"
 
 const mainTabs = ["/dashboard", "/contas", "/transacoes", "/metas", "/perfil"]
@@ -23,6 +24,8 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const showBack = !mainTabs.includes(pathname)
+  // O ecrã inicial no telemóvel ocupa a altura disponível, sem scroll
+  const isHome = pathname === "/dashboard"
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   useEffect(() => {
@@ -70,8 +73,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         description="Tem a certeza que deseja terminar a sessão?"
         onConfirm={handleLogout}
       />
-      <div data-scroll-container className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-        <main className="w-full min-w-0 px-4 pt-2 pb-28">
+      <div data-scroll-container className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden hide-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
+        <main className={cn("flex w-full min-w-0 flex-1 flex-col px-4 pt-2", isHome ? "pb-[64px] md:pb-28" : "pb-28")}>
           {showBack && (
             <div className="mb-3">
               <BackButton />

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { format } from "date-fns"
 import { pt } from "date-fns/locale"
 import { supabase } from "@/services"
-import Image from "next/image"
+import { QuickActionsButton } from "@/components/shared/fab"
 
 function getMozambiqueTime(): Date {
   const now = new Date()
@@ -38,26 +38,19 @@ export function MobileGreeting() {
   const greeting = getGreeting(hour)
   const dateStr = format(time, "EEEE, dd 'de' MMMM", { locale: pt })
 
+  const firstName = userName.trim().split(/\s+/)[0] || "Utilizador"
+
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center justify-between gap-3">
       <div className="min-w-0">
-        <p className="text-sm font-medium text-slate-500">{greeting},</p>
-        <h1 className="truncate text-xl font-bold text-[#0F172A] mt-0.5">
-          {userName || "Utilizador"}
+        <h1 className="truncate text-lg font-bold leading-tight text-[#0F172A]">
+          {greeting}, {firstName}
         </h1>
-        <p className="text-xs text-slate-500 mt-0.5 capitalize first-letter:uppercase">
+        <p className="truncate text-xs text-slate-500 capitalize first-letter:uppercase">
           {dateStr}
         </p>
       </div>
-      <div className="shrink-0">
-        <Image
-          src="/crescimento.png"
-          alt="Ilustração de crescimento financeiro"
-          width={112}
-          height={80}
-          className="h-16 w-24 sm:h-20 sm:w-28 object-contain"
-        />
-      </div>
+      <QuickActionsButton />
     </div>
   )
 }

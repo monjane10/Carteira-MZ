@@ -52,9 +52,10 @@ export function Fab() {
         )}
       </AnimatePresence>
 
+      {/* No telemóvel o ecrã inicial usa o QuickActionsButton, em linha com a saudação */}
       <div
         className={cn(
-          "fixed bottom-24 right-3 z-50 flex flex-col items-end gap-2 transition-all duration-200",
+          "fixed bottom-24 right-3 z-50 hidden flex-col items-end gap-2 transition-all duration-200 md:flex",
           hidden && !open && "pointer-events-none translate-y-6 opacity-0"
         )}
       >
@@ -101,5 +102,67 @@ export function Fab() {
         </button>
       </div>
     </>
+  )
+}
+
+/** Botão "+" em linha (ecrã inicial no telemóvel): o menu abre para baixo. */
+export function QuickActionsButton() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-label={open ? "Fechar acções rápidas" : "Abrir acções rápidas"}
+        className={cn(
+          "flex h-10 w-10 items-center justify-center rounded-full shadow-sm transition-all",
+          open ? "bg-slate-900 text-white rotate-45" : "bg-emerald-500 text-white hover:bg-emerald-600"
+        )}
+      >
+        <Plus className="h-6 w-6" />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/20"
+            onClick={() => setOpen(false)}
+          />
+        )}
+        {open && (
+          <motion.div
+            key="menu"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-12 z-50 flex flex-col items-end gap-2"
+          >
+            {actions.map((action) => {
+              const Icon = action.icon
+              return (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-medium shadow-sm",
+                    action.color
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {action.label}
+                </Link>
+              )
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }

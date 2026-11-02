@@ -1,15 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import { formatCurrency } from "@/lib/utils"
 import type { DashboardSummary } from "@/types"
 import { Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react"
 
 interface MobileBalanceCardProps {
   summary: DashboardSummary
+  /** Navegador de meses mostrado no cabeçalho do cartão */
+  monthNavigator?: ReactNode
 }
 
-export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
+export function MobileBalanceCard({ summary, monthNavigator }: MobileBalanceCardProps) {
   const [showValues, setShowValues] = useState(true)
 
   const hidden = "••••••"
@@ -20,15 +22,15 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
     : [balanceStr, ""]
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-[#0F1D40] px-4 py-3 text-white shadow-sm"
+    <div className="relative w-full shrink-0 overflow-hidden rounded-2xl bg-[#0F1D40] px-4 py-3 text-white shadow-sm"
       style={{ backgroundImage: "linear-gradient(135deg, #0B1633 0%, #0F1D40 50%, #1A2D5A 100%)" }}
     >
       <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/5" />
       <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/[0.03]" />
 
       <div className="relative">
-        <div className="flex items-center justify-between">
-          <p className="text-[11px] font-medium tracking-wide text-blue-200 uppercase">Saldo Total</p>
+        <div className="flex items-center justify-between gap-2">
+          {monthNavigator ?? <p className="text-[11px] font-medium tracking-wide text-blue-200 uppercase">Saldo Total</p>}
           <button
             type="button"
             onClick={() => setShowValues(!showValues)}
@@ -39,6 +41,9 @@ export function MobileBalanceCard({ summary }: MobileBalanceCardProps) {
           </button>
         </div>
 
+        {monthNavigator && (
+          <p className="mt-1.5 text-[10px] font-medium uppercase tracking-wide text-blue-200">Saldo Total</p>
+        )}
         <div className="flex items-baseline gap-1">
           <p className="text-[1.65rem] font-bold leading-tight tracking-tight text-white break-words">
             {showValues ? amountPart : hidden}

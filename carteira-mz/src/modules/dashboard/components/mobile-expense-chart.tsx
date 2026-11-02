@@ -15,25 +15,25 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
   const total = data.reduce((s, d) => s + d.total, 0)
 
   return (
-    <section className="w-full">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-bold text-[#0F172A]">Despesas por Categoria</h2>
+    <section className="w-full shrink-0">
+      <div className="flex items-center justify-between mb-1.5">
+        <h2 className="text-sm font-bold text-[#0F172A]">Despesas por Categoria</h2>
         <Link
           href="/relatorios"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
         >
           Ver todas
         </Link>
       </div>
 
       {data.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Nenhuma despesa este mês</p>
+        <div className="rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+          <p className="text-xs text-slate-500">Nenhuma despesa este mês</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center gap-5">
-            <div className="relative shrink-0" style={{ width: 130, height: 130 }}>
+        <div className="rounded-xl border border-slate-200 bg-white px-3 py-2">
+          <div className="flex items-center gap-3">
+            <div className="relative shrink-0" style={{ width: 84, height: 84 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -42,8 +42,8 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                     nameKey="category_name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={38}
-                    outerRadius={60}
+                    innerRadius={28}
+                    outerRadius={42}
                     strokeWidth={0}
                   >
                     {data.map((_, index) => (
@@ -53,15 +53,15 @@ export function MobileExpenseChart({ data }: MobileExpenseChartProps) {
                 </PieChart>
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-[10px] font-medium text-slate-500 leading-none">Total</p>
-                <p className="text-[10px] font-bold text-slate-900 leading-tight text-center px-0.5">
+                <p className="text-[8px] font-medium text-slate-500 leading-none">Total</p>
+                <p className="text-[8px] font-bold text-slate-900 leading-tight text-center px-0.5">
                   {formatCurrency(total)}
                 </p>
               </div>
             </div>
 
-            <div className="flex-1 space-y-2.5 min-w-0">
-              {data.slice(0, 5).map((item, index) => (
+            <div className="flex-1 space-y-1 min-w-0">
+              {data.slice(0, 4).map((item, index) => (
                 <div key={item.category_id} className="flex items-center justify-between gap-1">
                   <div className="flex items-center gap-2 min-w-0 flex-1">
                     <div

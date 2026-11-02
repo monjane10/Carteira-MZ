@@ -5,7 +5,7 @@ import Link from "next/link"
 import { formatCurrency } from "@/lib/utils"
 import { getAccountLogo } from "@/lib/account-logos"
 import type { Account } from "@/types"
-import { Building2, Smartphone, Wallet, PiggyBank, ChevronRight } from "lucide-react"
+import { Building2, Smartphone, Wallet, PiggyBank } from "lucide-react"
 
 interface MobileAccountsProps {
   accounts: Account[]
@@ -26,19 +26,19 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
   if (active.length === 0) {
     return (
       <div className="w-full">
-        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
-        <p className="mt-2 text-sm text-slate-500">Nenhuma conta activa</p>
+        <h2 className="text-sm font-bold text-[#0F172A]">Minhas Contas</h2>
+        <p className="mt-1 text-xs text-slate-500">Nenhuma conta activa</p>
       </div>
     )
   }
 
   return (
-    <section className="w-full">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-bold text-[#0F172A]">Minhas Contas</h2>
+    <section className="w-full shrink-0">
+      <div className="flex items-center justify-between mb-1.5">
+        <h2 className="text-sm font-bold text-[#0F172A]">Minhas Contas</h2>
         <Link
           href="/contas"
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
         >
           Ver todas
         </Link>
@@ -54,33 +54,32 @@ export function MobileAccounts({ accounts }: MobileAccountsProps) {
               <Link
                 key={account.id}
                 href={`/contas/${account.id}`}
-                className="w-[150px] shrink-0 rounded-xl border border-slate-100 bg-white px-2.5 py-2 transition-colors hover:bg-slate-50"
+                className="flex w-[140px] shrink-0 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5 transition-colors hover:bg-slate-50"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden bg-slate-50">
-                    {logoPath ? (
-                      <Image
-                        src={logoPath}
-                        alt={account.name}
-                        width={24}
-                        height={24}
-                        className="object-contain"
-                      />
-                    ) : (
-                      <FallbackIcon
-                        className="h-3.5 w-3.5"
-                        style={{ color: account.color || "#0F172A" }}
-                      />
-                    )}
-                  </div>
-                  <ChevronRight className="h-2.5 w-2.5 text-slate-300 shrink-0" />
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-50">
+                  {logoPath ? (
+                    <Image
+                      src={logoPath}
+                      alt={account.name}
+                      width={28}
+                      height={28}
+                      className="object-contain"
+                    />
+                  ) : (
+                    <FallbackIcon
+                      className="h-3.5 w-3.5"
+                      style={{ color: account.color || "#0F172A" }}
+                    />
+                  )}
                 </div>
-                <p className="mt-1.5 text-[10px] font-medium text-slate-500 truncate">
-                  {account.name}
-                </p>
-                <p className="text-[11px] font-bold text-[#0F172A] truncate">
-                  {formatCurrency(account.balance)}
-                </p>
+                <div className="min-w-0">
+                  <p className="truncate text-[10px] font-medium leading-tight text-slate-500">
+                    {account.name}
+                  </p>
+                  <p className="truncate text-xs font-bold leading-tight text-[#0F172A]">
+                    {formatCurrency(account.balance)}
+                  </p>
+                </div>
               </Link>
             )
           })}

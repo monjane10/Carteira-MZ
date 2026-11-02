@@ -13,15 +13,44 @@ interface MonthNavigatorProps {
   onPrev: () => void
   onNext: () => void
   isCurrent: boolean
+  /** Versão compacta, em branco, para dentro do cartão do saldo */
+  variant?: "default" | "card"
 }
 
-export function MonthNavigator({ year, month, onPrev, onNext, isCurrent }: MonthNavigatorProps) {
+export function MonthNavigator({ year, month, onPrev, onNext, isCurrent, variant = "default" }: MonthNavigatorProps) {
+  if (variant === "card") {
+    return (
+      <div className="flex min-w-0 items-center gap-1">
+        <button
+          type="button"
+          onClick={onPrev}
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 active:bg-white/20"
+          aria-label="Mês anterior"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" />
+        </button>
+        <span className="truncate px-1 text-xs font-semibold text-white">
+          {MONTHS[month]} {year}
+        </span>
+        <button
+          type="button"
+          onClick={onNext}
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 active:bg-white/20 disabled:opacity-30"
+          aria-label="Mês seguinte"
+          disabled={isCurrent}
+        >
+          <ChevronRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="flex items-center justify-between gap-2">
       <button
         type="button"
         onClick={onPrev}
-        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
+        className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
         aria-label="Mês anterior"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -41,7 +70,7 @@ export function MonthNavigator({ year, month, onPrev, onNext, isCurrent }: Month
       <button
         type="button"
         onClick={onNext}
-        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
+        className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors active:scale-95 shrink-0"
         aria-label="Mês seguinte"
         disabled={isCurrent}
         style={{ opacity: isCurrent ? 0.3 : 1 }}

@@ -159,7 +159,7 @@ export function MobileDashboard() {
 
   return (
     <div
-      className="flex w-full max-w-full min-w-0 flex-col gap-5"
+      className="flex w-full max-w-full min-w-0 flex-1 flex-col gap-2"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -179,31 +179,37 @@ export function MobileDashboard() {
 
       <MobileGreeting />
 
-      <MonthNavigator
-        year={targetYear}
-        month={targetMonth}
-        isCurrent={monthOffset === 0}
-        onPrev={() => {
-          if (targetMonth === 0) {
-            setTargetYear(targetYear - 1)
-            setTargetMonth(11)
-          } else {
-            setTargetMonth(targetMonth - 1)
+      {summary && (
+        <MobileBalanceCard
+          summary={summary}
+          monthNavigator={
+            <MonthNavigator
+              variant="card"
+              year={targetYear}
+              month={targetMonth}
+              isCurrent={monthOffset === 0}
+              onPrev={() => {
+                if (targetMonth === 0) {
+                  setTargetYear(targetYear - 1)
+                  setTargetMonth(11)
+                } else {
+                  setTargetMonth(targetMonth - 1)
+                }
+                setMonthOffset(monthOffset - 1)
+              }}
+              onNext={() => {
+                if (targetMonth === 11) {
+                  setTargetYear(targetYear + 1)
+                  setTargetMonth(0)
+                } else {
+                  setTargetMonth(targetMonth + 1)
+                }
+                setMonthOffset(monthOffset + 1)
+              }}
+            />
           }
-          setMonthOffset(monthOffset - 1)
-        }}
-        onNext={() => {
-          if (targetMonth === 11) {
-            setTargetYear(targetYear + 1)
-            setTargetMonth(0)
-          } else {
-            setTargetMonth(targetMonth + 1)
-          }
-          setMonthOffset(monthOffset + 1)
-        }}
-      />
-
-      {summary && <MobileBalanceCard summary={summary} />}
+        />
+      )}
 
       {summary && <MobileMetrics summary={summary} categorySpending={categorySpending} />}
 
